@@ -1,18 +1,34 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { z} from "zod";
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+export const conferenceImages = pgTable("conference_images", {
+  id: varchar("id").primaryKey(),
+  imagePath: text("image_path").notNull(),
+  fullPath: text("full_path").notNull(),
+  uploadedAt: timestamp("uploaded_at").notNull().defaultNow(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const insertConferenceImageSchema = createInsertSchema(conferenceImages).pick({
+  imagePath: true,
+  fullPath: true,
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type InsertConferenceImage = z.infer<typeof insertConferenceImageSchema>;
+export type ConferenceImage = typeof conferenceImages.$inferSelect;
+
+export interface Location {
+  name: string;
+  category: string;
+  lat: number;
+  lng: number;
+  narrative?: string;
+}
+
+export interface ScheduleSession {
+  time: string;
+  title: string;
+  duration: number;
+  isBreak: boolean;
+  day: 1 | 2;
+}
