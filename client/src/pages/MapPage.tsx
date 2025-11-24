@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Location } from "@shared/schema";
 import L from "leaflet";
+import { ExternalLink } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 
 interface MapPageProps {
@@ -121,17 +122,45 @@ export default function MapPage({ locations }: MapPageProps) {
               position={[location.lat, location.lng]}
               icon={getCategoryIcon(location.category)}
             >
-              <Popup>
+              <Popup maxWidth={320} minWidth={250}>
                 <div className="p-2">
-                  <h3 className="font-semibold text-sm mb-1">{location.name}</h3>
-                  <Badge className={`${getCategoryColor(location.category)} text-xs mb-2`}>
+                  <h3 className="font-semibold text-sm mb-2" data-testid={`popup-title-${idx}`}>{location.name}</h3>
+                  <Badge className={`${getCategoryColor(location.category)} text-xs mb-3`}>
                     {location.category}
                   </Badge>
                   {location.narrative && (
-                    <p className="text-xs text-muted-foreground line-clamp-3 font-serif">
+                    <p className="text-xs text-muted-foreground mb-3 font-serif leading-relaxed" data-testid={`popup-narrative-${idx}`}>
                       {location.narrative}
                     </p>
                   )}
+                  <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-border">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="w-full justify-start gap-2 text-xs"
+                      onClick={() => {
+                        const url = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
+                        window.open(url, '_blank');
+                      }}
+                      data-testid={`button-google-maps-${idx}`}
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      Open in Google Maps
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="w-full justify-start gap-2 text-xs"
+                      onClick={() => {
+                        const url = `https://maps.apple.com/?q=${location.name}&ll=${location.lat},${location.lng}`;
+                        window.open(url, '_blank');
+                      }}
+                      data-testid={`button-apple-maps-${idx}`}
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      Open in Apple Maps
+                    </Button>
+                  </div>
                 </div>
               </Popup>
             </Marker>

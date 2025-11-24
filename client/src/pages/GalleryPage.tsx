@@ -2,17 +2,28 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Upload, X, ImageIcon, Loader2 } from "lucide-react";
+import { Upload, X, ImageIcon, Loader2, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { ConferenceImage } from "@shared/schema";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 export default function GalleryPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [imageToDelete, setImageToDelete] = useState<ConferenceImage | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
@@ -57,6 +68,28 @@ export default function GalleryPage() {
     },
     onSettled: () => {
       setIsUploading(false);
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (imageId: string) => {
+      await apiRequest("DELETE", `/api/conference-images/${imageId}`, {});
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/conference-images"] });
+      toast({
+        title: "Image deleted",
+        description: "The image has been removed from the gallery.",
+      });
+      setImageToDelete(null);
+    },
+    onError: (error) => {
+      console.error("Delete error:", error);
+      toast({
+        title: "Delete failed",
+        description: "Failed to delete image. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -172,6 +205,19 @@ export default function GalleryPage() {
                     className="w-full h-full object-cover"
                   />
                 </div>
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button
+                    size="icon"
+                    variant="destructive"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setImageToDelete(image);
+                    }}
+                    data-testid={`button-delete-${idx}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
                 <div className="absolute bottom-2 left-2 right-2 bg-background/80 backdrop-blur-sm px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <p className="text-xs text-muted-foreground">
                     {new Date(image.uploadedAt).toLocaleDateString()}
@@ -194,6 +240,27 @@ export default function GalleryPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!imageToDelete} onOpenChange={() => setImageToDelete(null)}>
+        <AlertDialogContent data-testid="dialog-delete-confirm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Image?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this image? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-delete">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => imageToDelete && deleteMutation.mutate(imageToDelete.id)}
+              disabled={deleteMutation.isPending}
+              data-testid="button-confirm-delete"
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

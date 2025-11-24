@@ -136,6 +136,12 @@ export class ObjectStorageService {
     return objectFile;
   }
 
+  async getFileByFullPath(fullPath: string): Promise<File> {
+    const { bucketName, objectName } = parseObjectPath(fullPath);
+    const bucket = objectStorageClient.bucket(bucketName);
+    return bucket.file(objectName);
+  }
+
   async downloadObject(file: File, res: Response, cacheTtlSec: number = 3600) {
     try {
       const [metadata] = await file.getMetadata();

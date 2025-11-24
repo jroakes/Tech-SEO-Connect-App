@@ -79,6 +79,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/conference-images/:id", async (req, res) => {
+    const { id } = req.params;
+    
+    if (!id) {
+      return res.status(400).json({ error: "Image ID is required" });
+    }
+
+    try {
+      await storage.deleteConferenceImage(id);
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting conference image:", error);
+      res.status(500).json({ error: "Failed to delete image" });
+    }
+  });
+
   app.get("/objects/:objectPath(*)", async (req, res) => {
     const objectStorageService = new ObjectStorageService();
     try {
