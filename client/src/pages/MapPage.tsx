@@ -19,13 +19,23 @@ interface MapPageProps {
   locations: Location[];
 }
 
-const createCustomIcon = (color: string, iconSvg: string) => {
+const createCustomIcon = (color: string, iconSvg: string, size: number = 32) => {
   return L.divIcon({
     className: "custom-marker",
-    html: `<div style="background-color: ${color}; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">${iconSvg}</div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
+    html: `<div style="background-color: ${color}; width: ${size}px; height: ${size}px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">${iconSvg}</div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
   });
+};
+
+const VENUE_NAME = "The Fruit -Conference Venue";
+
+const createVenueIcon = () => {
+  return createCustomIcon(
+    "#D4AF37",
+    '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+    44
+  );
 };
 
 const getCategoryIcon = (category: string) => {
@@ -70,10 +80,25 @@ export default function MapPage({ locations }: MapPageProps) {
     setExpandedNarratives(newExpanded);
   };
 
+  const venueLocation = useMemo(() => {
+    return locations.find(loc => loc.name === VENUE_NAME);
+  }, [locations]);
+
   const filteredLocations = useMemo(() => {
     if (selectedCategory === "all") return locations;
-    return locations.filter(loc => loc.category === selectedCategory);
-  }, [locations, selectedCategory]);
+    const filtered = locations.filter(loc => loc.category === selectedCategory);
+    if (venueLocation && !filtered.some(loc => loc.name === VENUE_NAME)) {
+      return [...filtered, venueLocation];
+    }
+    return filtered;
+  }, [locations, selectedCategory, venueLocation]);
+
+  const getLocationIcon = (location: Location) => {
+    if (location.name === VENUE_NAME) {
+      return createVenueIcon();
+    }
+    return getCategoryIcon(location.category);
+  };
 
   const center: [number, number] = [35.9940, -78.8986];
 
@@ -128,7 +153,8 @@ export default function MapPage({ locations }: MapPageProps) {
             <Marker
               key={idx}
               position={[location.lat, location.lng]}
-              icon={getCategoryIcon(location.category)}
+              icon={getLocationIcon(location)}
+              zIndexOffset={location.name === VENUE_NAME ? 1000 : 0}
             >
               <Popup maxWidth={320} minWidth={250}>
                 <div className="p-2">

@@ -141,6 +141,11 @@ Preferred communication style: Simple, everyday language.
   - Attractions: Camera icon with teal background (#689581)
   - 32px marker size for improved visibility
 - Dropdown category filter for cleaner mobile UI with high z-index (z-[9999]) to appear above map (November 24, 2025)
+- Special venue marker (November 2025):
+  - "The Fruit -Conference Venue" always appears on map as gold star (#D4AF37)
+  - Larger size (44px vs 32px) for visibility
+  - Appears regardless of category filter selection (helps users judge distance to venue)
+  - Higher z-index (zIndexOffset=1000) ensures visibility above other markers
 - Enhanced popups (November 2025):
   - Collapsible narratives with line-clamp-3 and "Read more"/"Show less" toggle
   - Google Maps and Apple Maps navigation buttons on same line
