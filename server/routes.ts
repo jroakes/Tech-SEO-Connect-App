@@ -8,7 +8,7 @@ import path from "path";
 export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/kml-data", async (req, res) => {
     try {
-      const kmlPath = path.join(process.cwd(), "attached_assets", "Tech SEO Connect Durham, NC_1763762954623.kml");
+      const kmlPath = path.join(process.cwd(), "attached_assets", "locations.kml");
       const kmlData = readFileSync(kmlPath, "utf-8");
       res.setHeader("Content-Type", "application/vnd.google-earth.kml+xml");
       res.send(kmlData);
