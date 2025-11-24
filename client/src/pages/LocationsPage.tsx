@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search, ExternalLink } from "lucide-react";
 import type { Location } from "@shared/schema";
+import { trackMapButtonClick } from "@/lib/analytics";
 import {
   Dialog,
   DialogContent,
@@ -138,6 +139,7 @@ export default function LocationsPage({ locations }: LocationsPageProps) {
                       variant="outline"
                       className="flex-1 justify-center gap-1.5 min-h-11"
                       onClick={() => {
+                        trackMapButtonClick('google_maps', selectedLocation.name, selectedLocation.category);
                         const url = `https://www.google.com/maps/search/?api=1&query=${selectedLocation.lat},${selectedLocation.lng}`;
                         window.open(url, '_blank');
                       }}
@@ -150,6 +152,7 @@ export default function LocationsPage({ locations }: LocationsPageProps) {
                       variant="outline"
                       className="flex-1 justify-center gap-1.5 min-h-11"
                       onClick={() => {
+                        trackMapButtonClick('apple_maps', selectedLocation.name, selectedLocation.category);
                         const url = `https://maps.apple.com/?q=${selectedLocation.name}&ll=${selectedLocation.lat},${selectedLocation.lng}`;
                         window.open(url, '_blank');
                       }}

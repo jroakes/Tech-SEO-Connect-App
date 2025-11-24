@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import type { Location } from "@shared/schema";
+import { trackMapButtonClick } from "@/lib/analytics";
 
 interface LocationCardProps {
   location: Location;
@@ -17,6 +18,20 @@ export function LocationCard({ location, onClick }: LocationCardProps) {
     if (category.includes("Conference")) return "bg-chart-5 text-white";
     if (category.includes("Attractions")) return "bg-chart-4 text-white";
     return "bg-muted text-muted-foreground";
+  };
+
+  const handleGoogleMapsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    trackMapButtonClick('google_maps', location.name, location.category);
+    const url = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
+    window.open(url, '_blank');
+  };
+
+  const handleAppleMapsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    trackMapButtonClick('apple_maps', location.name, location.category);
+    const url = `https://maps.apple.com/?q=${location.name}&ll=${location.lat},${location.lng}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -51,11 +66,7 @@ export function LocationCard({ location, onClick }: LocationCardProps) {
         <Button
           variant="outline"
           className="flex-1 justify-center gap-1.5 min-h-11"
-          onClick={(e) => {
-            e.stopPropagation();
-            const url = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
-            window.open(url, '_blank');
-          }}
+          onClick={handleGoogleMapsClick}
           data-testid="button-google-maps"
         >
           <ExternalLink className="h-4 w-4" />
@@ -64,11 +75,7 @@ export function LocationCard({ location, onClick }: LocationCardProps) {
         <Button
           variant="outline"
           className="flex-1 justify-center gap-1.5 min-h-11"
-          onClick={(e) => {
-            e.stopPropagation();
-            const url = `https://maps.apple.com/?q=${location.name}&ll=${location.lat},${location.lng}`;
-            window.open(url, '_blank');
-          }}
+          onClick={handleAppleMapsClick}
           data-testid="button-apple-maps"
         >
           <ExternalLink className="h-4 w-4" />

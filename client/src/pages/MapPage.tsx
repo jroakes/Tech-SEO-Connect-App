@@ -12,6 +12,7 @@ import {
 import type { Location } from "@shared/schema";
 import L from "leaflet";
 import { ExternalLink } from "lucide-react";
+import { trackMapButtonClick } from "@/lib/analytics";
 import "leaflet/dist/leaflet.css";
 
 interface MapPageProps {
@@ -160,6 +161,7 @@ export default function MapPage({ locations }: MapPageProps) {
                       variant="outline"
                       className="flex-1 justify-center gap-1.5 min-h-11"
                       onClick={() => {
+                        trackMapButtonClick('google_maps', location.name, location.category);
                         const url = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
                         window.open(url, '_blank');
                       }}
@@ -172,6 +174,7 @@ export default function MapPage({ locations }: MapPageProps) {
                       variant="outline"
                       className="flex-1 justify-center gap-1.5 min-h-11"
                       onClick={() => {
+                        trackMapButtonClick('apple_maps', location.name, location.category);
                         const url = `https://maps.apple.com/?q=${location.name}&ll=${location.lat},${location.lng}`;
                         window.open(url, '_blank');
                       }}
