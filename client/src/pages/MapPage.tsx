@@ -134,32 +134,32 @@ export default function MapPage({ locations }: MapPageProps) {
                       {location.narrative}
                     </p>
                   )}
-                  <div className="flex flex-col gap-2 mt-3 pt-3 border-t border-border">
+                  <div className="flex gap-2 mt-3 pt-3 border-t border-border">
                     <Button
                       size="sm"
                       variant="outline"
-                      className="w-full justify-start gap-2 text-xs"
+                      className="flex-1 justify-center gap-1.5"
                       onClick={() => {
                         const url = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
                         window.open(url, '_blank');
                       }}
                       data-testid={`button-google-maps-${idx}`}
                     >
-                      <ExternalLink className="h-3 w-3" />
-                      Open in Google Maps
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Google Maps
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      className="w-full justify-start gap-2 text-xs"
+                      className="flex-1 justify-center gap-1.5"
                       onClick={() => {
                         const url = `https://maps.apple.com/?q=${location.name}&ll=${location.lat},${location.lng}`;
                         window.open(url, '_blank');
                       }}
                       data-testid={`button-apple-maps-${idx}`}
                     >
-                      <ExternalLink className="h-3 w-3" />
-                      Open in Apple Maps
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Apple Maps
                     </Button>
                   </div>
                 </div>
