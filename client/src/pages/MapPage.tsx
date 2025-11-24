@@ -1,7 +1,14 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { Location } from "@shared/schema";
 import L from "leaflet";
 import { ExternalLink } from "lucide-react";
@@ -11,26 +18,39 @@ interface MapPageProps {
   locations: Location[];
 }
 
-const createCustomIcon = (color: string) => {
+const createCustomIcon = (color: string, iconSvg: string) => {
   return L.divIcon({
     className: "custom-marker",
-    html: `<div style="background-color: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
+    html: `<div style="background-color: ${color}; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">${iconSvg}</div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
   });
 };
 
 const getCategoryIcon = (category: string) => {
-  if (category.includes("Hotel")) return createCustomIcon("#6A8EC4");
-  if (category.includes("Lunch") || category.includes("Dinner") || category.includes("Coffee")) return createCustomIcon("#0DB47C");
-  if (category.includes("Drinks")) return createCustomIcon("#836152");
-  if (category.includes("Conference")) return createCustomIcon("#3C4639");
-  if (category.includes("Attractions")) return createCustomIcon("#689581");
-  return createCustomIcon("#999");
+  if (category.includes("Hotel")) {
+    return createCustomIcon("#6A8EC4", '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M8 10h.01"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 14h.01"/><path d="M16 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M16 18h.01"/><path d="M12 18h.01"/></svg>');
+  }
+  if (category.includes("Lunch") || category.includes("Dinner")) {
+    return createCustomIcon("#0DB47C", '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>');
+  }
+  if (category.includes("Coffee")) {
+    return createCustomIcon("#0DB47C", '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>');
+  }
+  if (category.includes("Drinks")) {
+    return createCustomIcon("#836152", '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 22h8"/><path d="M12 11v11"/><path d="m19 3-7 8-7-8Z"/></svg>');
+  }
+  if (category.includes("Conference")) {
+    return createCustomIcon("#3C4639", '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg>');
+  }
+  if (category.includes("Attractions")) {
+    return createCustomIcon("#689581", '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>');
+  }
+  return createCustomIcon("#999", '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>');
 };
 
 export default function MapPage({ locations }: MapPageProps) {
-  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [expandedNarratives, setExpandedNarratives] = useState<Set<number>>(new Set());
 
   const categories = useMemo(() => {
@@ -38,23 +58,6 @@ export default function MapPage({ locations }: MapPageProps) {
     locations.forEach(loc => cats.add(loc.category));
     return Array.from(cats).sort();
   }, [locations]);
-
-  useEffect(() => {
-    setSelectedCategories(new Set(categories));
-  }, [categories]);
-
-  const toggleCategory = (category: string) => {
-    const newSelected = new Set(selectedCategories);
-    if (newSelected.has(category)) {
-      newSelected.delete(category);
-    } else {
-      newSelected.add(category);
-    }
-    setSelectedCategories(newSelected);
-  };
-
-  const selectAll = () => setSelectedCategories(new Set(categories));
-  const clearAll = () => setSelectedCategories(new Set());
   
   const toggleNarrative = (idx: number) => {
     const newExpanded = new Set(expandedNarratives);
@@ -67,8 +70,9 @@ export default function MapPage({ locations }: MapPageProps) {
   };
 
   const filteredLocations = useMemo(() => {
-    return locations.filter(loc => selectedCategories.has(loc.category));
-  }, [locations, selectedCategories]);
+    if (selectedCategory === "all") return locations;
+    return locations.filter(loc => loc.category === selectedCategory);
+  }, [locations, selectedCategory]);
 
   const center: [number, number] = [35.9940, -78.8986];
 
@@ -85,33 +89,25 @@ export default function MapPage({ locations }: MapPageProps) {
     <div className="flex flex-col h-[calc(100vh-7rem)] md:h-[calc(100vh-3.5rem)]">
       <div className="p-4 border-b border-border bg-card">
         <div className="max-w-screen-xl mx-auto">
-          <div className="flex items-center justify-between gap-4 mb-3">
+          <div className="flex items-center justify-between gap-4">
             <h2 className="text-xl font-semibold text-foreground" data-testid="text-map-title">Durham Locations</h2>
-            <div className="flex gap-2">
-              <Button variant="outline" className="min-h-11" onClick={selectAll} data-testid="button-select-all">
-                All
-              </Button>
-              <Button variant="outline" className="min-h-11" onClick={clearAll} data-testid="button-clear-all">
-                Clear
-              </Button>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
-              <Button
-                key={category}
-                variant={selectedCategories.has(category) ? "default" : "outline"}
-                className={`min-h-11 ${
-                  selectedCategories.has(category)
-                    ? getCategoryColor(category)
-                    : ""
-                }`}
-                onClick={() => toggleCategory(category)}
-                data-testid={`button-filter-${category.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                {category} ({locations.filter(l => l.category === category).length})
-              </Button>
-            ))}
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-[240px] min-h-11" data-testid="select-category">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all" data-testid="select-option-all">All Categories ({locations.length})</SelectItem>
+                {categories.map(category => (
+                  <SelectItem 
+                    key={category} 
+                    value={category}
+                    data-testid={`select-option-${category.toLowerCase().replace(/\s+/g, '-')}`}
+                  >
+                    {category} ({locations.filter(l => l.category === category).length})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

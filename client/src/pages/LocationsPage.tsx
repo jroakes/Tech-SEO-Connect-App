@@ -111,7 +111,7 @@ export default function LocationsPage({ locations }: LocationsPageProps) {
       </div>
 
       <Dialog open={!!selectedLocation} onOpenChange={() => setSelectedLocation(null)}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto" data-testid="dialog-location-detail">
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-2xl max-h-[80vh] overflow-y-auto" data-testid="dialog-location-detail">
           {selectedLocation && (
             <>
               <DialogHeader>
