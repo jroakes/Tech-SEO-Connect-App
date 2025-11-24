@@ -36,10 +36,19 @@ Preferred communication style: Simple, everyday language.
 - Query client configured with aggressive caching (staleTime: Infinity)
 
 **Key Pages**:
-- MapPage: Interactive Leaflet map with location markers, full narratives, and Google/Apple Maps navigation buttons
+- MapPage: Interactive Leaflet map with location markers, collapsible narratives, and Google/Apple Maps navigation buttons
 - SchedulePage: Two-day conference schedule with tabbed interface
-- LocationsPage: Searchable/filterable location directory
+- LocationsPage: Searchable/filterable location directory with Google/Apple Maps navigation on cards
 - GalleryPage: Image upload, display, and moderation with delete capability
+
+**Mobile UX Improvements** (November 2025):
+- All interactive buttons meet 44px minimum tap target requirement (min-h-11)
+- Category filter buttons converted from Badge to Button components for better touch targets
+- Google Maps and Apple Maps buttons displayed side-by-side with flex-1 for equal width
+- Map location narratives collapse by default (line-clamp-3) with click-to-expand functionality
+- Location cards and detail dialogs include Google/Apple Maps navigation buttons
+- Removed coordinate display from Locations page (lat/long no longer shown on cards or dialogs)
+- Consistent button styling across Map and Locations pages for cohesive mobile experience
 
 ### Backend Architecture
 
@@ -109,9 +118,10 @@ Preferred communication style: Simple, everyday language.
 - OpenStreetMap tile layer for map tiles
 - Custom marker icons with category-based color coding
 - Enhanced popups (November 2025):
-  - Full location narratives displayed without truncation
-  - Google Maps and Apple Maps navigation buttons
+  - Collapsible narratives with line-clamp-3 and "Read more"/"Show less" toggle
+  - Google Maps and Apple Maps navigation buttons on same line
   - Opens directions in new tab with proper coordinate URLs
+  - 44px minimum tap targets for all interactive elements
 
 **UI Libraries**:
 - Radix UI for accessible component primitives
