@@ -88,10 +88,10 @@ export default function MapPage({ locations }: MapPageProps) {
           <div className="flex items-center justify-between gap-4 mb-3">
             <h2 className="text-xl font-semibold text-foreground" data-testid="text-map-title">Durham Locations</h2>
             <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={selectAll} data-testid="button-select-all">
+              <Button variant="outline" className="min-h-11" onClick={selectAll} data-testid="button-select-all">
                 All
               </Button>
-              <Button size="sm" variant="outline" onClick={clearAll} data-testid="button-clear-all">
+              <Button variant="outline" className="min-h-11" onClick={clearAll} data-testid="button-clear-all">
                 Clear
               </Button>
             </div>
@@ -101,8 +101,7 @@ export default function MapPage({ locations }: MapPageProps) {
               <Button
                 key={category}
                 variant={selectedCategories.has(category) ? "default" : "outline"}
-                size="sm"
-                className={`min-h-9 ${
+                className={`min-h-11 ${
                   selectedCategories.has(category)
                     ? getCategoryColor(category)
                     : ""
@@ -162,29 +161,27 @@ export default function MapPage({ locations }: MapPageProps) {
                   )}
                   <div className="flex gap-2 mt-3 pt-3 border-t border-border">
                     <Button
-                      size="sm"
                       variant="outline"
-                      className="flex-1 justify-center gap-1.5"
+                      className="flex-1 justify-center gap-1.5 min-h-11"
                       onClick={() => {
                         const url = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
                         window.open(url, '_blank');
                       }}
                       data-testid={`button-google-maps-${idx}`}
                     >
-                      <ExternalLink className="h-3.5 w-3.5" />
+                      <ExternalLink className="h-4 w-4" />
                       Google Maps
                     </Button>
                     <Button
-                      size="sm"
                       variant="outline"
-                      className="flex-1 justify-center gap-1.5"
+                      className="flex-1 justify-center gap-1.5 min-h-11"
                       onClick={() => {
                         const url = `https://maps.apple.com/?q=${location.name}&ll=${location.lat},${location.lng}`;
                         window.open(url, '_blank');
                       }}
                       data-testid={`button-apple-maps-${idx}`}
                     >
-                      <ExternalLink className="h-3.5 w-3.5" />
+                      <ExternalLink className="h-4 w-4" />
                       Apple Maps
                     </Button>
                   </div>

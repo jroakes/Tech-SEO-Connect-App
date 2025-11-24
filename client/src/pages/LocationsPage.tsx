@@ -66,27 +66,27 @@ export default function LocationsPage({ locations }: LocationsPageProps) {
 
           <div className="flex flex-wrap gap-2 mb-2">
             <Button
-              size="sm"
               variant={selectedCategory === null ? "default" : "outline"}
+              className="min-h-11"
               onClick={() => setSelectedCategory(null)}
               data-testid="button-category-all"
             >
               All ({locations.length})
             </Button>
             {categories.map(category => (
-              <Badge
+              <Button
                 key={category}
-                variant="outline"
-                className={`cursor-pointer transition-all hover-elevate active-elevate-2 ${
+                variant={selectedCategory === category ? "default" : "outline"}
+                className={`min-h-11 ${
                   selectedCategory === category
                     ? getCategoryColor(category)
-                    : "bg-transparent"
+                    : ""
                 }`}
                 onClick={() => setSelectedCategory(category)}
-                data-testid={`badge-category-${category.toLowerCase().replace(/\s+/g, '-')}`}
+                data-testid={`button-category-${category.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 {category} ({locations.filter(l => l.category === category).length})
-              </Badge>
+              </Button>
             ))}
           </div>
         </div>
@@ -135,29 +135,27 @@ export default function LocationsPage({ locations }: LocationsPageProps) {
                 <div className="pt-4 border-t border-border">
                   <div className="flex gap-2">
                     <Button
-                      size="sm"
                       variant="outline"
-                      className="flex-1 justify-center gap-1.5"
+                      className="flex-1 justify-center gap-1.5 min-h-11"
                       onClick={() => {
                         const url = `https://www.google.com/maps/search/?api=1&query=${selectedLocation.lat},${selectedLocation.lng}`;
                         window.open(url, '_blank');
                       }}
                       data-testid="button-dialog-google-maps"
                     >
-                      <ExternalLink className="h-3.5 w-3.5" />
+                      <ExternalLink className="h-4 w-4" />
                       Open in Google Maps
                     </Button>
                     <Button
-                      size="sm"
                       variant="outline"
-                      className="flex-1 justify-center gap-1.5"
+                      className="flex-1 justify-center gap-1.5 min-h-11"
                       onClick={() => {
                         const url = `https://maps.apple.com/?q=${selectedLocation.name}&ll=${selectedLocation.lat},${selectedLocation.lng}`;
                         window.open(url, '_blank');
                       }}
                       data-testid="button-dialog-apple-maps"
                     >
-                      <ExternalLink className="h-3.5 w-3.5" />
+                      <ExternalLink className="h-4 w-4" />
                       Open in Apple Maps
                     </Button>
                   </div>

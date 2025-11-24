@@ -49,9 +49,8 @@ export function LocationCard({ location, onClick }: LocationCardProps) {
 
       <div className="flex gap-2 pt-3 border-t border-border">
         <Button
-          size="sm"
           variant="outline"
-          className="flex-1 justify-center gap-1.5"
+          className="flex-1 justify-center gap-1.5 min-h-11"
           onClick={(e) => {
             e.stopPropagation();
             const url = `https://www.google.com/maps/search/?api=1&query=${location.lat},${location.lng}`;
@@ -59,13 +58,12 @@ export function LocationCard({ location, onClick }: LocationCardProps) {
           }}
           data-testid="button-google-maps"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
+          <ExternalLink className="h-4 w-4" />
           Google Maps
         </Button>
         <Button
-          size="sm"
           variant="outline"
-          className="flex-1 justify-center gap-1.5"
+          className="flex-1 justify-center gap-1.5 min-h-11"
           onClick={(e) => {
             e.stopPropagation();
             const url = `https://maps.apple.com/?q=${location.name}&ll=${location.lat},${location.lng}`;
@@ -73,7 +71,7 @@ export function LocationCard({ location, onClick }: LocationCardProps) {
           }}
           data-testid="button-apple-maps"
         >
-          <ExternalLink className="h-3.5 w-3.5" />
+          <ExternalLink className="h-4 w-4" />
           Apple Maps
         </Button>
       </div>
