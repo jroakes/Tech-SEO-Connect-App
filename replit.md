@@ -46,6 +46,9 @@ Preferred communication style: Simple, everyday language.
 - Map button clicks tracked: `{ event: 'map_button_click', map_type: 'google_maps'|'apple_maps', location_name, location_category }`
 - Speaker likes tracked: `{ event: 'speaker_like', speaker_name: session.title, conference_day }`
 - Tracking enabled on Map page popups, Location cards, Location detail dialogs
+- Debug mode: Open browser console and run `enableAnalyticsDebug()` to log dataLayer events to console
+  - Run `disableAnalyticsDebug()` to turn off console logging
+  - Setting persists in localStorage until disabled
 
 **Speaker Like Feature** (November 2025):
 - Heart icon on each speaker session (not breaks) in the schedule

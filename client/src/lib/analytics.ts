@@ -8,10 +8,41 @@ if (typeof window !== 'undefined' && !window.dataLayer) {
   window.dataLayer = [];
 }
 
+const DEBUG_KEY = 'techseo_debug_analytics';
+
+export function isAnalyticsDebugEnabled(): boolean {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(DEBUG_KEY) === 'true';
+}
+
+export function setAnalyticsDebug(enabled: boolean): void {
+  if (typeof window === 'undefined') return;
+  if (enabled) {
+    localStorage.setItem(DEBUG_KEY, 'true');
+    console.log('%c[Analytics Debug] Enabled - dataLayer events will be logged to console', 'color: #0DB47C; font-weight: bold');
+  } else {
+    localStorage.removeItem(DEBUG_KEY);
+    console.log('%c[Analytics Debug] Disabled', 'color: #836152; font-weight: bold');
+  }
+}
+
+if (typeof window !== 'undefined') {
+  (window as unknown as Record<string, unknown>).enableAnalyticsDebug = () => setAnalyticsDebug(true);
+  (window as unknown as Record<string, unknown>).disableAnalyticsDebug = () => setAnalyticsDebug(false);
+}
+
 export function pushToDataLayer(event: Record<string, unknown>) {
   if (typeof window !== 'undefined') {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(event);
+    
+    if (isAnalyticsDebugEnabled()) {
+      console.log(
+        '%c[dataLayer]',
+        'background: #3C4639; color: white; padding: 2px 6px; border-radius: 3px;',
+        event
+      );
+    }
   }
 }
 
