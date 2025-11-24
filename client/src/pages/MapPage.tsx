@@ -31,6 +31,7 @@ const getCategoryIcon = (category: string) => {
 
 export default function MapPage({ locations }: MapPageProps) {
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+  const [expandedNarratives, setExpandedNarratives] = useState<Set<number>>(new Set());
 
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -54,6 +55,16 @@ export default function MapPage({ locations }: MapPageProps) {
 
   const selectAll = () => setSelectedCategories(new Set(categories));
   const clearAll = () => setSelectedCategories(new Set());
+  
+  const toggleNarrative = (idx: number) => {
+    const newExpanded = new Set(expandedNarratives);
+    if (newExpanded.has(idx)) {
+      newExpanded.delete(idx);
+    } else {
+      newExpanded.add(idx);
+    }
+    setExpandedNarratives(newExpanded);
+  };
 
   const filteredLocations = useMemo(() => {
     return locations.filter(loc => selectedCategories.has(loc.category));
@@ -130,9 +141,24 @@ export default function MapPage({ locations }: MapPageProps) {
                     {location.category}
                   </Badge>
                   {location.narrative && (
-                    <p className="text-xs text-muted-foreground mb-3 font-serif leading-relaxed" data-testid={`popup-narrative-${idx}`}>
-                      {location.narrative}
-                    </p>
+                    <div className="mb-3">
+                      <p 
+                        className={`text-xs text-muted-foreground font-serif leading-relaxed cursor-pointer hover:text-foreground transition-colors ${
+                          expandedNarratives.has(idx) ? '' : 'line-clamp-3'
+                        }`}
+                        onClick={() => toggleNarrative(idx)}
+                        data-testid={`popup-narrative-${idx}`}
+                      >
+                        {location.narrative}
+                      </p>
+                      <button
+                        onClick={() => toggleNarrative(idx)}
+                        className="text-xs text-primary hover:underline mt-1"
+                        data-testid={`button-toggle-narrative-${idx}`}
+                      >
+                        {expandedNarratives.has(idx) ? 'Show less' : 'Read more'}
+                      </button>
+                    </div>
                   )}
                   <div className="flex gap-2 mt-3 pt-3 border-t border-border">
                     <Button
