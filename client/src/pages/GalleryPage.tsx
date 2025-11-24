@@ -36,7 +36,7 @@ export default function GalleryPage() {
       setIsUploading(true);
       
       const uploadResponse = await apiRequest("POST", "/api/conference-images/upload", {});
-      const { uploadURL, fullPath, publicPath } = uploadResponse;
+      const { uploadURL, fullPath, publicPath } = await uploadResponse.json();
 
       await fetch(uploadURL, {
         method: "PUT",

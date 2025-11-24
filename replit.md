@@ -36,10 +36,10 @@ Preferred communication style: Simple, everyday language.
 - Query client configured with aggressive caching (staleTime: Infinity)
 
 **Key Pages**:
-- MapPage: Interactive Leaflet map with location markers
+- MapPage: Interactive Leaflet map with location markers, full narratives, and Google/Apple Maps navigation buttons
 - SchedulePage: Two-day conference schedule with tabbed interface
 - LocationsPage: Searchable/filterable location directory
-- GalleryPage: Image upload and display with dialog previews
+- GalleryPage: Image upload, display, and moderation with delete capability
 
 ### Backend Architecture
 
@@ -53,39 +53,48 @@ Preferred communication style: Simple, everyday language.
 **API Structure**:
 - RESTful endpoints under `/api` prefix
 - `/api/kml-data`: Serves location data from KML file
-- `/api/conference-images`: CRUD operations for gallery images
-- `/api/conference-images/upload`: Pre-signed upload URL generation
+- `/api/conference-images`: GET (list) and POST (create) operations for gallery images
+- `/api/conference-images/:id`: DELETE endpoint for image moderation
+- `/api/conference-images/upload`: Pre-signed upload URL generation for object storage
 
 **Data Layer**:
-- In-memory storage (MemStorage class) for conference images
+- PostgreSQL database (DbStorage class) for conference images metadata
 - File-based data for locations (KML parsing)
-- Drizzle ORM configured for PostgreSQL (schema defined but not actively used)
+- Drizzle ORM for database schema management and queries
+- Object deletion removes from both database and Google Cloud Storage
 
-**Architecture Decision**: The application currently uses in-memory storage with file-based location data. The PostgreSQL schema is defined via Drizzle ORM but not implemented, suggesting the app can migrate to database persistence when needed without major refactoring.
+**Architecture Decision**: Conference images use PostgreSQL for metadata persistence with Google Cloud Storage for actual image files. This hybrid approach provides database-backed reliability while leveraging object storage for efficient file serving. Location data remains file-based as it's static conference data that doesn't change.
 
 ### Data Storage Solutions
 
 **Current Implementation**:
 - Location data: Static KML file parsed on client-side load
 - Location narratives: JSON file imported as static asset
-- Conference images: Object storage (Google Cloud Storage via Replit integration) with in-memory metadata
+- Conference images: PostgreSQL database for metadata + Google Cloud Storage for files
+
+**Database Persistence** (November 2025):
+- Conference images migrated from in-memory to PostgreSQL database
+- Metadata (id, imagePath, fullPath, uploadedAt) stored in `conference_images` table
+- Images persist across server restarts and deployments
+- Drizzle ORM with Neon serverless PostgreSQL connection
+- Full CRUD operations: create, list, and delete with cascade to object storage
 
 **Object Storage Integration**:
-- Gallery images are uploaded to Google Cloud Storage using pre-signed URLs
-- Images persist across server restarts and deployments
+- Gallery images uploaded to Google Cloud Storage using pre-signed URLs
 - Public access via `/objects/:objectPath` route that maps to private storage bucket
+- Delete operations remove from both database AND object storage (no orphaned files)
 - Required environment variables (automatically set by Replit):
   - `DEFAULT_OBJECT_STORAGE_BUCKET_ID`: GCS bucket ID
   - `PRIVATE_OBJECT_DIR`: Private directory path within bucket for uploads
   - `PUBLIC_OBJECT_SEARCH_PATHS`: Comma-separated paths for public object resolution
 
-**Prepared for Migration**:
-- Drizzle ORM schema defined for `conference_images` table
-- Database connection configured for Neon PostgreSQL
-- Can migrate image metadata from in-memory to database persistence without changing upload flow
-- Migration infrastructure in place (drizzle-kit)
+**Image Moderation** (November 2025):
+- Delete button on each gallery image with confirmation dialog
+- DELETE endpoint removes image from both database and cloud storage
+- Proper error handling and logging for storage deletion failures
+- Cache invalidation ensures UI updates immediately after deletion
 
-**Rationale**: The in-memory approach allows rapid development and deployment without database setup. The schema-first approach via Drizzle enables zero-downtime migration to persistent storage when scale requires it.
+**Rationale**: The hybrid database + object storage approach provides reliable metadata persistence while leveraging cloud storage for efficient file serving. Images survive server restarts, and the moderation system ensures clean removal without orphaned files.
 
 ### External Dependencies
 
@@ -97,8 +106,12 @@ Preferred communication style: Simple, everyday language.
 
 **Mapping Service**:
 - Leaflet for interactive maps
-- OpenStreetMap tile layer (implied by Leaflet default usage)
+- OpenStreetMap tile layer for map tiles
 - Custom marker icons with category-based color coding
+- Enhanced popups (November 2025):
+  - Full location narratives displayed without truncation
+  - Google Maps and Apple Maps navigation buttons
+  - Opens directions in new tab with proper coordinate URLs
 
 **UI Libraries**:
 - Radix UI for accessible component primitives
@@ -109,9 +122,11 @@ Preferred communication style: Simple, everyday language.
 - Google Fonts: Inter and Source Serif 4
 - Loaded via CDN in index.html
 
-**Database** (configured but not active):
+**Database** (active since November 2025):
 - Neon PostgreSQL via `@neondatabase/serverless`
 - Drizzle ORM for schema management and queries
+- Active tables: `conference_images` with id, imagePath, fullPath, uploadedAt
+- Migration via `npm run db:push` command
 
 **Development Tools**:
 - Replit-specific plugins for runtime error overlay and dev banner
