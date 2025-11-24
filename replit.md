@@ -126,7 +126,7 @@ Preferred communication style: Simple, everyday language.
   - Conference: Office building icon with dark green background (#3C4639)
   - Attractions: Camera icon with teal background (#689581)
   - 32px marker size for improved visibility
-- Dropdown category filter for cleaner mobile UI (November 24, 2025)
+- Dropdown category filter for cleaner mobile UI with high z-index (z-[9999]) to appear above map (November 24, 2025)
 - Enhanced popups (November 2025):
   - Collapsible narratives with line-clamp-3 and "Read more"/"Show less" toggle
   - Google Maps and Apple Maps navigation buttons on same line

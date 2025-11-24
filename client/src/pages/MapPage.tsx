@@ -95,7 +95,7 @@ export default function MapPage({ locations }: MapPageProps) {
               <SelectTrigger className="w-[240px] min-h-11" data-testid="select-category">
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[9999]">
                 <SelectItem value="all" data-testid="select-option-all">All Categories ({locations.length})</SelectItem>
                 {categories.map(category => (
                   <SelectItem 
