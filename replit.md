@@ -36,10 +36,23 @@ Preferred communication style: Simple, everyday language.
 - Query client configured with aggressive caching (staleTime: Infinity)
 
 **Key Pages**:
-- MapPage: Interactive Leaflet map with custom category-specific marker icons, dropdown category filter, collapsible narratives, and Google/Apple Maps navigation buttons
-- SchedulePage: Two-day conference schedule with tabbed interface
-- LocationsPage: Searchable/filterable location directory with Google/Apple Maps navigation on cards and responsive detail dialogs
+- MapPage: Interactive Leaflet map with custom category-specific marker icons, dropdown category filter, collapsible narratives, and Google/Apple Maps navigation buttons with GA4 tracking
+- SchedulePage: Two-day conference schedule with tabbed interface and speaker heart/like feature
+- LocationsPage: Searchable/filterable location directory with Google/Apple Maps navigation on cards and responsive detail dialogs with GA4 tracking
 - GalleryPage: Image upload, display, and moderation with delete capability
+
+**Analytics Tracking** (November 2025):
+- GA4 dataLayer integration via `client/src/lib/analytics.ts`
+- Map button clicks tracked: `{ event: 'map_button_click', map_type: 'google_maps'|'apple_maps', location_name, location_category }`
+- Speaker likes tracked: `{ event: 'speaker_like', speaker_name: session.title, conference_day }`
+- Tracking enabled on Map page popups, Location cards, Location detail dialogs
+
+**Speaker Like Feature** (November 2025):
+- Heart icon on each speaker session (not breaks) in the schedule
+- Grey heart by default, pink after like with rising animation
+- Single-click only (no toggle off) - liked hearts stay pink and become non-clickable
+- Persistence via localStorage with key `techseo_liked_speakers`
+- CSS animation class `animate-heart-rise` for 0.6s rising effect
 
 **Mobile UX Improvements** (November 2025):
 - All interactive buttons meet 44px minimum tap target requirement (min-h-11)
