@@ -1,11 +1,34 @@
+import { useState, useEffect } from "react";
 import type { ScheduleSession } from "@shared/schema";
-import { Clock } from "lucide-react";
+import { Clock, Heart } from "lucide-react";
+import { trackSpeakerLike, isSpeakerLiked, saveLikedSpeaker } from "@/lib/analytics";
 
 interface ScheduleCardProps {
   session: ScheduleSession;
 }
 
 export function ScheduleCard({ session }: ScheduleCardProps) {
+  const sessionKey = `${session.day}_${session.title}`;
+  const [isLiked, setIsLiked] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  
+  useEffect(() => {
+    setIsLiked(isSpeakerLiked(sessionKey));
+  }, [sessionKey]);
+
+  const handleLikeClick = () => {
+    if (isLiked) return;
+    
+    setIsAnimating(true);
+    setIsLiked(true);
+    saveLikedSpeaker(sessionKey);
+    trackSpeakerLike(session.title, session.day);
+    
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 600);
+  };
+
   return (
     <div
       className={`flex items-start gap-4 p-4 border-l-4 transition-all ${
@@ -35,6 +58,38 @@ export function ScheduleCard({ session }: ScheduleCardProps) {
           </p>
         )}
       </div>
+
+      {!session.isBreak && (
+        <div className="relative flex-shrink-0">
+          <button
+            onClick={handleLikeClick}
+            className={`p-2 min-h-11 min-w-11 flex items-center justify-center rounded-md transition-all ${
+              isLiked 
+                ? "cursor-default" 
+                : "hover:bg-muted cursor-pointer"
+            }`}
+            disabled={isLiked}
+            data-testid={`button-like-${session.title.replace(/\s+/g, '-')}`}
+            aria-label={isLiked ? `Liked ${session.title}` : `Like ${session.title}`}
+          >
+            <Heart 
+              className={`h-5 w-5 transition-colors ${
+                isLiked 
+                  ? "fill-pink-500 text-pink-500" 
+                  : "text-muted-foreground hover:text-pink-400"
+              }`}
+            />
+          </button>
+          
+          {isAnimating && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <Heart 
+                className="h-5 w-5 fill-pink-500 text-pink-500 animate-heart-rise"
+              />
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
