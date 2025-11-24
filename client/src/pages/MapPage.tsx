@@ -87,19 +87,20 @@ export default function MapPage({ locations }: MapPageProps) {
           </div>
           <div className="flex flex-wrap gap-2">
             {categories.map(category => (
-              <Badge
+              <Button
                 key={category}
-                variant="outline"
-                className={`cursor-pointer transition-all hover-elevate active-elevate-2 ${
+                variant={selectedCategories.has(category) ? "default" : "outline"}
+                size="sm"
+                className={`min-h-9 ${
                   selectedCategories.has(category)
                     ? getCategoryColor(category)
-                    : "bg-transparent"
+                    : ""
                 }`}
                 onClick={() => toggleCategory(category)}
-                data-testid={`badge-filter-${category.toLowerCase().replace(/\s+/g, '-')}`}
+                data-testid={`button-filter-${category.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 {category} ({locations.filter(l => l.category === category).length})
-              </Badge>
+              </Button>
             ))}
           </div>
         </div>
