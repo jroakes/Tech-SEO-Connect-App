@@ -144,7 +144,7 @@ export default function LocationsPage({ locations }: LocationsPageProps) {
                       data-testid="button-dialog-google-maps"
                     >
                       <ExternalLink className="h-4 w-4" />
-                      Open in Google Maps
+                      Google Maps
                     </Button>
                     <Button
                       variant="outline"
@@ -156,7 +156,7 @@ export default function LocationsPage({ locations }: LocationsPageProps) {
                       data-testid="button-dialog-apple-maps"
                     >
                       <ExternalLink className="h-4 w-4" />
-                      Open in Apple Maps
+                      Apple Maps
                     </Button>
                   </div>
                 </div>

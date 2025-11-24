@@ -49,6 +49,7 @@ Preferred communication style: Simple, everyday language.
 - Map location narratives collapse by default (line-clamp-3) with click-to-expand functionality
 - Location cards and detail dialogs include Google/Apple Maps navigation buttons
 - Location detail dialogs constrained to viewport width on mobile (max-w-[calc(100vw-2rem)]) (November 24, 2025)
+- Navigation button text shortened to "Google Maps"/"Apple Maps" for better mobile fit (November 24, 2025)
 - Removed coordinate display from Locations page (lat/long no longer shown on cards or dialogs)
 - Consistent button styling across Map and Locations pages for cohesive mobile experience
 
