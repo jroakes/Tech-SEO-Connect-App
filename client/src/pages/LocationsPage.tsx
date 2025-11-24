@@ -3,7 +3,7 @@ import { LocationCard } from "../components/LocationCard";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, ExternalLink } from "lucide-react";
 import type { Location } from "@shared/schema";
 import {
   Dialog,
@@ -133,9 +133,34 @@ export default function LocationsPage({ locations }: LocationsPageProps) {
                 )}
 
                 <div className="pt-4 border-t border-border">
-                  <p className="text-xs text-muted-foreground" data-testid="text-dialog-coordinates">
-                    Coordinates: {selectedLocation.lat.toFixed(4)}, {selectedLocation.lng.toFixed(4)}
-                  </p>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="flex-1 justify-center gap-1.5"
+                      onClick={() => {
+                        const url = `https://www.google.com/maps/search/?api=1&query=${selectedLocation.lat},${selectedLocation.lng}`;
+                        window.open(url, '_blank');
+                      }}
+                      data-testid="button-dialog-google-maps"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Open in Google Maps
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="flex-1 justify-center gap-1.5"
+                      onClick={() => {
+                        const url = `https://maps.apple.com/?q=${selectedLocation.name}&ll=${selectedLocation.lat},${selectedLocation.lng}`;
+                        window.open(url, '_blank');
+                      }}
+                      data-testid="button-dialog-apple-maps"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                      Open in Apple Maps
+                    </Button>
+                  </div>
                 </div>
               </div>
             </>
