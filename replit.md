@@ -36,17 +36,19 @@ Preferred communication style: Simple, everyday language.
 - Query client configured with aggressive caching (staleTime: Infinity)
 
 **Key Pages**:
-- MapPage: Interactive Leaflet map with location markers, collapsible narratives, and Google/Apple Maps navigation buttons
+- MapPage: Interactive Leaflet map with custom category-specific marker icons, dropdown category filter, collapsible narratives, and Google/Apple Maps navigation buttons
 - SchedulePage: Two-day conference schedule with tabbed interface
-- LocationsPage: Searchable/filterable location directory with Google/Apple Maps navigation on cards
+- LocationsPage: Searchable/filterable location directory with Google/Apple Maps navigation on cards and responsive detail dialogs
 - GalleryPage: Image upload, display, and moderation with delete capability
 
 **Mobile UX Improvements** (November 2025):
 - All interactive buttons meet 44px minimum tap target requirement (min-h-11)
 - Category filter buttons converted from Badge to Button components for better touch targets
+- Map category filters replaced with compact dropdown select box (November 24, 2025)
 - Google Maps and Apple Maps buttons displayed side-by-side with flex-1 for equal width
 - Map location narratives collapse by default (line-clamp-3) with click-to-expand functionality
 - Location cards and detail dialogs include Google/Apple Maps navigation buttons
+- Location detail dialogs constrained to viewport width on mobile (max-w-[calc(100vw-2rem)]) (November 24, 2025)
 - Removed coordinate display from Locations page (lat/long no longer shown on cards or dialogs)
 - Consistent button styling across Map and Locations pages for cohesive mobile experience
 
@@ -116,7 +118,15 @@ Preferred communication style: Simple, everyday language.
 **Mapping Service**:
 - Leaflet for interactive maps
 - OpenStreetMap tile layer for map tiles
-- Custom marker icons with category-based color coding
+- Custom marker icons with category-specific SVG icons and color coding (November 24, 2025):
+  - Hotels: Building icon with blue background (#6A8EC4)
+  - Lunch/Dinner: Utensils icon with green background (#0DB47C)
+  - Coffee: Coffee cup icon with green background (#0DB47C)
+  - Drinks: Martini glass icon with brown background (#836152)
+  - Conference: Office building icon with dark green background (#3C4639)
+  - Attractions: Camera icon with teal background (#689581)
+  - 32px marker size for improved visibility
+- Dropdown category filter for cleaner mobile UI (November 24, 2025)
 - Enhanced popups (November 2025):
   - Collapsible narratives with line-clamp-3 and "Read more"/"Show less" toggle
   - Google Maps and Apple Maps navigation buttons on same line
