@@ -57,6 +57,17 @@ Preferred communication style: Simple, everyday language.
 - Persistence via localStorage with key `techseo_liked_speakers`
 - CSS animation class `animate-heart-rise` for 0.6s rising effect
 
+**Progressive Web App (PWA)** (November 2025):
+- Service worker for offline support and caching strategy
+- Web manifest (manifest.json) with app metadata and shortcuts
+- PWA meta tags in index.html for iOS and Android support
+- Service worker registration in index.html (register at `/service-worker.js`)
+- Caching strategy: network-first for API calls, cache-first for static assets
+- App can be installed on mobile devices and accessed offline
+- Touch icon (tc-1_1763763013990.jpg) configured for home screen
+- Theme color matches conference branding (#3C4639)
+- Hosted at app.techseoconnect.com with HTTPS enabled
+
 **Mobile UX Improvements** (November 2025):
 - All interactive buttons meet 44px minimum tap target requirement (min-h-11)
 - Category filter buttons converted from Badge to Button components for better touch targets
