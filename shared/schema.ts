@@ -31,4 +31,5 @@ export interface ScheduleSession {
   duration: number;
   isBreak: boolean;
   day: 1 | 2;
+  speaker?: string;
 }

@@ -38,13 +38,6 @@ export default function SchedulePage() {
             ))}
           </TabsContent>
         </Tabs>
-
-        <div className="mt-8 p-4 border border-card-border bg-muted/30">
-          <p className="text-sm text-muted-foreground" data-testid="text-schedule-note">
-            All sessions are 30 minutes. Breaks provide time for networking and refreshments.
-            The schedule runs from 8:00 AM to 4:55 PM each day.
-          </p>
-        </div>
       </div>
     </div>
   );

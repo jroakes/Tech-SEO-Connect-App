@@ -52,9 +52,9 @@ export function ScheduleCard({ session }: ScheduleCardProps) {
         <h3 className={`text-base font-semibold ${session.isBreak ? "text-chart-4" : "text-foreground"}`} data-testid="text-session-title">
           {session.title}
         </h3>
-        {!session.isBreak && (
-          <p className="text-sm text-muted-foreground mt-1" data-testid="text-session-description">
-            30-minute session
+        {!session.isBreak && session.speaker && (
+          <p className="text-sm text-muted-foreground mt-1" data-testid="text-session-speaker">
+            {session.speaker}
           </p>
         )}
       </div>
