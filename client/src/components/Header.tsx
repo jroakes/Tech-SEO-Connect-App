@@ -7,7 +7,7 @@ export function Header() {
   const [location] = useLocation();
 
   const navItems = [
-    { path: "/", label: "Map", icon: MapPin },
+    { path: "/map", label: "Map", icon: MapPin },
     { path: "/schedule", label: "Schedule", icon: Calendar },
     { path: "/locations", label: "Locations", icon: Building2 },
     { path: "/sponsors", label: "Sponsors", icon: Award },

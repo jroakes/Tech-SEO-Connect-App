@@ -56,7 +56,7 @@ function Router() {
 
   return (
     <Switch>
-      <Route path="/">
+      <Route path="/map">
         <MapPage locations={locations} />
       </Route>
       <Route path="/schedule">
@@ -67,6 +67,9 @@ function Router() {
       </Route>
       <Route path="/sponsors">
         <SponsorsPage />
+      </Route>
+      <Route path="/">
+        <SchedulePage />
       </Route>
       <Route component={NotFound} />
     </Switch>
