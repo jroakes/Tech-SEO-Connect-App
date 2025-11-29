@@ -1,6 +1,6 @@
 declare global {
   interface Window {
-    dataLayer: Record<string, unknown>[];
+    dataLayer: (Record<string, unknown> | unknown[])[];
     gtag?: (...args: unknown[]) => void;
     setAnalyticsDebug?: (enabled: boolean) => void;
     enableAnalyticsDebug?: () => void;
@@ -16,21 +16,12 @@ const GA_ID = 'G-QRWD85BG5Z';
 
 export function initializeGtag(): void {
   if (typeof window !== 'undefined') {
-    // Wait for Google's gtag script to load
-    const checkGtagLoaded = setInterval(() => {
-      if (typeof window.gtag === 'function') {
-        clearInterval(checkGtagLoaded);
-        window.gtag!('js', new Date());
-        window.gtag!('config', GA_ID);
-      }
-    }, 100);
-    
-    // Fallback: initialize after a delay if script hasn't loaded
-    setTimeout(() => {
-      if (typeof window.gtag === 'function') {
-        window.gtag!('config', GA_ID);
-      }
-    }, 2000);
+    window.dataLayer = window.dataLayer || [];
+    const gtag = (...args: unknown[]): void => {
+      window.dataLayer!.push(args);
+    };
+    gtag('js', new Date());
+    gtag('config', GA_ID);
   }
 }
 
