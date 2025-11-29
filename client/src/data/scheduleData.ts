@@ -18,7 +18,7 @@ export const scheduleDay1: ScheduleSession[] = [
   { time: "4:00 PM", title: "Behind the Scenes of Building Scalable Data Products for SEOs", duration: 30, isBreak: false, day: 1, speaker: "Baruch Toledano" },
   { time: "4:30 PM", title: "Video SEO – The Shortcut to AIO Visibility", duration: 30, isBreak: false, day: 1, speaker: "Cindy Krum" },
   { time: "5:00 PM", title: "Closing Remarks", duration: 10, isBreak: true, day: 1 },
-  { time: "5:10 PM", title: "Happy Hour at Club Era", duration: 110, isBreak: true, day: 1 },
+  { time: "5:10 PM", title: "Happy Hour at Club Era", duration: 120, isBreak: true, day: 1 },
 ];
 
 export const scheduleDay2: ScheduleSession[] = [

@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "./components/Header";
+import { SplashScreen } from "./components/SplashScreen";
 import MapPage from "./pages/MapPage";
 import SchedulePage from "./pages/SchedulePage";
 import LocationsPage from "./pages/LocationsPage";
@@ -73,9 +74,12 @@ function Router() {
 }
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
+        {showSplash && <SplashScreen onAnimationComplete={() => setShowSplash(false)} />}
         <div className="min-h-screen bg-background">
           <Header />
           <Router />

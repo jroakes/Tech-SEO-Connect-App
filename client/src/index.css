@@ -325,3 +325,37 @@
     inset: -1px;
   }
 }
+
+/* Splash Screen Animations */
+@keyframes splash-zoom-in {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes splash-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes splash-pause {
+  0%, 100% {
+    transform: scale(1);
+  }
+}
+
+.animate-splash-sequence {
+  animation: 
+    splash-zoom-in 0.6s ease-out forwards,
+    splash-bounce 0.4s ease-in-out 0.6s forwards,
+    splash-pause 1s linear 1s forwards;
+}

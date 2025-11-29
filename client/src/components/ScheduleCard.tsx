@@ -44,7 +44,9 @@ export function ScheduleCard({ session }: ScheduleCardProps) {
         </div>
         <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
           <Clock className="h-3 w-3" />
-          <span data-testid="text-session-duration">{session.duration}m</span>
+          <span data-testid="text-session-duration">
+            {session.duration === 120 ? "2h" : `${session.duration}m`}
+          </span>
         </div>
       </div>
 
