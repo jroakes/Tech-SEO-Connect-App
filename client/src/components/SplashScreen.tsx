@@ -10,15 +10,15 @@ export function SplashScreen({ onAnimationComplete }: SplashScreenProps) {
 
   useEffect(() => {
     // Animation sequence: 
-    // - Zoom in: 600ms
-    // - Bounce: 400ms
-    // - Pause: 1000ms
+    // - Zoom in: 1000ms
+    // - Bounce: 600ms
+    // - Pause: 1500ms
     // - Fade out: 300ms
-    // Total: 2300ms
+    // Total: 3100ms
     const timer = setTimeout(() => {
       setIsVisible(false);
       setTimeout(onAnimationComplete, 300);
-    }, 2300);
+    }, 3100);
 
     return () => clearTimeout(timer);
   }, [onAnimationComplete]);
@@ -34,7 +34,7 @@ export function SplashScreen({ onAnimationComplete }: SplashScreenProps) {
         <img
           src={logoPath}
           alt="Tech SEO Connect"
-          className="w-32 h-32 md:w-48 md:h-48 object-contain"
+          className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 object-contain"
         />
       </div>
     </div>
