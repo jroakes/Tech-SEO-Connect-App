@@ -141,7 +141,7 @@ export default function MapPage({ locations }: MapPageProps) {
       <div className="flex-1 relative" data-testid="map-container">
         <MapContainer
           center={center}
-          zoom={14}
+          zoom={15}
           style={{ height: "100%", width: "100%" }}
           scrollWheelZoom={true}
         >
