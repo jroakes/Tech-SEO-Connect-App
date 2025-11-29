@@ -2,6 +2,9 @@ declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
     gtag?: (...args: unknown[]) => void;
+    setAnalyticsDebug?: (enabled: boolean) => void;
+    enableAnalyticsDebug?: () => void;
+    disableAnalyticsDebug?: () => void;
   }
 }
 
@@ -13,15 +16,21 @@ const GA_ID = 'G-QRWD85BG5Z';
 
 export function initializeGtag(): void {
   if (typeof window !== 'undefined') {
-    window.dataLayer = window.dataLayer || [];
-    const gtag = function(...args: unknown[]) {
-      window.dataLayer!.push(Object.fromEntries(
-        typeof args[0] === 'string' ? [['command', args[0]], ...args.slice(1).map((v, i) => [i, v])] : []
-      ) as Record<string, unknown>);
-    };
-    gtag('js', new Date());
-    gtag('config', GA_ID);
-    window.gtag = gtag;
+    // Wait for Google's gtag script to load
+    const checkGtagLoaded = setInterval(() => {
+      if (typeof window.gtag === 'function') {
+        clearInterval(checkGtagLoaded);
+        window.gtag!('js', new Date());
+        window.gtag!('config', GA_ID);
+      }
+    }, 100);
+    
+    // Fallback: initialize after a delay if script hasn't loaded
+    setTimeout(() => {
+      if (typeof window.gtag === 'function') {
+        window.gtag!('config', GA_ID);
+      }
+    }, 2000);
   }
 }
 
@@ -44,8 +53,9 @@ export function setAnalyticsDebug(enabled: boolean): void {
 }
 
 if (typeof window !== 'undefined') {
-  (window as unknown as Record<string, unknown>).enableAnalyticsDebug = () => setAnalyticsDebug(true);
-  (window as unknown as Record<string, unknown>).disableAnalyticsDebug = () => setAnalyticsDebug(false);
+  window.setAnalyticsDebug = setAnalyticsDebug;
+  window.enableAnalyticsDebug = () => setAnalyticsDebug(true);
+  window.disableAnalyticsDebug = () => setAnalyticsDebug(false);
 }
 
 export function pushToDataLayer(event: Record<string, unknown>) {
