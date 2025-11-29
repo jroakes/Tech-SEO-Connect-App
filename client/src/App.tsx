@@ -57,10 +57,10 @@ function Router() {
   return (
     <Switch>
       <Route path="/">
-        <MapPage locations={locations} />
-      </Route>
-      <Route path="/schedule">
         <SchedulePage />
+      </Route>
+      <Route path="/map">
+        <MapPage locations={locations} />
       </Route>
       <Route path="/locations">
         <LocationsPage locations={locations} />
