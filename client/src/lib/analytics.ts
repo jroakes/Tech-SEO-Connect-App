@@ -12,18 +12,8 @@ if (typeof window !== 'undefined' && !window.dataLayer) {
   window.dataLayer = [];
 }
 
-const GA_ID = 'G-QRWD85BG5Z';
-
-export function initializeGtag(): void {
-  if (typeof window !== 'undefined') {
-    window.dataLayer = window.dataLayer || [];
-    const gtag = (...args: unknown[]): void => {
-      window.dataLayer!.push(args);
-    };
-    gtag('js', new Date());
-    gtag('config', GA_ID);
-  }
-}
+// Google gtag.js script in index.html automatically initializes and tracks page views
+// No additional initialization needed - the script handles all GA4 setup
 
 const DEBUG_KEY = 'techseo_debug_analytics';
 
