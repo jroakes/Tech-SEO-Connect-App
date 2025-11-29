@@ -13,6 +13,7 @@ import NotFound from "@/pages/not-found";
 import { useEffect, useState } from "react";
 import type { Location } from "@shared/schema";
 import { parseKML } from "./lib/kmlParser";
+import { initializeGtag } from "./lib/analytics";
 import narrativesData from "@assets/durham-locations-narratives_1763765760597.json";
 
 function RedirectToSchedule() {
@@ -87,6 +88,10 @@ function Router() {
 function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [, setLocation] = useLocation();
+
+  useEffect(() => {
+    initializeGtag();
+  }, []);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
