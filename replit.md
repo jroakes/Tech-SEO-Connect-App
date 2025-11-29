@@ -28,7 +28,7 @@ Preferred communication style: Simple, everyday language.
 - Typography: Inter for UI elements, Source Serif 4 for narrative content
 - Mobile-first responsive design approach
 
-**Routing**: wouter for lightweight client-side routing with default route `/` redirecting to `/schedule` (November 29, 2025)
+**Routing**: wouter for lightweight client-side routing
 
 **State Management**: 
 - @tanstack/react-query for server state and API data caching
@@ -37,7 +37,7 @@ Preferred communication style: Simple, everyday language.
 
 **Key Pages**:
 - MapPage: Interactive Leaflet map with custom category-specific marker icons, dropdown category filter, collapsible narratives, and Google/Apple Maps navigation buttons with GA4 tracking
-- SchedulePage: Two-day conference schedule with tabbed interface and speaker heart/like feature (default landing page)
+- SchedulePage: Two-day conference schedule with tabbed interface and speaker heart/like feature
 - LocationsPage: Searchable/filterable location directory with Google/Apple Maps navigation on cards and responsive detail dialogs with GA4 tracking
 - SponsorsPage: Display of conference sponsor logos in a responsive grid layout
 
@@ -67,12 +67,6 @@ Preferred communication style: Simple, everyday language.
 - Touch icon (tc-1_1763763013990.jpg) configured for home screen
 - Theme color matches conference branding (#3C4639)
 - Hosted at app.techseoconnect.com with HTTPS enabled
-
-**Splash Screen Animation** (November 29, 2025):
-- Animated loading screen on app init with green background (#51AE7F) matching logo
-- Sequence: 1s zoom-in, 0.6s bounce, 1.5s pause, 0.3s fade (3.1s total)
-- Logo scales responsively: 256px base (mobile) to 320px (desktop)
-- Plays before app content loads
 
 **Mobile UX Improvements** (November 2025):
 - All interactive buttons meet 44px minimum tap target requirement (min-h-11)
@@ -143,21 +137,15 @@ Preferred communication style: Simple, everyday language.
 
 ### External Dependencies
 
-**Map Tiling Service** (November 29, 2025):
-- MapTiler API for tile rendering (production-ready, no rate limiting concerns)
-- API key stored as encrypted secret: `VITE_MAPTILER_API_KEY`
-- Map style: OpenStreetMap (MapTiler version) - comprehensive POI coverage with readable street names and building outlines
-- Leaflet for interactive maps with react-leaflet integration
-- Custom marker icons with category-specific colors and SVG icons
-- Features: building footprints, points of interest (shops, parking, transportation, amenities), street names at downtown zoom level
-
 **Cloud Storage**: 
 - Google Cloud Storage via `@google-cloud/storage`
 - Replit Object Storage integration for image uploads
 - Pre-signed URL pattern for secure client-side uploads
+- Environment variable `PUBLIC_OBJECT_SEARCH_PATHS` for bucket configuration
 
 **Mapping Service**:
 - Leaflet for interactive maps
+- OpenStreetMap tile layer for map tiles
 - Custom marker icons with category-specific SVG icons and color coding (November 24, 2025):
   - Hotels: Building icon with blue background (#6A8EC4)
   - Lunch/Dinner: Utensils icon with green background (#0DB47C)
