@@ -7,7 +7,7 @@ import { Header } from "./components/Header";
 import MapPage from "./pages/MapPage";
 import SchedulePage from "./pages/SchedulePage";
 import LocationsPage from "./pages/LocationsPage";
-import GalleryPage from "./pages/GalleryPage";
+import SponsorsPage from "./pages/SponsorsPage";
 import NotFound from "@/pages/not-found";
 import { useEffect, useState } from "react";
 import type { Location } from "@shared/schema";
@@ -64,8 +64,8 @@ function Router() {
       <Route path="/locations">
         <LocationsPage locations={locations} />
       </Route>
-      <Route path="/gallery">
-        <GalleryPage />
+      <Route path="/sponsors">
+        <SponsorsPage />
       </Route>
       <Route component={NotFound} />
     </Switch>

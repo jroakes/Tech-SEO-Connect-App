@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import logoIcon from "@assets/tc-1_1763763013990.jpg";
 import logoFull from "@assets/tc-2_1763763013990.jpg";
-import { MapPin, Calendar, Building2, ImageIcon } from "lucide-react";
+import { MapPin, Calendar, Building2, Award } from "lucide-react";
 
 export function Header() {
   const [location] = useLocation();
@@ -10,7 +10,7 @@ export function Header() {
     { path: "/", label: "Map", icon: MapPin },
     { path: "/schedule", label: "Schedule", icon: Calendar },
     { path: "/locations", label: "Locations", icon: Building2 },
-    { path: "/gallery", label: "Gallery", icon: ImageIcon },
+    { path: "/sponsors", label: "Sponsors", icon: Award },
   ];
 
   return (

@@ -39,7 +39,7 @@ Preferred communication style: Simple, everyday language.
 - MapPage: Interactive Leaflet map with custom category-specific marker icons, dropdown category filter, collapsible narratives, and Google/Apple Maps navigation buttons with GA4 tracking
 - SchedulePage: Two-day conference schedule with tabbed interface and speaker heart/like feature
 - LocationsPage: Searchable/filterable location directory with Google/Apple Maps navigation on cards and responsive detail dialogs with GA4 tracking
-- GalleryPage: Image upload, display, and moderation with delete capability
+- SponsorsPage: Display of conference sponsor logos in a responsive grid layout
 
 **Analytics Tracking** (November 2025):
 - GA4 dataLayer integration via `client/src/lib/analytics.ts`
