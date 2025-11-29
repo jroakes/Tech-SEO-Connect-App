@@ -1,11 +1,28 @@
 declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
 if (typeof window !== 'undefined' && !window.dataLayer) {
   window.dataLayer = [];
+}
+
+const GA_ID = 'G-QRWD85BG5Z';
+
+export function initializeGtag(): void {
+  if (typeof window !== 'undefined') {
+    window.dataLayer = window.dataLayer || [];
+    const gtag = function(...args: unknown[]) {
+      window.dataLayer!.push(Object.fromEntries(
+        typeof args[0] === 'string' ? [['command', args[0]], ...args.slice(1).map((v, i) => [i, v])] : []
+      ) as Record<string, unknown>);
+    };
+    gtag('js', new Date());
+    gtag('config', GA_ID);
+    window.gtag = gtag;
+  }
 }
 
 const DEBUG_KEY = 'techseo_debug_analytics';
