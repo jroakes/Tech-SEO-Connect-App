@@ -1,29 +1,31 @@
-const CACHE_NAME = 'techseo-v1';
+// Service Worker for Tech SEO Connect PWA
+const CACHE_NAME = 'techseo-connect-v1';
+const RUNTIME_CACHE = 'techseo-connect-runtime';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/favicon.png'
 ];
 
+// Install event - cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS).catch(() => {
-        // Silently fail if assets aren't available during install
-        return Promise.resolve();
+        // Ignore errors during initial cache - app will still work
       });
     })
   );
   self.skipWaiting();
 });
 
+// Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
+          if (cacheName !== CACHE_NAME && cacheName !== RUNTIME_CACHE) {
             return caches.delete(cacheName);
           }
         })
@@ -33,31 +35,58 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// Fetch event - network first, fall back to cache
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  const url = new URL(request.url);
 
-  // Network-first for API calls
-  if (url.pathname.startsWith('/api/')) {
+  // Skip non-GET requests
+  if (request.method !== 'GET') {
+    return;
+  }
+
+  // For API calls, use network first
+  if (request.url.includes('/api/')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
           if (response.ok) {
-            const cache = caches.open(CACHE_NAME);
-            cache.then((c) => c.put(request, response.clone()));
+            const responseClone = response.clone();
+            caches.open(RUNTIME_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
           }
           return response;
         })
         .catch(() => {
-          return caches.match(request);
+          return caches.match(request).then((response) => {
+            return response || new Response('Offline - API not available', { status: 503 });
+          });
         })
     );
-  } else {
-    // Cache-first for static assets
-    event.respondWith(
-      caches.match(request).then((response) => {
-        return response || fetch(request);
-      })
-    );
+    return;
   }
+
+  // For other requests, use cache first, fall back to network
+  event.respondWith(
+    caches.match(request).then((response) => {
+      if (response) {
+        return response;
+      }
+      return fetch(request)
+        .then((response) => {
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+          const responseClone = response.clone();
+          caches.open(RUNTIME_CACHE).then((cache) => {
+            cache.put(request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Return offline page or placeholder for failed requests
+          return new Response('Offline - Page not available', { status: 503 });
+        });
+    })
+  );
 });
