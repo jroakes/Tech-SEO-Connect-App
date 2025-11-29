@@ -25,9 +25,10 @@ export function SplashScreen({ onAnimationComplete }: SplashScreenProps) {
 
   return (
     <div
-      className={`fixed inset-0 flex items-center justify-center bg-[#09b27b] z-50 transition-opacity duration-300 ${
+      className={`fixed inset-0 flex items-center justify-center bg-[#51AE7F] z-[9999] transition-opacity duration-300 ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
+      style={{ pointerEvents: isVisible ? "auto" : "none" }}
     >
       <div className="animate-splash-sequence">
         <img
