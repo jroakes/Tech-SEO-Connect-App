@@ -40,17 +40,24 @@ if (typeof window !== 'undefined') {
 }
 
 export function pushToDataLayer(event: Record<string, unknown>) {
-  if (typeof window !== 'undefined') {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(event);
-    
-    if (isAnalyticsDebugEnabled()) {
-      console.log(
-        '%c[dataLayer]',
-        'background: #3C4639; color: white; padding: 2px 6px; border-radius: 3px;',
-        event
-      );
-    }
+  if (typeof window === 'undefined') return;
+  
+  const eventName = event.event as string;
+  const eventData = { ...event };
+  delete eventData.event;
+  
+  // Use gtag() function which is initialized by the gtag.js script in index.html
+  if (window.gtag) {
+    window.gtag('event', eventName, eventData);
+  }
+  
+  if (isAnalyticsDebugEnabled()) {
+    console.log(
+      '%c[GA4 Event]',
+      'background: #3C4639; color: white; padding: 2px 6px; border-radius: 3px;',
+      eventName,
+      eventData
+    );
   }
 }
 
