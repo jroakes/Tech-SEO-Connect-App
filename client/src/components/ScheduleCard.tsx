@@ -22,7 +22,7 @@ export function ScheduleCard({ session }: ScheduleCardProps) {
     setIsAnimating(true);
     setIsLiked(true);
     saveLikedSpeaker(sessionKey);
-    trackSpeakerLike(session.title, session.day);
+    trackSpeakerLike(session.speaker || session.title, session.day);
     
     setTimeout(() => {
       setIsAnimating(false);
