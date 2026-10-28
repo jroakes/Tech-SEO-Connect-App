@@ -1,0 +1,366 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* LIGHT MODE */
+:root {
+  --button-outline: rgba(0,0,0, .10);
+  --badge-outline: rgba(0,0,0, .05);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(0,0,0, .03);
+  --elevate-2: rgba(0,0,0, .08);
+  --background: 0 0% 100%;
+  --foreground: 120 8% 22%;
+  --border: 25 14% 74%;
+  --card: 0 0% 100%;
+  --card-foreground: 120 8% 22%;
+  --card-border: 25 14% 74%;
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 120 8% 22%;
+  --sidebar-border: 25 14% 74%;
+  --sidebar-primary: 162 88% 38%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 25 17% 86%;
+  --sidebar-accent-foreground: 120 8% 22%;
+  --sidebar-ring: 162 88% 38%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 120 8% 22%;
+  --popover-border: 25 14% 74%;
+  --primary: 162 88% 38%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 25 17% 86%;
+  --secondary-foreground: 120 8% 22%;
+  --muted: 25 17% 86%;
+  --muted-foreground: 120 5% 45%;
+  --accent: 25 17% 86%;
+  --accent-foreground: 120 8% 22%;
+  --destructive: 0 75% 42%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 25 14% 68%;
+  --ring: 162 88% 38%;
+  --chart-1: 162 88% 38%;
+  --chart-2: 210 65% 58%;
+  --chart-3: 25 45% 52%;
+  --chart-4: 150 35% 53%;
+  --chart-5: 120 8% 22%;
+  --font-sans: Inter, sans-serif;
+  --font-serif: Source Serif 4, serif;
+  --font-mono: monospace;
+  --radius: .5rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(120 10% 20% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(120 10% 20% / 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(120 10% 20% / 0.00), 0px 1px 2px -1px hsl(120 10% 20% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(120 10% 20% / 0.00), 0px 1px 2px -1px hsl(120 10% 20% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(120 10% 20% / 0.00), 0px 2px 4px -1px hsl(120 10% 20% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(120 10% 20% / 0.00), 0px 4px 6px -1px hsl(120 10% 20% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(120 10% 20% / 0.00), 0px 8px 10px -1px hsl(120 10% 20% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(120 10% 20% / 0.00);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+
+/* Fallback for older browsers */
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --primary-border: hsl(var(--primary));
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --secondary-border: hsl(var(--secondary));
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --muted-border: hsl(var(--muted));
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --accent-border: hsl(var(--accent));
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --destructive-border: hsl(var(--destructive));
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+}
+
+.dark {
+  --button-outline: rgba(255,255,255, .10);
+  --badge-outline: rgba(255,255,255, .05);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(255,255,255, .04);
+  --elevate-2: rgba(255,255,255, .09);
+  --background: 120 8% 12%;
+  --foreground: 25 17% 88%;
+  --border: 120 5% 24%;
+  --card: 120 8% 14%;
+  --card-foreground: 25 17% 88%;
+  --card-border: 120 5% 24%;
+  --sidebar: 120 8% 14%;
+  --sidebar-foreground: 25 17% 88%;
+  --sidebar-border: 120 5% 24%;
+  --sidebar-primary: 162 88% 38%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 120 5% 20%;
+  --sidebar-accent-foreground: 25 17% 88%;
+  --sidebar-ring: 162 88% 38%;
+  --popover: 120 8% 14%;
+  --popover-foreground: 25 17% 88%;
+  --popover-border: 120 5% 24%;
+  --primary: 162 88% 42%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 120 5% 20%;
+  --secondary-foreground: 25 17% 88%;
+  --muted: 120 5% 20%;
+  --muted-foreground: 25 10% 60%;
+  --accent: 120 5% 20%;
+  --accent-foreground: 25 17% 88%;
+  --destructive: 0 75% 45%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 120 5% 32%;
+  --ring: 162 88% 42%;
+  --chart-1: 162 88% 48%;
+  --chart-2: 210 65% 62%;
+  --chart-3: 25 50% 58%;
+  --chart-4: 150 40% 58%;
+  --chart-5: 25 17% 75%;
+  --shadow-2xs: 0px 2px 0px 0px hsl(120 5% 10% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(120 5% 10% / 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(120 5% 10% / 0.00), 0px 1px 2px -1px hsl(120 5% 10% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(120 5% 10% / 0.00), 0px 1px 2px -1px hsl(120 5% 10% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(120 5% 10% / 0.00), 0px 2px 4px -1px hsl(120 5% 10% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(120 5% 10% / 0.00), 0px 4px 6px -1px hsl(120 5% 10% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(120 5% 10% / 0.00), 0px 8px 10px -1px hsl(120 5% 10% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(120 5% 10% / 0.00);
+
+/* Fallback for older browsers */
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-primary-border: hsl(from hsl(var(--sidebar-primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --sidebar-accent-border: hsl(from hsl(var(--sidebar-accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --primary-border: hsl(var(--primary));
+  --primary-border: hsl(from hsl(var(--primary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --secondary-border: hsl(var(--secondary));
+  --secondary-border: hsl(from hsl(var(--secondary)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --muted-border: hsl(var(--muted));
+  --muted-border: hsl(from hsl(var(--muted)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --accent-border: hsl(var(--accent));
+  --accent-border: hsl(from hsl(var(--accent)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+
+  /* Fallback for older browsers */
+  --destructive-border: hsl(var(--destructive));
+  --destructive-border: hsl(from hsl(var(--destructive)) h s calc(l + var(--opaque-button-border-intensity)) / alpha);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--card-border));
+}
+
+.leaflet-popup-tip {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--card-border));
+}
+
+@keyframes heart-rise {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-16px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-28px) scale(1);
+  }
+}
+
+.animate-heart-rise {
+  animation: heart-rise 0.6s ease-out forwards;
+}
+
+/**
+ * Using the elevate system.
+ * Automatic contrast adjustment.
+ *
+ * <element className="hover-elevate" />
+ * <element className="active-elevate-2" />
+ *
+ * // Using the tailwind utility when a data attribute is "on"
+ * <element className="toggle-elevate data-[state=on]:toggle-elevated" />
+ * // Or manually controlling the toggle state
+ * <element className="toggle-elevate toggle-elevated" />
+ *
+ * Elevation systems have to handle many states.
+ * - not-hovered, vs. hovered vs. active  (three mutually exclusive states)
+ * - toggled or not
+ * - focused or not (this is not handled with these utilities)
+ *
+ * Even without handling focused or not, this is six possible combinations that
+ * need to be distinguished from eachother visually.
+ */
+@layer utilities {
+
+  /* Hide ugly search cancel button in Chrome until we can style it properly */
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+
+  /* Placeholder styling for contentEditable div */
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted-foreground));
+    pointer-events: none;
+  }
+
+  /* .no-default-hover-elevate/no-default-active-elevate is an escape hatch so consumers of
+   * buttons/badges can remove the automatic brightness adjustment on interactions
+   * and program their own. */
+  .no-default-hover-elevate {}
+
+  .no-default-active-elevate {}
+
+
+  /**
+   * Toggleable backgrounds go behind the content. Hoverable/active goes on top.
+   * This way they can stack/compound. Both will overlap the parent's borders!
+   * So borders will be automatically adjusted both on toggle, and hover/active,
+   * and they will be compounded.
+   */
+  .toggle-elevate::before,
+  .toggle-elevate-2::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    /*border-radius: inherit;   match rounded corners */
+    border-radius: inherit;
+    z-index: -1;
+    /* sits behind content but above backdrop */
+  }
+
+  .toggle-elevate.toggle-elevated::before {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
+  .border.toggle-elevate::before {
+    inset: -1px;
+  }
+
+  /* Does not work on elements with overflow:hidden! */
+  .hover-elevate:not(.no-default-hover-elevate),
+  .active-elevate:not(.no-default-active-elevate),
+  .hover-elevate-2:not(.no-default-hover-elevate),
+  .active-elevate-2:not(.no-default-active-elevate) {
+    position: relative;
+    z-index: 0;
+  }
+
+  .hover-elevate:not(.no-default-hover-elevate)::after,
+  .active-elevate:not(.no-default-active-elevate)::after,
+  .hover-elevate-2:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:not(.no-default-active-elevate)::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0px;
+    /*border-radius: inherit;   match rounded corners */
+    border-radius: inherit;
+    z-index: 999;
+    /* sits in front of content */
+  }
+
+  .hover-elevate:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-1);
+  }
+
+  .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
+  .active-elevate-2:active:not(.no-default-active-elevate)::after {
+    background-color: var(--elevate-2);
+  }
+
+  /* If there's a 1px border, adjust the inset so that it covers that parent's border */
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
+  .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
+  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
+    inset: -1px;
+  }
+}
+
+/* Splash Screen Animations */
+@keyframes splash-zoom-in {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes splash-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes splash-pause {
+  0%, 100% {
+    transform: scale(1);
+  }
+}
+
+.animate-splash-sequence {
+  animation: 
+    splash-zoom-in 1s ease-out forwards,
+    splash-bounce 0.6s ease-in-out 1s forwards,
+    splash-pause 1.5s linear 1.6s forwards;
+}
+
+/* Splash screen: hidden once it has played in this browser session. */
+.splash-seen #splash {
+  display: none;
+}

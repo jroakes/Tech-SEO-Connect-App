@@ -1,0 +1,29 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { sponsors } from "@/data/sponsors";
+import { slugify } from "@/lib/sessions";
+
+export const prerender = true;
+---
+
+<Layout title="Sponsors">
+  <main class="mx-auto max-w-screen-xl px-4 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-foreground" data-testid="heading-sponsors">Conference Sponsors</h1>
+      <p class="mt-2 text-muted-foreground">Thank you to our sponsors for making Tech SEO Connect possible.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {
+        sponsors.map((sponsor) => (
+          <div
+            class="flex items-center justify-center rounded-md border border-border bg-card p-8 hover-elevate"
+            data-testid={`card-sponsor-${slugify(sponsor.name)}`}
+          >
+            <img src={sponsor.logo} alt={sponsor.name} class="max-h-32 max-w-full object-contain" loading="lazy" />
+          </div>
+        ))
+      }
+    </div>
+  </main>
+</Layout>

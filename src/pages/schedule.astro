@@ -1,0 +1,14 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "@/layouts/Layout.astro";
+import ScheduleView from "@/components/ScheduleView";
+import { getSchedule } from "@/lib/db";
+
+export const prerender = false;
+
+const sessions = await getSchedule(env.DB);
+---
+
+<Layout title="Schedule">
+  <ScheduleView client:load sessions={sessions} />
+</Layout>

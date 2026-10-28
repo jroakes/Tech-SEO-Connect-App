@@ -1,0 +1,93 @@
+---
+import "@/styles/global.css";
+import Header from "@/components/Header.astro";
+import logoFull from "@/assets/logo-full.jpg";
+import { event, pageDescription } from "@/data/event";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = pageDescription } = Astro.props;
+const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.city} ${event.shortDateRange}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#3C4639" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content={event.name} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-QRWD85BG5Z"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QRWD85BG5Z");
+    </script>
+    <script is:inline>
+      // The splash plays once per browser session.
+      try {
+        if (sessionStorage.getItem("tsc_splash_seen")) document.documentElement.classList.add("splash-seen");
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="splash" class="fixed inset-0 flex items-center justify-center bg-[#51AE7F] z-[9999] transition-opacity duration-300">
+      <div class="animate-splash-sequence">
+        <img src={logoFull.src} alt={event.name} class="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 object-contain" />
+      </div>
+    </div>
+
+    <div class="min-h-screen bg-background">
+      <Header />
+      <slot />
+    </div>
+
+    <script is:inline>
+      (function () {
+        var splash = document.getElementById("splash");
+        if (!splash || document.documentElement.classList.contains("splash-seen")) return;
+        try {
+          sessionStorage.setItem("tsc_splash_seen", "1");
+        } catch (e) {}
+        setTimeout(function () {
+          splash.style.opacity = "0";
+          splash.style.pointerEvents = "none";
+          setTimeout(function () {
+            splash.remove();
+          }, 300);
+        }, 3100);
+      })();
+
+      if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+        navigator.serviceWorker.register("/service-worker.js").catch(function (err) {
+          console.log("ServiceWorker registration failed: ", err);
+        });
+      }
+    </script>
+    <script>
+      import { logEvent } from "@/lib/analytics";
+      logEvent("page_view");
+    </script>
+  </body>
+</html>

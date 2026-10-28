@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tech-seo-connect-app",
+  // Custom entry: routes /mcp to the MCP server, everything else to Astro,
+  // and runs the schedule sync on the cron trigger below.
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tech-seo-connect",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    // Hourly schedule sync from the main site.
+    "crons": ["0 * * * *"]
+  },
+  "vars": {
+    // The main site's homepage carries the schedule (see src/lib/schedule-parse.ts).
+    "SCHEDULE_SOURCE_URL": "https://www.techseoconnect.com/"
+  },
+  "observability": {
+    "enabled": true
+  }
+  // Add at cutover, once the old app.techseoconnect.com DNS record is removed:
+  // "routes": [{ "pattern": "app.techseoconnect.com", "custom_domain": true }]
+}

@@ -1,245 +1,119 @@
 # Tech SEO Connect Conference App
 
-A mobile-first Progressive Web App (PWA) companion for the Tech SEO Connect conference (December 4-5, 2025) in Durham, NC.
+The attendee companion app for Tech SEO Connect in Durham, NC, served at
+[app.techseoconnect.com](https://app.techseoconnect.com). It runs entirely on
+Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
 
-## Overview
+## What it does
 
-Tech SEO Connect is a conference companion application that helps attendees navigate and engage with the event through:
+- **Schedule** synced every hour from the schedule on
+  [www.techseoconnect.com](https://www.techseoconnect.com/).
+- **My Schedule**: tap the heart on a talk to save it. Saved talks stay on the
+  device; signed-in attendees (via [Clerk](https://clerk.com)) keep them in
+  their account across devices.
+- **Map** and **Locations** of curated restaurants, bars, coffee, hotels and
+  things to do, with Google Maps and Apple Maps directions.
+- **Sponsors**.
+- **MCP server** at `/mcp` so attendees can add the conference to Claude or
+  other AI tools and ask about talks, speakers and places.
+- **Event logging**: page views, place views, directions clicks and session
+  saves go to the `events` table in D1, alongside GA4.
+- Installable as a PWA, with the schedule available offline.
 
-- **Interactive Map** - Explore Durham locations (hotels, restaurants, venues, attractions) with category filters and real-time navigation
-- **Conference Schedule** - Two-day event schedule with speaker sessions and the ability to like sessions for personal tracking
-- **Locations Directory** - Searchable directory of Durham locations with detailed narratives and navigation options
-- **Sponsors Gallery** - Display of conference sponsors and partners
-- **Photo Gallery** - Share and view conference photos submitted by attendees
+## How it fits together
 
-The app is designed with a mobile-first approach, emphasizing fast access to information in an information-dense, clean interface inspired by Linear's design philosophy.
+```
+src/worker.ts          Worker entry: /mcp -> MCP server, everything else -> Astro,
+                       and the cron trigger -> schedule sync
+src/pages/             Astro pages and API routes
+  schedule.astro       Rendered per request from D1
+  my-schedule.astro    Rendered per request from D1
+  map / locations /    Prerendered at build time (served free as static assets)
+  sponsors .astro
+  api/events.ts        POST batches of analytics events
+  api/saved.ts         GET/POST a signed-in user's saved sessions
+src/mcp/server.ts      Read-only MCP tools (stateless, no login)
+src/lib/schedule-*.ts  Main-site schedule parser and the hourly sync
+src/components/        React islands (map, lists, schedule) and the header
+src/data/              Conference details, bundled fallback schedule, places, sponsors
+migrations/            D1 schema
+content/               Source files for places (KML export and narratives)
+```
 
-## Features
+**Data:**
 
-### Core Features
-
-- **PWA Support** - Installable on mobile devices with offline support via service worker
-- **Interactive Leaflet Map** - Custom category-specific markers with Google/Apple Maps navigation
-- **GA4 Analytics** - Comprehensive event tracking for map interactions and speaker engagement
-- **Real-time Photo Gallery** - Upload, display, and manage conference images with cloud storage
-- **Persistent User Preferences** - LocalStorage-based liked speakers tracking
-- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
-
-### Analytics Tracking
-
-- Map button clicks with location and category data
-- Speaker session engagement (likes)
-- Page view tracking
-- Debug mode for development: `setAnalyticsDebug(true)` in browser console
-
-## Tech Stack
-
-### Frontend
-- **React** 18 with TypeScript
-- **Vite** - Fast build tool and dev server
-- **Tailwind CSS** - Utility-first styling
-- **shadcn/ui** - Component library built on Radix UI
-- **Wouter** - Lightweight client-side routing
-- **TanStack React Query** - Server state management and caching
-- **Leaflet** - Interactive mapping library
-- **Uppy** - File upload interface
-- **Framer Motion** - Animations
-
-### Backend
-- **Express.js** - REST API server
-- **TypeScript** - Type-safe development
-- **Drizzle ORM** - Database schema management
-- **Neon PostgreSQL** - Cloud database for image metadata
-- **Google Cloud Storage** - Object storage for gallery images
-
-### Services
-- **MapTiler** - Tile layer API for map rendering
-- **Google Analytics 4** - Analytics and event tracking
-- **Replit Object Storage** - Cloud file storage integration
-
-## Installation & Setup
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-
-### Getting Started
-
-1. **Clone the repository**
-   ```bash
-   git clone <repo-url>
-   cd tech-seo-connect-app
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   
-   The following secrets are automatically configured by Replit:
-   - `DATABASE_URL` - PostgreSQL connection
-   - `DEFAULT_OBJECT_STORAGE_BUCKET_ID` - Cloud storage bucket
-   - `VITE_MAPTILER_API_KEY` - MapTiler API key
-   - `SESSION_SECRET` - Session encryption key
-
-4. **Push database schema**
-   ```bash
-   npm run db:push
-   ```
+- **Schedule:** the cron job fetches `SCHEDULE_SOURCE_URL`, parses it, and
+  replaces the `sessions` table. If parsing finds fewer than five talks, it
+  keeps the current schedule and records an error in `sync_runs`. Until the
+  first sync runs, pages fall back to the bundled schedule in
+  `src/data/schedule.ts`.
+- **Places:** built from `content/places.kml` (a Google My Maps export) and
+  `content/place-narratives.json` with `npm run import:places`, which writes
+  `src/data/places.json`.
+- **Session IDs:** each one is the date plus the speaker (or the time plus the
+  title for breaks). A retitled talk keeps its saves.
 
 ## Development
 
-### Running Locally
+Requires Node 22.23.4 or newer (`nvm use` reads `.nvmrc`).
 
 ```bash
+npm install
+cp .env.example .env              # optional: Clerk and MapTiler keys
+cp .dev.vars.example .dev.vars    # optional: Clerk secret key
+npm run db:migrate:local
 npm run dev
 ```
 
-The app will start on `http://localhost:5000` with:
-- Express backend serving API endpoints
-- Vite dev server with HMR for frontend changes
-- Automatic service worker registration (localhost only)
+Without Clerk keys the app runs normally, with sign-in hidden. Without a
+MapTiler key, local development uses OpenStreetMap tiles.
 
-### Project Structure
+| Command | What it does |
+|---|---|
+| `npm run dev` | Astro dev server running in workerd, with local D1 |
+| `npm run build` | Generate Worker types and build to `dist/` |
+| `npm run preview` | Build, then serve the built Worker locally with Wrangler |
+| `npm test` | Unit tests (schedule parser) |
+| `npm run check` | Type-check Astro and TypeScript files |
+| `npm run import:places` | Rebuild `src/data/places.json` from `content/` |
+| `npm run db:migrate:local` / `db:migrate:remote` | Apply D1 migrations |
 
-```
-client/
-├── src/
-│   ├── pages/           # Route pages (Schedule, Map, Locations, Sponsors)
-│   ├── components/      # Reusable UI components
-│   ├── lib/
-│   │   ├── analytics.ts # GA4 event tracking
-│   │   ├── kmlParser.ts # KML data parsing
-│   │   └── queryClient.ts # React Query setup
-│   ├── data/
-│   │   └── scheduleData.ts # Conference schedule
-│   └── assets/          # Static images and data
-├── index.html           # GA4 script and PWA meta tags
-├── public/              # Service worker and manifest
-└── src/main.tsx        # React entry point
+To run the schedule sync locally, start `npx wrangler dev --test-scheduled`
+after a build, then open `http://localhost:8787/__scheduled`.
 
-server/
-├── routes.ts           # API endpoints
-├── storage.ts          # Data storage interface
-├── index-dev.ts        # Development entry point
-└── vite.ts            # Vite server config
+## Deploying
 
-shared/
-└── schema.ts          # Shared data types and schemas
-```
+1. Build with the production keys in `.env`, then run `npm run deploy`. The
+   first deploy creates the D1 database.
+2. Apply the schema: `npm run db:migrate:remote`.
+3. Set the Clerk secret: `npx wrangler secret put CLERK_SECRET_KEY`.
+4. **Cutover:** remove the old `app.techseoconnect.com` DNS record, then
+   uncomment the `routes` entry in `wrangler.jsonc` and deploy again. Cloudflare
+   creates the DNS record and certificate. The techseoconnect.com zone must be
+   in the same Cloudflare account as the Worker.
 
-### Database Schema
+The Workers Paid plan ($5/month) is recommended for the conference month. On
+the free plan, D1 queries fail once the daily row limits are reached.
 
-Uses Drizzle ORM with PostgreSQL:
-- `conference_images` - Stores metadata for uploaded gallery images (id, imagePath, fullPath, uploadedAt)
-- Images are persisted to Google Cloud Storage with database references
+## Connecting the MCP server
 
-### API Endpoints
+Add `https://app.techseoconnect.com/mcp` as a custom connector in Claude (or
+any MCP client). Tools: `get_event_info`, `get_schedule`, `search_sessions`,
+`find_places`, `list_sponsors`. Tool calls are logged as `mcp_tool_call`
+events.
 
-- `GET /api/kml-data` - Returns KML location data
-- `GET /api/conference-images` - List uploaded gallery images
-- `POST /api/conference-images` - Create image metadata
-- `DELETE /api/conference-images/:id` - Remove image from gallery
-- `POST /api/conference-images/upload` - Get pre-signed upload URL
+## Analytics
 
-### Environment Variables (Frontend)
-
-Frontend variables must be prefixed with `VITE_`:
-- `VITE_MAPTILER_API_KEY` - MapTiler API key for map tiles
-
-## Deployment
-
-### Building for Production
+`events` rows hold `type`, `ts`, `anon_id` (per device), `user_id` (when
+signed in), `path` and JSON `props`. Event types: `page_view`, `place_view`,
+`map_button_click`, `session_save`, `session_unsave`, `mcp_tool_call`. For
+example:
 
 ```bash
-npm run build
+npx wrangler d1 execute DB --remote --command \
+  "SELECT json_extract(props,'$.place_name') AS place, COUNT(*) AS clicks FROM events WHERE type='map_button_click' GROUP BY place ORDER BY clicks DESC LIMIT 20"
 ```
 
-This creates optimized bundles for both frontend and backend.
-
-### Hosting
-
-The app is hosted at **app.techseoconnect.com** with:
-- HTTPS enabled
-- PWA installable on mobile devices
-- Service worker caching for offline support
-- Google Analytics tracking active
-
-## Color Palette
-
-The app uses a carefully selected color scheme:
-- **Primary** (`#3C4639`) - Dark forest green, conference branding
-- **Accent** (`#0DB47C`) - Bright teal/green, interactive elements
-- **Warm** (`#836152`) - Muted brown, secondary accents
-- **Light** (`#D9CEC5`) - Warm beige, light backgrounds
-- **Teal** (`#689581`) - Muted teal, tertiary accents
-- **Blue** (`#6A8EC4`) - Slate blue, hotel markers
-
-## Mobile Optimizations
-
-- **Touch Targets** - All interactive elements meet 44px minimum tap target
-- **Category Filter Dropdown** - Compact select for mobile map filtering
-- **Responsive Dialogs** - Location detail dialogs constrained to viewport
-- **Offline Support** - Service worker caches critical assets and API responses
-- **PWA Installation** - Web manifest and meta tags for home screen installation
-
-## Analytics & Tracking
-
-### Custom Events
-
-**Map Navigation:**
-```
-event: "map_button_click"
-- map_type: "google_maps" | "apple_maps"
-- location_name: string
-- location_category: string
-```
-
-**Speaker Engagement:**
-```
-event: "speaker_like"
-- speaker_name: string
-- conference_day: 1 | 2
-```
-
-### Debug Mode
-
-Enable analytics debug logging:
-```javascript
-// In browser console
-setAnalyticsDebug(true)      // Enable
-enableAnalyticsDebug()       // Enable (alias)
-disableAnalyticsDebug()      // Disable
-```
-
-Events will be logged to console when debug mode is active.
-
-## Notes
-
-- **Location Data** - Static KML file with Durham conference-related locations
-- **Schedule Data** - Real speaker names and session titles from conference organizers
-- **Photo Persistence** - Images stored in cloud persist across server restarts
-- **Image Moderation** - Delete button for gallery images removes from both DB and cloud storage
-- **No Authentication** - Open access model appropriate for conference companion app
-
-## Contributing
-
-This is a Replit-based project. To contribute:
-
-1. Make changes to source files
-2. Test locally with `npm run dev`
-3. Verify analytics events fire correctly
-4. Ensure database migrations succeed with `npm run db:push`
-5. Deploy updates via Replit's publish feature
-
-## Support
-
-For issues or feature requests related to the conference, contact the Tech SEO Connect organizers.
-
----
-
-**Last Updated:** December 2025  
-**Version:** 1.0  
-**Hosted at:** app.techseoconnect.com
+GA4 (`G-QRWD85BG5Z`) still receives `map_button_click` and `speaker_like`
+events. Run `enableAnalyticsDebug()` in the browser console to log events as
+they fire.

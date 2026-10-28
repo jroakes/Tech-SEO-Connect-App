@@ -1,0 +1,15 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import MapView from "@/components/MapView";
+import places from "@/data/places.json";
+
+export const prerender = true;
+---
+
+<Layout title="Map">
+  <MapView client:only="react" places={places}>
+    <div slot="fallback" class="flex items-center justify-center h-[calc(100vh-7rem)] md:h-[calc(100vh-3.5rem)]">
+      <p class="text-sm text-muted-foreground">Loading map...</p>
+    </div>
+  </MapView>
+</Layout>

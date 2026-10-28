@@ -1,0 +1,81 @@
+---
+import { Award, Building2, Calendar, Heart, MapPin } from "lucide-react";
+import logoIcon from "@/assets/logo-icon.jpg";
+import logoFull from "@/assets/logo-full.jpg";
+import AuthButtons from "./AuthButtons";
+import { event } from "@/data/event";
+
+const clerkEnabled = import.meta.env.PUBLIC_CLERK_ENABLED;
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+const navItems = [
+  { path: "/schedule", label: "Schedule", icon: Calendar },
+  { path: "/my-schedule", label: "My Schedule", icon: Heart },
+  { path: "/map", label: "Map", icon: MapPin },
+  { path: "/locations", label: "Locations", icon: Building2 },
+  { path: "/sponsors", label: "Sponsors", icon: Award },
+];
+---
+
+<header class="border-b border-border bg-background sticky top-0 z-50">
+  <div class="mx-auto max-w-screen-xl px-4">
+    <div class="flex h-14 items-center justify-between gap-2">
+      <a href="/schedule" data-testid="link-home">
+        <img src={logoIcon.src} alt={event.name} class="h-8 w-8 md:hidden" data-testid="img-logo-icon" />
+        <img src={logoFull.src} alt={event.name} class="hidden h-10 md:block" data-testid="img-logo-full" />
+      </a>
+
+      <nav class="hidden md:flex items-center gap-1" data-testid="nav-desktop">
+        {
+          navItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = path === item.path;
+            return (
+              <a href={item.path} data-testid={`link-${item.path.slice(1)}`} aria-current={isActive ? "page" : undefined}>
+                <div
+                  class={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors hover-elevate ${
+                    isActive ? "text-primary border-b-2 border-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </div>
+              </a>
+            );
+          })
+        }
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden lg:block">
+          <div class="text-sm font-semibold text-foreground" data-testid="text-conference-name">{event.city}</div>
+          <div class="text-xs text-muted-foreground" data-testid="text-conference-dates">{event.shortDateRange}</div>
+        </div>
+        {clerkEnabled && <AuthButtons client:load />}
+      </div>
+    </div>
+  </div>
+
+  <div class="md:hidden border-t border-border">
+    <nav class="flex justify-around" data-testid="nav-mobile">
+      {
+        navItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = path === item.path;
+          return (
+            <a href={item.path} data-testid={`link-mobile-${item.path.slice(1)}`} aria-current={isActive ? "page" : undefined}>
+              <div
+                class={`flex flex-col items-center gap-1 px-2 py-2 text-xs transition-colors hover-elevate ${
+                  isActive ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+                <span class="font-medium whitespace-nowrap">{item.label}</span>
+              </div>
+            </a>
+          );
+        })
+      }
+    </nav>
+  </div>
+</header>
