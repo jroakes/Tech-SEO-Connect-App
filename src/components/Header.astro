@@ -6,7 +6,8 @@ import Logo from "./Logo.astro";
 import { event } from "@/data/event";
 
 const clerkEnabled = import.meta.env.PUBLIC_CLERK_ENABLED;
-const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+// Prerendered pages are built as files (map.html), so drop the extension too.
+const path = Astro.url.pathname.replace(/(\.html|\/)$/, "") || "/";
 
 const navItems = [
   { path: "/schedule", label: "Schedule", icon: Calendar },
