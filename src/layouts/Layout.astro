@@ -57,12 +57,8 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
       class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[#09B07B] transition-opacity duration-300"
     >
       <canvas id="splash-canvas" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
-      <div
-        id="splash-logo"
-        class="relative w-72 max-w-[80vw] text-white transition duration-700 ease-out"
-        style="opacity: 0; transform: scale(0.85)"
-      >
-        <Logo title={event.name} class="h-auto w-full" />
+      <div id="splash-logo" class="relative w-80 max-w-[80vw] text-white transition-opacity duration-700" style="opacity: 0">
+        <Logo title={event.name} class="h-auto w-full" markClass="splash-mark" />
       </div>
     </div>
 

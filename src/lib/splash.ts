@@ -3,8 +3,8 @@
 // when the splash plays. Without WebGL, or with reduced motion, the logo
 // simply fades in.
 
-const LOGO_AT = 1700; // ms after the animation starts
-const END_AT = 3000;
+const LOGO_AT = 1800; // ms after the animation starts, as the wheel comes together
+const END_AT = 3600;
 const LOAD_TIMEOUT = 1500; // give up on the animation if Three.js is slower than this
 
 export function runSplash() {
@@ -21,9 +21,13 @@ export function runSplash() {
   let fellBack = false;
 
   const showLogo = () => {
-    if (!logo) return;
-    logo.style.opacity = "1";
-    logo.style.transform = "scale(1)";
+    if (logo) logo.style.opacity = "1";
+  };
+  // The animated wheel lands on the logo's mark, which is the left 101 of the
+  // logo's 320.4 viewBox units.
+  const markRect = () => {
+    const box = logo?.querySelector("svg")?.getBoundingClientRect() ?? new DOMRect();
+    return new DOMRect(box.left, box.top, (box.width * 101) / 320.4, box.height);
   };
   const finish = () => {
     if (finished) return;
@@ -52,7 +56,10 @@ export function runSplash() {
     .then(({ startScene }) => {
       if (finished || fellBack) return;
       clearTimeout(fallback);
-      stopAnimation = startScene(canvas);
+      // The 3D wheel stands in for the logo's flat mark.
+      const flatMark = logo?.querySelector<SVGElement>(".splash-mark");
+      if (flatMark) flatMark.style.visibility = "hidden";
+      stopAnimation = startScene(canvas, markRect);
       setTimeout(showLogo, LOGO_AT);
       setTimeout(finish, END_AT);
     })
