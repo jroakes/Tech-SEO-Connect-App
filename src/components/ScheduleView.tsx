@@ -3,7 +3,7 @@ import { MapPin } from "lucide-react";
 import { ScheduleCard } from "./ScheduleCard";
 import { event } from "@/data/event";
 import type { Session } from "@/lib/types";
-import { useSavedSessions } from "@/lib/saved-sessions";
+import { useSaved } from "@/lib/saved";
 import { getScheduleDays } from "@/lib/sessions";
 import { trackSessionSave } from "@/lib/analytics";
 
@@ -12,7 +12,7 @@ interface ScheduleViewProps {
 }
 
 export default function ScheduleView({ sessions }: ScheduleViewProps) {
-  const { saved, toggle } = useSavedSessions();
+  const { saved, toggle } = useSaved("session");
   const days = getScheduleDays(sessions);
 
   const handleToggle = (session: Session) => {

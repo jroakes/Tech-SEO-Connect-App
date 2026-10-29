@@ -7,9 +7,11 @@ import { event, pageDescription } from "@/data/event";
 interface Props {
   title?: string;
   description?: string;
+  /** Keep the page out of search engines (organizer-only pages). */
+  noindex?: boolean;
 }
 
-const { title, description = pageDescription } = Astro.props;
+const { title, description = pageDescription, noindex = false } = Astro.props;
 const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.city} ${event.shortDateRange}`;
 ---
 
@@ -20,6 +22,7 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />

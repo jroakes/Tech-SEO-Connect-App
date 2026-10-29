@@ -5,13 +5,17 @@ import { ExternalLink } from "lucide-react";
 import type { Place } from "@/lib/types";
 import { openDirections, trackMapButtonClick } from "@/lib/analytics";
 import { getCategoryColor } from "@/lib/categories";
+import { FavoriteButton } from "./FavoriteButton";
 
 interface LocationCardProps {
   location: Place;
   onClick?: () => void;
+  saved: boolean;
+  /** Toggles the save and returns whether the place is now saved. */
+  onToggleSave: () => boolean;
 }
 
-export function LocationCard({ location, onClick }: LocationCardProps) {
+export function LocationCard({ location, onClick, saved, onToggleSave }: LocationCardProps) {
   const handleGoogleMapsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     trackMapButtonClick("google_maps", location, "list");
@@ -30,19 +34,19 @@ export function LocationCard({ location, onClick }: LocationCardProps) {
       data-testid={`card-location-${location.id}`}
     >
       <div 
-        className="cursor-pointer mb-3"
+        className={`mb-3 ${onClick ? "cursor-pointer" : ""}`}
         onClick={onClick}
       >
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <h3 className="text-base font-semibold text-foreground leading-tight" data-testid="text-location-name">
-            {location.name}
-          </h3>
-          <Badge
-            className={`${getCategoryColor(location.category)} text-xs shrink-0`}
-            data-testid="badge-category"
-          >
-            {location.category}
-          </Badge>
+        <div className="flex items-start justify-between gap-2 mb-2">
+          <div className="min-w-0 pt-1">
+            <h3 className="text-base font-semibold text-foreground leading-tight" data-testid="text-location-name">
+              {location.name}
+            </h3>
+            <Badge className={`${getCategoryColor(location.category)} text-xs mt-2`} data-testid="badge-category">
+              {location.category}
+            </Badge>
+          </div>
+          <FavoriteButton saved={saved} onToggle={onToggleSave} label={location.name} testId={`button-save-place-${location.id}`} className="-mr-2 -mt-1" />
         </div>
 
         {location.narrative && (

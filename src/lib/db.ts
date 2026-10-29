@@ -61,18 +61,28 @@ export async function recordSyncRun(db: D1Database, status: "ok" | "skipped" | "
     .run();
 }
 
-export async function getSavedSessionIds(db: D1Database, userId: string): Promise<string[]> {
+// What a user can save, and where each kind is stored.
+export type SavedKind = "session" | "place";
+const SAVED_TABLES: Record<SavedKind, { table: string; column: string }> = {
+  session: { table: "saved_sessions", column: "session_id" },
+  place: { table: "saved_places", column: "place_id" },
+};
+
+/** IDs of the talks or places a user has saved, oldest first. */
+export async function getSavedIds(db: D1Database, kind: SavedKind, userId: string): Promise<string[]> {
+  const { table, column } = SAVED_TABLES[kind];
   const { results } = await db
-    .prepare("SELECT session_id FROM saved_sessions WHERE user_id = ? ORDER BY created_at")
+    .prepare(`SELECT ${column} AS id FROM ${table} WHERE user_id = ? ORDER BY created_at`)
     .bind(userId)
-    .all<{ session_id: string }>();
-  return results.map((r) => r.session_id);
+    .all<{ id: string }>();
+  return results.map((r) => r.id);
 }
 
-export async function updateSavedSessions(db: D1Database, userId: string, add: string[], remove: string[]): Promise<void> {
+export async function updateSaved(db: D1Database, kind: SavedKind, userId: string, add: string[], remove: string[]): Promise<void> {
+  const { table, column } = SAVED_TABLES[kind];
   const statements = [
-    ...add.map((id) => db.prepare("INSERT OR IGNORE INTO saved_sessions (user_id, session_id) VALUES (?, ?)").bind(userId, id)),
-    ...remove.map((id) => db.prepare("DELETE FROM saved_sessions WHERE user_id = ? AND session_id = ?").bind(userId, id)),
+    ...add.map((id) => db.prepare(`INSERT OR IGNORE INTO ${table} (user_id, ${column}) VALUES (?, ?)`).bind(userId, id)),
+    ...remove.map((id) => db.prepare(`DELETE FROM ${table} WHERE user_id = ? AND ${column} = ?`).bind(userId, id)),
   ];
   if (statements.length) await db.batch(statements);
 }

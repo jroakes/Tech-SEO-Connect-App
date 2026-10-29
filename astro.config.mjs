@@ -21,6 +21,7 @@ export default defineConfig({
   integrations: [react(), ...(clerkEnabled ? [clerk()] : [])],
   redirects: {
     "/": "/schedule",
+    "/my-schedule": "/my-conference",
   },
   // map.html rather than map/index.html, so /map is served without a
   // redirect to /map/ (the service worker can't cache redirected pages).

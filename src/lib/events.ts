@@ -8,6 +8,10 @@ export const CLIENT_EVENT_TYPES = [
   "place_view",
   "session_save",
   "session_unsave",
+  "place_save",
+  "place_unsave",
+  "mcp_modal_open",
+  "mcp_url_copy",
 ] as const;
 
 const propValue = z.union([z.string().max(300), z.number(), z.boolean()]);

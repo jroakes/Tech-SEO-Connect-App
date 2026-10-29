@@ -1,6 +1,7 @@
 ---
 import { Award, Building2, Calendar, Heart, MapPin } from "lucide-react";
 import AuthButtons from "./AuthButtons";
+import AiBotsButton from "./AiBotsButton";
 import Logo from "./Logo.astro";
 import { event } from "@/data/event";
 
@@ -9,7 +10,7 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 
 const navItems = [
   { path: "/schedule", label: "Schedule", icon: Calendar },
-  { path: "/my-schedule", label: "My Schedule", icon: Heart },
+  { path: "/my-conference", label: "My Conference", icon: Heart },
   { path: "/map", label: "Map", icon: MapPin },
   { path: "/locations", label: "Locations", icon: Building2 },
   { path: "/sponsors", label: "Sponsors", icon: Award },
@@ -48,12 +49,21 @@ const navItems = [
         }
       </nav>
 
-      <div class="flex items-center gap-3">
-        <div class="text-right hidden lg:block">
+      <div class="flex items-center gap-2 sm:gap-3">
+        <AiBotsButton client:load />
+        <div class="text-right hidden xl:block">
           <div class="text-sm font-semibold text-foreground" data-testid="text-conference-name">{event.city}</div>
           <div class="text-xs text-muted-foreground" data-testid="text-conference-dates">{event.shortDateRange}</div>
         </div>
-        {clerkEnabled && <AuthButtons client:load />}
+        {
+          clerkEnabled && (
+            // Browser-only: on prebuilt pages a server-rendered copy plus Clerk's
+            // own render showed two Sign in buttons.
+            <AuthButtons client:only="react">
+              <div slot="fallback" class="h-9 w-[4.75rem]" aria-hidden="true" />
+            </AuthButtons>
+          )
+        }
       </div>
     </div>
   </div>
@@ -67,7 +77,7 @@ const navItems = [
           return (
             <a href={item.path} data-testid={`link-mobile-${item.path.slice(1)}`} aria-current={isActive ? "page" : undefined}>
               <div
-                class={`flex flex-col items-center gap-1 px-2 py-2 text-xs transition-colors hover-elevate ${
+                class={`flex flex-col items-center gap-1 px-1.5 py-2 text-[11px] transition-colors hover-elevate ${
                   isActive ? "text-primary" : "text-muted-foreground"
                 }`}
               >

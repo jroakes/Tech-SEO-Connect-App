@@ -12,7 +12,9 @@ import {
 import type { Place } from "@/lib/types";
 import L from "leaflet";
 import { ExternalLink } from "lucide-react";
-import { openDirections, trackMapButtonClick, trackPlaceView } from "@/lib/analytics";
+import { openDirections, trackMapButtonClick, trackPlaceSave, trackPlaceView } from "@/lib/analytics";
+import { useSaved } from "@/lib/saved";
+import { FavoriteButton } from "./FavoriteButton";
 import { getCategoryColor, getCategoryKind } from "@/lib/categories";
 import { event } from "@/data/event";
 import "leaflet/dist/leaflet.css";
@@ -79,6 +81,13 @@ const getCategoryIcon = (category: string) => {
 export default function MapView({ places }: MapViewProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [expandedNarratives, setExpandedNarratives] = useState<Set<number>>(new Set());
+  const { saved, toggle } = useSaved("place");
+
+  const toggleSave = (place: Place) => {
+    const nowSaved = toggle(place.id);
+    trackPlaceSave(place, nowSaved);
+    return nowSaved;
+  };
 
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -149,10 +158,21 @@ export default function MapView({ places }: MapViewProps) {
             >
               <Popup maxWidth={320} minWidth={250}>
                 <div className="p-2">
-                  <h3 className="font-semibold text-sm mb-2" data-testid={`popup-title-${idx}`}>{location.name}</h3>
-                  <Badge className={`${getCategoryColor(location.category)} text-xs mb-3`}>
-                    {location.category}
-                  </Badge>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 pt-1">
+                      <h3 className="font-semibold text-sm mb-2" data-testid={`popup-title-${idx}`}>{location.name}</h3>
+                      <Badge className={`${getCategoryColor(location.category)} text-xs mb-3`}>
+                        {location.category}
+                      </Badge>
+                    </div>
+                    <FavoriteButton
+                      saved={saved.has(location.id)}
+                      onToggle={() => toggleSave(location)}
+                      label={location.name}
+                      testId={`button-save-place-${location.id}`}
+                      className="-mr-2 -mt-1"
+                    />
+                  </div>
                   {location.narrative && (
                     <div className="mb-3">
                       <p 

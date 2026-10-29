@@ -5,7 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search, ExternalLink } from "lucide-react";
 import type { Place } from "@/lib/types";
-import { openDirections, trackMapButtonClick, trackPlaceView } from "@/lib/analytics";
+import { openDirections, trackMapButtonClick, trackPlaceSave, trackPlaceView } from "@/lib/analytics";
+import { useSaved } from "@/lib/saved";
+import { FavoriteButton } from "./FavoriteButton";
 import { getCategoryColor } from "@/lib/categories";
 import {
   Dialog,
@@ -22,6 +24,13 @@ export default function LocationsView({ places: locations }: LocationsViewProps)
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<Place | null>(null);
+  const { saved, toggle } = useSaved("place");
+
+  const toggleSave = (place: Place) => {
+    const nowSaved = toggle(place.id);
+    trackPlaceSave(place, nowSaved);
+    return nowSaved;
+  };
 
   const categories = useMemo(() => {
     const cats = new Set<string>();
@@ -102,6 +111,8 @@ export default function LocationsView({ places: locations }: LocationsViewProps)
                 key={location.id}
                 location={location}
                 onClick={() => openPlace(location)}
+                saved={saved.has(location.id)}
+                onToggleSave={() => toggleSave(location)}
               />
             ))}
           </div>
@@ -118,9 +129,18 @@ export default function LocationsView({ places: locations }: LocationsViewProps)
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
-                <Badge className={getCategoryColor(selectedLocation.category)} data-testid="badge-dialog-category">
-                  {selectedLocation.category}
-                </Badge>
+                <div className="flex items-center justify-between gap-2">
+                  <Badge className={getCategoryColor(selectedLocation.category)} data-testid="badge-dialog-category">
+                    {selectedLocation.category}
+                  </Badge>
+                  <FavoriteButton
+                    saved={saved.has(selectedLocation.id)}
+                    onToggle={() => toggleSave(selectedLocation)}
+                    label={selectedLocation.name}
+                    testId="button-save-place-dialog"
+                    className="-my-2"
+                  />
+                </div>
 
                 {selectedLocation.narrative && (
                   <div className="prose prose-sm max-w-none">

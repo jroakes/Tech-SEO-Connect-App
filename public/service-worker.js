@@ -2,17 +2,17 @@
 //
 // Pages: network first, so schedule changes show up right away; the cached
 // copy is used only when offline. Built assets under /_astro/ have hashed
-// names, so they're cached forever. API, MCP and other sites' requests are
-// never cached.
+// names, so they're cached forever. API, MCP, analytics and other sites'
+// requests are never cached.
 //
 // Bump VERSION whenever this file's caching rules change. The activate step
 // deletes every cache from older versions, including the 2025 app's
 // "techseo-connect-v1" caches on phones that installed it last year.
 
-const VERSION = "2026-1";
+const VERSION = "2026-2";
 const PAGE_CACHE = `tsc-pages-${VERSION}`;
 const ASSET_CACHE = `tsc-assets-${VERSION}`;
-const OFFLINE_PAGES = ["/schedule", "/my-schedule", "/map", "/locations", "/sponsors"];
+const OFFLINE_PAGES = ["/schedule", "/my-conference", "/map", "/locations", "/sponsors"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -41,7 +41,8 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith("/api/") || url.pathname === "/mcp") return;
+  // Never cache APIs, the MCP server or the organizers' analytics page.
+  if (url.pathname.startsWith("/api/") || url.pathname === "/mcp" || url.pathname === "/analytics") return;
 
   if (url.pathname.startsWith("/_astro/")) {
     event.respondWith(cacheFirst(request));

@@ -149,6 +149,13 @@ export function trackSessionSave(session: Session, saved: boolean) {
   });
 }
 
+export function trackPlaceSave(place: Place, saved: boolean) {
+  if (saved) {
+    pushToDataLayer({ event: "place_like", location_name: place.name, location_category: place.category });
+  }
+  logEvent(saved ? "place_save" : "place_unsave", { place_id: place.id, place_name: place.name, category: place.category });
+}
+
 export function openDirections(mapType: "google_maps" | "apple_maps", place: Place) {
   const url =
     mapType === "google_maps"

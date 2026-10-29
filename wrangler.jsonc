@@ -23,7 +23,9 @@
   },
   "vars": {
     // The main site's homepage carries the schedule (see src/lib/schedule-parse.ts).
-    "SCHEDULE_SOURCE_URL": "https://www.techseoconnect.com/"
+    "SCHEDULE_SOURCE_URL": "https://www.techseoconnect.com/",
+    // Who can see /analytics: comma-separated, verified Clerk email addresses.
+    "ORGANIZER_EMAILS": "jroakes@gmail.com"
   },
   "observability": {
     "enabled": true

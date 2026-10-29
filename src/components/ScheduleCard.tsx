@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Clock, Heart } from "lucide-react";
+import { Clock } from "lucide-react";
+import { FavoriteButton } from "./FavoriteButton";
 import type { Session } from "@/lib/types";
 import { formatDuration } from "@/lib/sessions";
 
@@ -10,16 +10,6 @@ interface ScheduleCardProps {
 }
 
 export function ScheduleCard({ session, saved, onToggle }: ScheduleCardProps) {
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const handleSaveClick = () => {
-    const nowSaved = onToggle(session);
-    if (nowSaved) {
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 600);
-    }
-  };
-
   return (
     <div
       className={`flex items-start gap-4 p-4 border-l-4 transition-all ${
@@ -54,27 +44,7 @@ export function ScheduleCard({ session, saved, onToggle }: ScheduleCardProps) {
       </div>
 
       {!session.isBreak && (
-        <div className="relative flex-shrink-0">
-          <button
-            onClick={handleSaveClick}
-            className="p-2 min-h-11 min-w-11 flex items-center justify-center rounded-md transition-all hover:bg-muted cursor-pointer"
-            aria-pressed={saved}
-            aria-label={saved ? `Remove ${session.title} from My Schedule` : `Save ${session.title} to My Schedule`}
-            data-testid={`button-save-${session.id}`}
-          >
-            <Heart
-              className={`h-5 w-5 transition-colors ${
-                saved ? "fill-pink-500 text-pink-500" : "text-muted-foreground hover:text-pink-400"
-              }`}
-            />
-          </button>
-
-          {isAnimating && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Heart className="h-5 w-5 fill-pink-500 text-pink-500 animate-heart-rise" />
-            </div>
-          )}
-        </div>
+        <FavoriteButton saved={saved} onToggle={() => onToggle(session)} label={session.title} testId={`button-save-${session.id}`} />
       )}
     </div>
   );

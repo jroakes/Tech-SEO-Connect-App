@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@clerk/astro": "^4.1.19",
+    "@clerk/backend": "^3.26.4",
     "@modelcontextprotocol/server": "2.3.1",
     "@radix-ui/react-dialog": "^1.1.7",
     "@radix-ui/react-select": "^2.1.7",

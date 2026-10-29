@@ -1,0 +1,302 @@
+---
+// Organizers' analytics: what attendees view, save and get directions to, and
+// how they use the AI assistant connector. Only signed-in organizers (verified
+// emails in ORGANIZER_EMAILS) can see it.
+import { env } from "cloudflare:workers";
+import Layout from "@/layouts/Layout.astro";
+import AuthButtons from "@/components/AuthButtons";
+import { getInsights, RANGES, type Range } from "@/lib/insights";
+
+export const prerender = false;
+
+interface ClerkUser {
+  emailAddresses: { emailAddress: string; verification: { status: string } | null }[];
+}
+const clerkEnabled = import.meta.env.PUBLIC_CLERK_ENABLED;
+const currentUser = (Astro.locals as { currentUser?: () => Promise<ClerkUser | null> }).currentUser;
+const user = clerkEnabled && currentUser ? await currentUser() : null;
+const organizers = (env.ORGANIZER_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+const allowed = !!user?.emailAddresses.some((e) => e.verification?.status === "verified" && organizers.includes(e.emailAddress.toLowerCase()));
+
+Astro.response.headers.set("Cache-Control", "no-store");
+if (!allowed) Astro.response.status = user ? 403 : 401;
+
+const requested = Astro.url.searchParams.get("range");
+const range: Range = RANGES.some((r) => r.value === requested) ? (requested as Range) : "7d";
+const data = allowed ? await getInsights(env.DB, range) : null;
+
+const n = (value: number) => value.toLocaleString("en-US");
+const toolNames: Record<string, string> = {
+  get_event_info: "Conference info",
+  get_schedule: "Schedule",
+  search_sessions: "Search talks",
+  find_places: "Find places",
+  list_sponsors: "Sponsors",
+  get_my_conference: "My Conference",
+  save_to_my_conference: "Save to My Conference",
+  remove_from_my_conference: "Remove from My Conference",
+};
+
+// Activity chart scale: the y-axis tops out at a round number.
+const series = data?.activity ?? [];
+const rawMax = Math.max(1, ...series.map((d) => d.value));
+const magnitude = 10 ** Math.floor(Math.log10(rawMax));
+const yMax = [1, 2, 5, 10].map((m) => m * magnitude).find((m) => m >= rawMax) ?? rawMax;
+const labelEvery = Math.ceil(series.length / 8);
+const tiles = data
+  ? [
+      { label: "Visitors", value: data.totals.visitors, note: "Devices that opened the app" },
+      { label: "Page views", value: data.totals.pageViews },
+      { label: "Signed-in attendees", value: data.totals.signedIn },
+      { label: "Directions taps", value: data.totals.directions, note: `Google ${n(data.directionsByApp.google)} · Apple ${n(data.directionsByApp.apple)}` },
+      { label: "Saves", value: data.totals.talkSaves + data.totals.placeSaves, note: `${n(data.totals.talkSaves)} talks · ${n(data.totals.placeSaves)} places` },
+      { label: "AI assistant requests", value: data.totals.aiRequests, note: `Connector opened ${n(data.connector.opened)} · URL copied ${n(data.connector.copied)}` },
+    ]
+  : [];
+const maxOf = (values: number[]) => Math.max(1, ...values);
+---
+
+<Layout title="Analytics" noindex>
+  <main class="mx-auto max-w-screen-xl px-4 py-8">
+    {
+      !allowed ? (
+        <div class="mx-auto max-w-md rounded-md border border-border bg-card p-6 text-center" data-testid="panel-analytics-locked">
+          <h1 class="mb-2 text-2xl font-bold text-foreground">Analytics</h1>
+          {user ? (
+            <p class="text-sm text-muted-foreground">This page is for Tech SEO Connect organizers.</p>
+          ) : (
+            <>
+              <p class="mb-4 text-sm text-muted-foreground">Sign in with your organizer account to see the analytics.</p>
+              {clerkEnabled && (
+                <div class="flex justify-center">
+                  <AuthButtons client:only="react" />
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      ) : (
+        data && (
+          <>
+            <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h1 class="text-3xl font-bold text-foreground md:text-4xl" data-testid="text-page-title">Analytics</h1>
+                <p class="mt-1 text-sm text-muted-foreground">What attendees view, save and get directions to. Times are Eastern.</p>
+              </div>
+              <nav class="inline-flex self-start rounded-md bg-muted p-1 sm:self-auto" aria-label="Time range">
+                {RANGES.map((r) => (
+                  <a
+                    href={`?range=${r.value}`}
+                    class={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${r.value === range ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                    aria-current={r.value === range ? "page" : undefined}
+                  >
+                    {r.label}
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            <section class="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6" aria-label="Totals">
+              {tiles.map((tile) => (
+                <div class="rounded-md border border-border bg-card p-4">
+                  <div class="text-xs font-medium text-muted-foreground">{tile.label}</div>
+                  <div class="mt-1 text-2xl font-bold tabular-nums text-foreground">{n(tile.value)}</div>
+                  {tile.note && <div class="mt-1 text-xs text-muted-foreground">{tile.note}</div>}
+                </div>
+              ))}
+            </section>
+
+            <section class="mb-6 rounded-md border border-border bg-card p-4" aria-labelledby="activity-title">
+              <h2 id="activity-title" class="mb-3 text-base font-semibold text-foreground">
+                Page views by {data.activityUnit}
+              </h2>
+              <div class="relative" data-chart>
+                <div class="flex gap-2">
+                  <div class="relative h-44 w-9 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground" aria-hidden="true">
+                    {[1, 0.5, 0].map((f) => (
+                      <span class="absolute right-0 -translate-y-1/2" style={`top: ${(1 - f) * 100}%`}>{n(Math.round(yMax * f))}</span>
+                    ))}
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="relative h-44" role="img" aria-label={`Page views by ${data.activityUnit}`}>
+                      {[1, 0.5].map((f) => (
+                        <div class="absolute inset-x-0 border-t border-dashed border-border" style={`top: ${(1 - f) * 100}%`} />
+                      ))}
+                      <div class="absolute inset-x-0 bottom-0 border-t border-border" />
+                      <div class="absolute inset-0 flex items-end gap-0.5">
+                        {series.map((d) => (
+                          <div class="flex h-full flex-1 items-end" data-tip={d.tooltip}>
+                            <div class="w-full rounded-t" style={`height: ${(d.value / yMax) * 100}%; background: #0A8F64`} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div class="mt-1.5 flex gap-0.5 text-[11px] text-muted-foreground" aria-hidden="true">
+                      {series.map((d, i) => (
+                        <span class="flex-1 overflow-visible whitespace-nowrap text-center">{i % labelEvery === 0 ? d.label : ""}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="pointer-events-none absolute z-10 hidden whitespace-nowrap rounded-md border border-border bg-popover px-2 py-1 text-xs text-popover-foreground shadow-md"
+                  data-tooltip
+                />
+              </div>
+              <details class="mt-2 text-sm">
+                <summary class="cursor-pointer text-muted-foreground hover:text-foreground">Show as a table</summary>
+                <table class="mt-2 w-full max-w-sm text-left">
+                  <tbody>
+                    {series.map((d) => (
+                      <tr class="border-b border-border last:border-0">
+                        <td class="py-1 pr-4 text-muted-foreground">{d.tooltip.split(":")[0]}</td>
+                        <td class="py-1 text-right tabular-nums text-foreground">{n(d.value)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </details>
+            </section>
+
+            <div class="grid items-start gap-6 lg:grid-cols-2">
+              <section class="rounded-md border border-border bg-card p-4">
+                <h2 class="mb-1 text-base font-semibold text-foreground">Places</h2>
+                <p class="mb-3 text-xs text-muted-foreground">Ranked by directions taps, then saves and views.</p>
+                {data.places.length ? (
+                  <table class="w-full text-left text-sm">
+                    <thead>
+                      <tr class="text-xs text-muted-foreground">
+                        <th class="pb-2 font-medium">Place</th>
+                        <th class="pb-2 text-right font-medium">Directions</th>
+                        <th class="pb-2 text-right font-medium">Saves</th>
+                        <th class="pb-2 text-right font-medium">Views</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.places.map((p) => (
+                        <tr class="border-t border-border">
+                          <td class="py-2 pr-2">
+                            <div class="font-medium text-foreground">{p.name}</div>
+                            <div class="text-xs text-muted-foreground">{p.category}</div>
+                          </td>
+                          <td class="py-2 text-right font-semibold tabular-nums text-foreground">{n(p.directions)}</td>
+                          <td class="py-2 text-right tabular-nums text-foreground">{n(Math.max(0, p.saves))}</td>
+                          <td class="py-2 text-right tabular-nums text-muted-foreground">{n(p.views)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p class="py-6 text-center text-sm text-muted-foreground">No place activity yet.</p>
+                )}
+              </section>
+
+              <section class="rounded-md border border-border bg-card p-4">
+                <h2 class="mb-1 text-base font-semibold text-foreground">Most-saved talks</h2>
+                <p class="mb-3 text-xs text-muted-foreground">Saves in the app, minus un-saves.</p>
+                {data.talks.length ? (
+                  <ol class="space-y-3">
+                    {data.talks.map((t) => (
+                      <li>
+                        <div class="flex items-baseline justify-between gap-3 text-sm">
+                          <span class="min-w-0">
+                            <span class="font-medium text-foreground">{t.title}</span>
+                            {t.speaker && <span class="text-muted-foreground"> · {t.speaker}</span>}
+                          </span>
+                          <span class="shrink-0 font-semibold tabular-nums text-foreground">{n(t.saves)}</span>
+                        </div>
+                        <div class="mt-1 h-1.5 rounded-full bg-muted">
+                          <div class="h-1.5 rounded-full" style={`width: ${(t.saves / maxOf(data.talks.map((x) => x.saves))) * 100}%; background: #0A8F64`} />
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p class="py-6 text-center text-sm text-muted-foreground">No saved talks yet.</p>
+                )}
+              </section>
+
+              <section class="rounded-md border border-border bg-card p-4">
+                <h2 class="mb-3 text-base font-semibold text-foreground">AI assistant</h2>
+                {data.aiTools.length ? (
+                  <table class="mb-4 w-full text-left text-sm">
+                    <thead>
+                      <tr class="text-xs text-muted-foreground">
+                        <th class="pb-2 font-medium">Tool</th>
+                        <th class="pb-2 text-right font-medium">Requests</th>
+                        <th class="pb-2 text-right font-medium">People</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.aiTools.map((t) => (
+                        <tr class="border-t border-border">
+                          <td class="py-2 text-foreground">{toolNames[t.tool] ?? t.tool}</td>
+                          <td class="py-2 text-right font-semibold tabular-nums text-foreground">{n(t.calls)}</td>
+                          <td class="py-2 text-right tabular-nums text-muted-foreground">{n(t.people)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p class="py-6 text-center text-sm text-muted-foreground">No AI assistant requests yet.</p>
+                )}
+                {data.aiSearches.length > 0 && (
+                  <>
+                    <h3 class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">What people asked about</h3>
+                    <div class="flex flex-wrap gap-2">
+                      {data.aiSearches.map((s) => (
+                        <span class="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground">
+                          {s.query} <span class="text-muted-foreground">{n(s.count)}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </section>
+
+              <section class="rounded-md border border-border bg-card p-4">
+                <h2 class="mb-3 text-base font-semibold text-foreground">Pages</h2>
+                {data.pages.length ? (
+                  <ol class="space-y-3">
+                    {data.pages.map((p) => (
+                      <li>
+                        <div class="flex items-baseline justify-between gap-3 text-sm">
+                          <span class="font-mono text-foreground">{p.path}</span>
+                          <span class="font-semibold tabular-nums text-foreground">{n(p.views)}</span>
+                        </div>
+                        <div class="mt-1 h-1.5 rounded-full bg-muted">
+                          <div class="h-1.5 rounded-full" style={`width: ${(p.views / maxOf(data.pages.map((x) => x.views))) * 100}%; background: #0A8F64`} />
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p class="py-6 text-center text-sm text-muted-foreground">No page views yet.</p>
+                )}
+              </section>
+            </div>
+          </>
+        )
+      )
+    }
+  </main>
+</Layout>
+
+<script>
+  // Tooltip for the activity chart's bars.
+  for (const chart of document.querySelectorAll<HTMLElement>("[data-chart]")) {
+    const tooltip = chart.querySelector<HTMLElement>("[data-tooltip]")!;
+    chart.addEventListener("pointermove", (e) => {
+      const target = (e.target as Element).closest<HTMLElement>("[data-tip]");
+      if (!target) return void tooltip.classList.add("hidden");
+      const box = chart.getBoundingClientRect();
+      const bar = target.getBoundingClientRect();
+      tooltip.textContent = target.dataset.tip ?? "";
+      tooltip.classList.remove("hidden");
+      const left = Math.min(Math.max(0, bar.left - box.left + bar.width / 2 - tooltip.offsetWidth / 2), box.width - tooltip.offsetWidth);
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${Math.max(0, e.clientY - box.top - tooltip.offsetHeight - 12)}px`;
+    });
+    chart.addEventListener("pointerleave", () => tooltip.classList.add("hidden"));
+  }
+</script>
