@@ -1,1101 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>Tech SEO Connect Durham, NC Guide and Things to Do</name>
-    <description/>
-    <Style id="icon-1517-673AB7-nodesc-normal">
-      <IconStyle>
-        <color>ffb73a67</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-1517-673AB7-nodesc-highlight">
-      <IconStyle>
-        <color>ffb73a67</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-1517-673AB7-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-1517-673AB7-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-1517-673AB7-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
-    <Style id="icon-1535-097138-nodesc-normal">
-      <IconStyle>
-        <color>ff387109</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-1535-097138-nodesc-highlight">
-      <IconStyle>
-        <color>ff387109</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-1535-097138-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-1535-097138-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-1535-097138-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
-    <Style id="icon-1577-0288D1-nodesc-normal">
-      <IconStyle>
-        <color>ffd18802</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-1577-0288D1-nodesc-highlight">
-      <IconStyle>
-        <color>ffd18802</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-1577-0288D1-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-1577-0288D1-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-1577-0288D1-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
-    <Style id="icon-1577-673AB7-nodesc-normal">
-      <IconStyle>
-        <color>ffb73a67</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-1577-673AB7-nodesc-highlight">
-      <IconStyle>
-        <color>ffb73a67</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-1577-673AB7-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-1577-673AB7-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-1577-673AB7-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
-    <Style id="icon-1602-0288D1-nodesc-normal">
-      <IconStyle>
-        <color>ffd18802</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-1602-0288D1-nodesc-highlight">
-      <IconStyle>
-        <color>ffd18802</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-1602-0288D1-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-1602-0288D1-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-1602-0288D1-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
-    <Style id="icon-1602-FF5252-nodesc-normal">
-      <IconStyle>
-        <color>ff5252ff</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-1602-FF5252-nodesc-highlight">
-      <IconStyle>
-        <color>ff5252ff</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-1602-FF5252-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-1602-FF5252-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-1602-FF5252-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
-    <Style id="icon-1603-FF5252-nodesc-normal">
-      <IconStyle>
-        <color>ff5252ff</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-1603-FF5252-nodesc-highlight">
-      <IconStyle>
-        <color>ff5252ff</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-1603-FF5252-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-1603-FF5252-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-1603-FF5252-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
-    <Style id="icon-1899-795548-nodesc-normal">
-      <IconStyle>
-        <color>ff485579</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-1899-795548-nodesc-highlight">
-      <IconStyle>
-        <color>ff485579</color>
-        <scale>1</scale>
-        <Icon>
-          <href>https://www.gstatic.com/mapspro/images/stock/503-wht-blank_maps.png</href>
-        </Icon>
-        <hotSpot x="32" xunits="pixels" y="64" yunits="insetPixels"/>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-1899-795548-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-1899-795548-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-1899-795548-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
+    <name>Tech SEO Connect 2026 Durham, NC Guide and Things to Do</name>
     <Folder>
       <name>Conference Main Locations</name>
       <Placemark>
-        <name>The Fruit -Conference Venue</name>
-        <styleUrl>#icon-1603-FF5252-nodesc</styleUrl>
+        <name>Bay 7 - Conference Venue</name>
+        <address>324 Blackwell St #700, Durham, NC 27701</address>
+        <description><![CDATA[Home base for Tech SEO Connect on Thursday, Nov 5 and Friday, Nov 6: check-in and coffee from 8 AM, talks from 9 AM to 5 PM, and a long lunch break from 11:30 to 1. Between sessions there's an all-day espresso bar from Liturgy Beverage Company, Boulted Bread pastries each morning and live sign painting. Bay 7 itself is a restored brick-and-timber tobacco warehouse bay on American Tobacco Campus, with tall windows and a wraparound balcony.
+https://www.bay7.events/]]></description>
         <Point>
-          <coordinates>
-            -78.8966214,35.99063,0
-          </coordinates>
+          <coordinates>-78.9052607,35.9934627,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>The Durham Hotel -Welcome Party</name>
-        <styleUrl>#icon-1602-FF5252-nodesc</styleUrl>
+        <name>SO/IF Bar - Welcome Drinks</name>
+        <address>331 W Main St, Durham, NC 27701</address>
+        <description>Welcome Drinks, Wednesday, Nov 4, 5–7 PM: the first toast of Tech SEO Connect, free with your conference badge, before everyone strolls a few blocks over to the Welcome Party at Mateo. SO/IF is a tiny, 13-seat coffee-and-cocktail bar from the team behind delafia, set inside the 1930 Art Deco Snow Building on West Main. Espresso by day, spritzes and cocktails by night, and no Wi-Fi, so pocket the phone and talk shop.
+https://soif.bar/</description>
         <Point>
-          <coordinates>
-            -78.9009182,35.9970358,0
-          </coordinates>
+          <coordinates>-78.9036678,35.9965255,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>21c Museum Hotel Durham - Main</name>
-        <styleUrl>#icon-1602-FF5252-nodesc</styleUrl>
+        <name>Mateo Bar de Tapas - Welcome Party</name>
+        <address>109 W Chapel Hill St, Durham, NC 27701</address>
+        <description>Welcome Party, Wednesday, Nov 4, 7–10 PM: Tech SEO Connect takes over the whole restaurant for the official kickoff, hosted by The SEO Community and Noah Learner, with tapas spread across both floors. Free with your conference badge. Mateo marries Spanish tapas with Southern ingredients, and regulars swear by the roasted bone marrow, pollo frito and croquetas; the upstairs room gives the crowd extra space to mingle.
+https://mateotapas.com/</description>
         <Point>
-          <coordinates>
-            -78.9017456,35.996052,0
-          </coordinates>
+          <coordinates>-78.9047943,35.9968525,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>American Tobacco Campus Rail Car - Happy Hour</name>
+        <address>300 Blackwell St, Durham, NC 27701 (rail car beside the Power Plant, 320 Blackwell St)</address>
+        <description>Happy Hour, Thursday, Nov 5, 5–7 PM: when the last session wraps, walk a minute from Bay 7 to the 1930s-era rail car parked beside the Power Plant, the brick building that once powered the tobacco factory. Live jazz from Butler Knowles and friends, beer and wine poured by delafia, and English muffin personal pizzas from Redstart Foods, all free with your badge. Around you is the restored American Tobacco complex, Lucky Strike water tower and all.
+https://americantobacco.co/</description>
+        <Point>
+          <coordinates>-78.9045627,35.9937321,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>BOOM Club - After Party</name>
+        <address>600 Foster St, Unit B, Durham, NC 27701</address>
+        <description>After Party, Thursday, Nov 5, 9 PM–2 AM: SEO and DJ Lily Ray takes the decks with Ash Lauryn, LexOnLoud and thefacesblur, free with your conference badge. BOOM Club, short for Building Our Own Music, is a Durham electronic-music clubhouse stocked with playable vintage and modern synths and drum machines. It began as a pop-up inside the American Tobacco rail car and moved this spring into the former PS37 space on Foster Street, near Durham Central Park.
+https://www.boom-club.org/</description>
+        <Point>
+          <coordinates>-78.9010113,36.002354,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>delafia - Farewell Party</name>
+        <address>1103 S Roxboro St, Durham, NC 27707</address>
+        <description>Farewell Party, Friday, Nov 6, 5 PM–midnight: wander over after the closing remarks for tacos from Taqueria La Vaquita (6–8 PM) and live jazz from Butler Knowles and friends (7–10 PM), all free with your conference badge. delafia is a cozy natural-wine bar and bottle shop on South Roxboro Street, loved for its orange and natural wines, good snacks and a laid-back patio, and it gets properly packed on a Friday night.
+https://www.delafiabar.com/</description>
+        <Point>
+          <coordinates>-78.9026308,35.9832881,0</coordinates>
         </Point>
       </Placemark>
     </Folder>
     <Folder>
       <name>Hotels</name>
       <Placemark>
-        <name>21c Museum Hotel Durham</name>
-        <styleUrl>#icon-1602-FF5252-nodesc</styleUrl>
+        <name>Aloft Durham Downtown</name>
+        <address>345 Blackwell St, Durham, NC 27701</address>
+        <description>The official Tech SEO Connect hotel and the closest bed to Bay 7, just across Blackwell Street next to DPAC on the edge of American Tobacco Campus. Expect bright, modern loft-style rooms, a lively lobby bar, a 24-hour gym and an outdoor plunge pool. Our room block is sold out, but some rooms may still be available at standard rates if you book directly with the hotel.
+https://www.marriott.com/en-us/hotels/rduld-aloft-durham-downtown/overview/</description>
         <Point>
-          <coordinates>
-            -78.9017456,35.996052,0
-          </coordinates>
+          <coordinates>-78.9027894,35.9931769,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>21c Museum Hotel Durham</name>
+        <address>111 N Corcoran St, Durham, NC 27701</address>
+        <description><![CDATA[A boutique hotel and contemporary-art museum rolled into the 1937 Hill Building, the Art Deco tower designed by the firm behind the Empire State Building. The galleries are free and open to the public, so even non-guests can wander through between sessions, and the on-site Counting House restaurant and bar plus a spa round things out. It's right in the middle of downtown's restaurant and bar blocks.
+https://21cmuseumhotels.com/durham/]]></description>
+        <Point>
+          <coordinates>-78.9017456,35.996052,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>The Durham Hotel</name>
-        <styleUrl>#icon-1602-FF5252-nodesc</styleUrl>
+        <address>315 E Chapel Hill St, Durham, NC 27701</address>
+        <description><![CDATA[Downtown's mid-century modern landmark: a 1960s bank building reborn as an independent boutique hotel with a playful, retro interior. The big draw is the rooftop bar, with raw-bar bites and sunset views over the skyline, plus a ground-floor coffee bar for early starts. It sits on East Chapel Hill Street in the heart of downtown, steps from dinner and drinks.
+https://www.thedurham.com/]]></description>
         <Point>
-          <coordinates>
-            -78.9009182,35.9970358,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Aloft Durham Downtown</name>
-        <styleUrl>#icon-1602-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9027894,35.9931769,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>SpringHill Suites by Marriott Durham City View</name>
-        <styleUrl>#icon-1602-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.903244,35.988558,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Unscripted Durham - JDV by Hyatt</name>
-        <styleUrl>#icon-1602-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9013137,35.9965896,0
-          </coordinates>
+          <coordinates>-78.9009182,35.9970358,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>Durham Marriott City Center</name>
-        <styleUrl>#icon-1602-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9018093,35.9973001,0
-          </coordinates>
-        </Point>
-      </Placemark>
-    </Folder>
-    <Folder>
-      <name>Lunch</name>
-      <Placemark>
-        <name>Aaktun Coffee, Restaurant and Bar</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8957363,35.9893315,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>PRESS Coffee Crêpes Cocktails</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.904263,35.9925992,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>QueenBurger</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9039817,35.9927674,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Bull City Burger and Brewery</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8997764,35.9954939,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Durham Food Hall</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9013355,36.0013101,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Anjappar Chettinad Indian Restaurant, Durham</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8987389,35.9942028,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Mezcalito Durham</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8954489,35.9890737,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Counting House</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9018032,35.9959681,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Thaiangle Restaurant</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8999034,35.9957636,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA[Queeny's]]></name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9007613,35.9970318,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Gym Tacos</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8995789,35.9959033,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Luna Rotisserie and Empanadas</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9009837,35.9953339,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Dashi Ramen and Izakaya Cocktail Bar</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8992279,35.9970933,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Barsa New Indian</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8988562,35.9976495,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Pokeworks</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.901368,35.995535,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Pizzeria Toro</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9036011,35.9971175,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Pie Pushers</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.901495,35.995255,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>koki - Creative Puerto Rican Kitchen</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8994022,35.9957585,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Parker and Otis</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9055208,35.992789,0
-          </coordinates>
-        </Point>
-      </Placemark>
-    </Folder>
-    <Folder>
-      <name>Dinner</name>
-      <Placemark>
-        <name>Viceroy</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9036861,35.9965393,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Seraphine</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9057665,35.9928259,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Mateo Bar de Tapas</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9047943,35.9968525,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Alley Twenty Six</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.900525,35.996751,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>M Sushi</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9011587,35.9972588,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Little Bull</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8948962,36.0018509,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Bar Virgile</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9007933,35.9947192,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Rue Cler</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8997435,35.9970869,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>NanaSteak</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9027412,35.9935313,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>M Tempura</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9005111,35.9961601,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Nerra</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8964666,35.9903696,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Flying Bull Restaurant and Brewery</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9034592,36.000063,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>M Pocha</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.903763,35.9970467,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA[Mothers & Sons Trattoria]]></name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9047132,35.996868,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Cucciolo Osteria Durham</name>
-        <styleUrl>#icon-1577-0288D1-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9064199,35.9979014,0
-          </coordinates>
-        </Point>
-      </Placemark>
-    </Folder>
-    <Folder>
-      <name>Drinks</name>
-      <Placemark>
-        <name>delafia</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9026308,35.9832881,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Weldon Mills Distillery Durham</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8983669,35.9934615,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA[Honeygirl Meadery & Tasting Room]]></name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9040098,35.9941544,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Bull City Ciderworks Durham</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8993013,35.9909566,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Ponysaurus Brewing Co.</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8952496,35.9895842,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Fullsteam</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9045813,35.9937821,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA[The Velvet Hippo Bar & Lounge]]></name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9004895,35.9964307,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Dram and Draught</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9080672,35.9989879,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Boxcar Bar + Arcade</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9016694,36.003381,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Kingfisher</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9008011,35.9970432,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Hi-Wire Brewing Durham</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8900261,35.9915365,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>West End Social</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9063091,35.998049,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>DSSOLVR Durham</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8997983,36.0018623,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Congress Social Bar</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8788589,35.9801959,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>La Mala Mexican Inspired Cocktails</name>
-        <styleUrl>#icon-1577-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9016279,35.9956818,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Fizzwerks</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8960683,35.9896134,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Durham Beer Garden</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8948379,36.0020079,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>High Dive Durham</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9009397,35.9948385,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>The Daily Beer Bar</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9004488,35.9947478,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Baryo</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8964666,35.9903696,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>The Glass Jug Beer Lab - Downtown Durham</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9016322,36.0013062,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA[Rhythm & Brews Bar and Grill]]></name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8994704,35.9846382,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Durty Bull Brewing Company</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8982389,36.0011326,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Atomic Clock Brewing Company</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9041536,36.0025519,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA[Ramblers Beer & Wine]]></name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.906942,35.9996361,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Clouds Brewing - Durham Brewcade + Kitchen</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9104806,36.0000389,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>The Waiting Room</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9037368,35.9946808,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Bull Durham Beer Company</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9041355,35.9913493,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Bull City Burger and Brewery</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8997764,35.9954939,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Killer Queen Wine Bar</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8999,35.99481,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA[Coupe & Stein Champagne Bar]]></name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.8906016,35.991068,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Primrose Bar and Lounge</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9012738,35.995129,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>West End Social</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9063091,35.998049,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA[Conniption Bar & Lounge - Formerly known as Corpse Reviver Bar & Lounge]]></name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9029041,36.0046403,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Pour Taproom</name>
-        <styleUrl>#icon-1517-673AB7-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9012878,35.9966673,0
-          </coordinates>
-        </Point>
-      </Placemark>
-    </Folder>
-    <Folder>
-      <name>Things to do</name>
-      <Placemark>
-        <name>American Tobacco Campus</name>
-        <styleUrl>#icon-1535-097138-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9041667,35.9933333,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Durham Bulls Athletic Park</name>
-        <styleUrl>#icon-1535-097138-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9049079,35.991542,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name><![CDATA["Major" – Durham Bull Bronze Sculpture]]></name>
-        <styleUrl>#icon-1535-097138-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9017088,35.9964874,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Museum of Durham History</name>
-        <styleUrl>#icon-1535-097138-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9049802,35.9982755,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Durham Central Park</name>
-        <styleUrl>#icon-1535-097138-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.901347,36.0006687,0
-          </coordinates>
-        </Point>
-      </Placemark>
-      <Placemark>
-        <name>Boxcar Bar + Arcade</name>
-        <styleUrl>#icon-1535-097138-nodesc</styleUrl>
-        <Point>
-          <coordinates>
-            -78.9016694,36.003381,0
-          </coordinates>
+        <address>201 Foster St, Durham, NC 27701</address>
+        <description><![CDATA[A full-service downtown tower connected to the Durham Convention Center, a dependable pick if you want a big-brand hotel and your Marriott points. It sits beside the historic Carolina Theatre, a short walk north of American Tobacco Campus, so Bay 7, the Wednesday welcome spots and downtown's bars are all within easy reach on foot.
+https://www.marriott.com/en-us/hotels/rducv-durham-marriott-city-center/overview/]]></description>
+        <Point>
+          <coordinates>-78.9027052,35.9970476,0</coordinates>
         </Point>
       </Placemark>
     </Folder>
@@ -1103,83 +102,921 @@
       <name>Coffee</name>
       <Placemark>
         <name>Aaktun Coffee, Restaurant and Bar</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <address>704 Ramseur St, Durham, NC 27701</address>
+        <description>From the team behind Mezcalito next door, this Tulum-inspired spot on Ramseur Street is a coffee shop by day and a tiki-style bar and restaurant by night. Mornings bring horchata lattes, matcha and espresso drinks in a room full of greenery and natural wood, while later the kitchen turns out ceviche, lomo saltado and pork belly alongside tropical cocktails. Good for a breakfast coffee meeting that could easily roll into dinner plans.
+https://aaktun.info/</description>
         <Point>
-          <coordinates>
-            -78.8957363,35.9893315,0
-          </coordinates>
+          <coordinates>-78.8957363,35.9893315,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
-        <name>Yonder Coffee</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <name>Yonder Coffee at the Daily</name>
+        <address>108 E Main St Suite 101, Durham, NC 27701</address>
+        <description><![CDATA[Durham's globe-trotting coffee bar runs a Global Roaster Subscription that spotlights a roaster from a different country each month, plus guest coffees from shops like Brooklyn's Parlor and Charlotte's HEX. Order the Flight of Filter, three small pours with notes on each coffee's farm-to-cup journey, or a Ganache Shot of filter coffee and dark chocolate. It all happens inside The Daily Beer Bar, which keeps coffee, tea, sandwiches and craft beer flowing into the evening.
+https://www.yonder.coffee/]]></description>
         <Point>
-          <coordinates>
-            -78.9005212,35.9946091,0
-          </coordinates>
+          <coordinates>-78.9005212,35.9946091,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>Cocoa Cinnamon</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <address>420 W Geer St, Durham, NC 27701</address>
+        <description><![CDATA[The Geer Street outpost of Cocoa Cinnamon, the Latina-led, women-forward cafe family behind Little Waves Coffee Roasters, a name on The World's 100 Best Coffee Shops list for North America, is a beloved Old North Durham hangout. Expect carefully sourced single-origin coffee, rich drinking chocolates and inventive specialty lattes, plus churros, in a lively space with covered outdoor seating made for people-watching. It's the pilgrimage for anyone who takes their coffee seriously.
+https://littlewaves.coffee/pages/old-north-durham]]></description>
         <Point>
-          <coordinates>
-            -78.9010749,36.0039706,0
-          </coordinates>
+          <coordinates>-78.9010749,36.0039706,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>The Oak House Durham</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <address>126 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[On the ground floor of One City Center, The Oak House is an all-day coffee shop and wine bar where espresso, pour-overs and French press share the menu with wine and craft beer from open to close. Pastries come from Strong Arm Baking Co., matcha from Durham's Arteao and chai from Winston-Salem's Chad's Chai. Free Wi-Fi with no time limit makes it an easy base for laptop work, a casual meeting or a glass of wine after sessions.
+https://oakhousedurham.com/]]></description>
         <Point>
-          <coordinates>
-            -78.9014868,35.9956143,0
-          </coordinates>
+          <coordinates>-78.9014868,35.9956143,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>PRESS Coffee Crêpes Cocktails</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <address>359 Blackwell St #135, Durham, NC 27701</address>
+        <description>Right on American Tobacco Campus, PRESS is a European-style coffeehouse that pours Durham-roasted Counter Culture coffee and slides from breakfast into lunch and cocktails as the day goes on. Savory crêpes like the Carolina (country ham, hoop cheese and mustard) and the hash brown waffles are the signatures, with sweet crêpes for dessert. Steps from the venue with a covered patio, it works for a pre-session coffee or a quick sit-down lunch.
+https://pressccc.com/</description>
         <Point>
-          <coordinates>
-            -78.904263,35.9925992,0
-          </coordinates>
+          <coordinates>-78.9042099,35.9925864,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>Narrative Coffee Company</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <address>300 Morris St Ste 101, Durham, NC 27701</address>
+        <description><![CDATA[Narrative started out as a coffee cart and trailer working Raleigh markets and festivals before putting down roots in Durham's Innovation District. Its specialty lattes are the draw, from the Butter Beer and Cookie Butter Oat to seasonal pours like Maple Bourbon and Pecan Praline, and pistachio milk is a fan-favorite upgrade. The cozy, quiet room is a welcoming place to catch up on email before heading to sessions.
+http://www.narrativecoffeecompany.com/]]></description>
         <Point>
-          <coordinates>
-            -78.903272,35.999837,0
-          </coordinates>
+          <coordinates>-78.903272,35.999837,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>Foster Street Coffee</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <address>530 Foster St #2, Durham, NC 27701</address>
+        <description><![CDATA[This hometown cafe in the Liberty Warehouse building, next to the Durham Food Hall just north of Central Park, is a favorite with remote workers thanks to comfortable chairs, plenty of tables and a meeting room. Baristas earn steady praise for chai lattes and espresso drinks, and paninis, smoothies, yogurt parfaits and coffee cake cover a quick breakfast. It's dog-friendly too, with an upbeat, social feel.
+http://fosterstreetcoffee.com/]]></description>
         <Point>
-          <coordinates>
-            -78.9012925,36.0016425,0
-          </coordinates>
+          <coordinates>-78.9012925,36.0016425,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>Yonderlust Cafe</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <address>109 N Gregson St, Durham, NC 27701</address>
+        <description>Part outdoor-gear shop and part cafe, this family-owned spot near Brightleaf has fueled Durham adventurers since 2022 with locally minded, organic-leaning food and a full coffee bar. Try a house special like the Campfire Latte with toasted marshmallow, cayenne and smoked salt, or the Maple Miso Cappuccino, alongside avocado toast or a panini on Ninth Street Bakery bread. Fresh juices and smoothies round out a menu built for a healthy start.
+https://yonderlu.st/</description>
         <Point>
-          <coordinates>
-            -78.909064,36.000436,0
-          </coordinates>
+          <coordinates>-78.909064,36.000436,0</coordinates>
         </Point>
       </Placemark>
       <Placemark>
         <name>Nectar Cafe</name>
-        <styleUrl>#icon-1899-795548-nodesc</styleUrl>
+        <address>620 Foster St, Durham, NC 27701</address>
+        <description><![CDATA[Tucked into the Geerhouse apartments' lobby, with a patio facing the complex's leafy decks and bridges, Nectar is a bright, modern cafe pouring espresso drinks, tea, juices and lemonade. Pastries, breakfast sandwiches and macarons handle the morning, while wine by the glass, cold beer and Lucettegrace desserts take over later in the day. It's calm and dog-friendly, with lobby seating that suits a quiet hour of laptop work.
+https://www.nectardurham.com/]]></description>
         <Point>
-          <coordinates>
-            -78.9007726,36.0031782,0
-          </coordinates>
+          <coordinates>-78.9007002,36.0031511,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ninth Street Bakery</name>
+        <address>136 E Chapel Hill St, Durham, NC 27701</address>
+        <description>A Durham institution since 1981, Ninth Street Bakery bakes organic breads and pastries at its downtown cafe and roasts its own coffee. Mornings mean croissants, scones and cinnamon buns; at lunch, rotating sandwiches on house bread, like curried chicken salad or roasted turkey, come out fast. Low-key, with outdoor tables, and a handy stop between the hotels and the venue.
+https://www.ninthstbakery.com/</description>
+        <Point>
+          <coordinates>-78.9029143,35.9966967,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Fare&Fellow]]></name>
+        <address>411 W Chapel Hill St, Durham, NC 27701</address>
+        <description><![CDATA[Fare&Fellow brings its coffee-plus-kitchen concept to the landmark NC Mutual building on West Chapel Hill Street, pairing espresso, flat whites, cold brew and draft kombucha with chef-driven plates. Mornings run from breakfast burritos and sandwiches to smoothie bowls and avocado toast, and the turkey-and-brie panini gets frequent shout-outs. A good-looking, cozy room and a friendly team make it a relaxed choice for a breakfast meeting.
+https://fareandfellow.com/]]></description>
+        <Point>
+          <coordinates>-78.9083214,35.9963806,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Montwood Café</name>
+        <address>123 Market St Ste A, Durham, NC 27701</address>
+        <description><![CDATA[Opened by a queer, interracial couple who fell for Durham after years of wandering, Montwood is a new neighborhood cafe on Market Street built around community and great coffee. Early reviewers single out well-pulled espresso and cappuccinos, cold brew and matcha, plus a warm welcome from the owners. It's a cozy, low-key spot for a quiet first cup before sessions start.
+http://www.montwoodcafe.com/]]></description>
+        <Point>
+          <coordinates>-78.9021835,35.9968433,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>The Can Opener</name>
+        <address>205 S Gregson St, Durham, NC 27701</address>
+        <description>Part craft coffee bar and part food truck park, The Can Opener on South Gregson Street pours espresso drinks, tea and matcha from early morning, then its on-site trucks serve Korean barbecue from Bulkogi, Greek street food and more for lunch and dinner. Roomy indoor and outdoor seating, local craft beer and cocktails make it a laid-back laptop spot by day and an easy group hangout later.
+http://thecanopenerdurham.com/</description>
+        <Point>
+          <coordinates>-78.9100663,35.9985175,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Juicekeys</name>
+        <address>110 N Corcoran St, Durham, NC 27701</address>
+        <description>Run by a brother-and-sister team, this locally owned juice and smoothie bar pairs cold-pressed juices and smoothie bowls with a full organic coffee menu, from pour-overs and lattes to bulletproof coffee. Gluten-free toasts and sandwiches make it a smart pick for a lighter breakfast, and it sits across Corcoran Street from the 21c Museum Hotel, handy for anyone staying downtown.
+http://juicekeys.com/</description>
+        <Point>
+          <coordinates>-78.9015257,35.9959335,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Lunch</name>
+      <Placemark>
+        <name>PRESS Coffee Crêpes Cocktails</name>
+        <address>359 Blackwell St #135, Durham, NC 27701</address>
+        <description>Right on American Tobacco Campus, PRESS is a European-style coffeehouse that pours Durham-roasted Counter Culture coffee and slides from breakfast into lunch and cocktails as the day goes on. Savory crêpes like the Carolina (country ham, hoop cheese and mustard) and the hash brown waffles are the signatures, with sweet crêpes for dessert. Steps from the venue with a covered patio, it works for a pre-session coffee or a quick sit-down lunch.
+https://pressccc.com/</description>
+        <Point>
+          <coordinates>-78.904263,35.9925992,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>QueenBurger</name>
+        <address>359 Blackwell St Ste 125, Durham, NC 27701</address>
+        <description><![CDATA[Smash burgers made from local grass-fed beef, stacked with house-made pickles and sauces, are the draw at this counter-service spot that began as a 2020 pandemic pop-up downtown. Beyond the classic there's a jerk burger, a patty melt, a veggie burger, chicken tenders and spicy fries, plus slushies and cocktails for the end of the day. It shares the ATC plaza with PRESS, handy when your group can't agree.
+http://eatqueenburger.com/]]></description>
+        <Point>
+          <coordinates>-78.9039817,35.9927674,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bull City Burger and Brewery</name>
+        <address>107 E Parrish St #105, Durham, NC 27701</address>
+        <description><![CDATA[Durham's homegrown brewpub has brewed its own beer on site since 2011 and grinds pasture-raised North Carolina beef in house for burgers on house-baked buns. Add duck-fat fries or pretzel-crusted pickle chips, and the Joan Jett veggie burger covers non-meat eaters. With about 90 seats, a year-round patio and a semi-private room, it handles a big conference group for lunch or an evening pint.
+http://www.bullcityburgerandbrewery.com/]]></description>
+        <Point>
+          <coordinates>-78.8997764,35.9954939,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Durham Food Hall</name>
+        <address>530 Foster St Ste 1, Durham, NC 27701</address>
+        <description><![CDATA[When your group can't agree on lunch, this food hall across from Durham Central Park settles it with about ten local counters under one roof. The current lineup includes Locals Seafood, Ex-Voto (known for its crunchwraps), Mango Indian Grill, Sfizio Pizzeria, Patty Boy, Corner Yaki and Everything Bagels, with Milklab and Liturgy Beverage for drinks and a central bar. You can order online for pickup to make the most of the break.
+http://durhamfoodhall.com/]]></description>
+        <Point>
+          <coordinates>-78.9013355,36.0013101,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Anjappar Chettinad Indian Restaurant, Durham</name>
+        <address>201 E Main St Ste 150, Durham, NC 27701</address>
+        <description>The Durham outpost of the Chettinad chain founded in Chennai in 1964 serves the fiery, pepper-forward cooking of Tamil Nadu alongside North Indian favorites. Dosas are the specialty, and the Chettinad goat masala, Chicken 65, biryani and flaky Malabar parotta are all worth ordering. A strong pick for spice lovers and vegetarians, with plenty of paneer and vegetable dishes to share.
+https://anjapparindian.com/</description>
+        <Point>
+          <coordinates>-78.8987389,35.9942028,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Counting House</name>
+        <address>111 N Corcoran St, Durham, NC 27701</address>
+        <description><![CDATA[The restaurant inside 21c Museum Hotel fills a former bank, complete with the old vault, original terrazzo floors and tall arched windows, with contemporary art never far away. The weekday daytime menu runs from breakfast into lunch with Japanese milk bread, za'atar deviled eggs, oysters on the half shell and a burger, all leaning on Carolina ingredients. It's the most polished sit-down lunch nearby; book ahead for a group.
+http://www.countinghousenc.com/]]></description>
+        <Point>
+          <coordinates>-78.9018032,35.9959681,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Thaiangle Restaurant</name>
+        <address>200 N Mangum St Ste 101, Durham, NC 27701</address>
+        <description>Opened in 2024, this family-owned Thai restaurant on North Mangum Street cooks everything to order in a calm, polished dining room. Drunken noodles, pad see ew, khao soi and the honey-glazed crispy duck are the favorites, and the kitchen will adjust the heat to your taste. A dependable sit-down lunch when you want something brighter than a burger.
+https://www.thaiangleofdurham.com/</description>
+        <Point>
+          <coordinates>-78.8999034,35.9957636,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Queeny's]]></name>
+        <address>321 E Chapel Hill St Ste 100, Durham, NC 27701</address>
+        <description><![CDATA[A nostalgic neighborhood bar and grill inspired by the spirit of a potluck, Queeny's pairs comfort food with a community-minded, everyone-welcome attitude. The chicken tenders and cheeseburgers have a loyal following, and the birria dip, French dip and sabich sandwich are worth a look. Counter service keeps lunch moving, and it's just as handy for a late bite after the evening events.
+http://queenysdurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9007613,35.9970318,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Gym Tacos</name>
+        <address>102 City Hall Plaza, Durham, NC 27701</address>
+        <description><![CDATA[A bright, casual taqueria on City Hall Plaza that presses its corn tortillas by hand. Go for the al pastor torta, suadero (brisket) tacos or a gringa, and finish with churros; the surf-and-turf burrito is a two-handed commitment. It's quick, inexpensive and an easy group order.
+https://gymtacosnc.com/]]></description>
+        <Point>
+          <coordinates>-78.8995789,35.9959033,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Luna Rotisserie and Empanadas</name>
+        <address>112 W Main St, Durham, NC 27701</address>
+        <description>Luna blends South American cooking with the American South, using pasture-raised, antibiotic-free meats in its rotisserie chicken, empanadas, arepas and grain bowls. Arepas, coconut rice, yuca and sweet maduros come up again and again in reviews, and jackfruit options make it easy for vegetarians. The exposed-brick room on West Main is casual enough for a quick lunch, with a full bar if the day calls for it.
+http://www.lunarotisserie.com/</description>
+        <Point>
+          <coordinates>-78.9009837,35.9953339,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dashi Ramen and Izakaya Cocktail Bar</name>
+        <address>415 E Chapel Hill St, Durham, NC 27701</address>
+        <description>The ground floor of this two-level Japanese spot is a cozy ramen shop with an open kitchen, turning out tonkotsu, shio, shoyu, miso and tantanmen bowls, plus a vegan ramen. Upstairs, the izakaya opens later with small plates, sake, shochu and a big whisky list. For lunch, stick to the ramen counter downstairs; a steaming bowl is ideal on a chilly November day.
+http://www.dashiramen.com/</description>
+        <Point>
+          <coordinates>-78.8992279,35.9970933,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Barsa New Indian</name>
+        <address>105 W Morgan St Ste 100, Durham, NC 27701</address>
+        <description><![CDATA[Barsa, whose name means rain in Hindi, puts a modern, refined spin on regional Indian cooking from Kerala to Kashmir. Standouts include Kerala-style lobster moilee, gunpowder lamb chops, slow-cooked goat rogan and plenty of vegetarian dishes such as paneer butter masala and pumpkin coconut curry. It's an upscale but relaxed lunch, good for a client meal or a small group that wants something special.
+https://barsanc.com/]]></description>
+        <Point>
+          <coordinates>-78.8988562,35.9976495,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pokeworks</name>
+        <address>122 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[This fast-casual poke bar builds bowls, burritos and salads to order, with spicy ahi, Hawaiian ahi, yuzu ponzu salmon, huli huli chicken and tofu among the proteins. It's a light, quick lunch with lots of gluten-free and vegan combinations, and reviewers regularly praise the friendly staff. Part of a national chain, it's a reliable pick when you want something fresh and fast.
+https://www.pokeworks.com/]]></description>
+        <Point>
+          <coordinates>-78.901368,35.995535,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pizzeria Toro</name>
+        <address>105 E Chapel Hill St, Durham, NC 27701</address>
+        <description><![CDATA[Wood-fired pies come out of the central oven at this busy, modern downtown pizzeria, with toppings that follow what local farms are bringing in. Start with the ricotta dumplings or the much-loved Tuscan kale salad, then split a sweet fennel sausage pizza. There's communal and bar seating but no reservations, so go early to beat the lunch crowd.
+http://www.pizzeriatoro.com/]]></description>
+        <Point>
+          <coordinates>-78.9036011,35.9971175,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pie Pushers</name>
+        <address>117A W Main St, Durham, NC 27701</address>
+        <description><![CDATA[What started as a food truck is now a downtown shop serving Durham-style thin-crust pizza by the slice or the whole pie. The wings are a sleeper hit, alongside garlic knots, Brussels sprouts and pies like the Pace Car and Barb's Margherita, with gluten-free and vegan options too. Slices make it one of the quicker, cheaper real lunches downtown.
+http://www.piepushers.com/]]></description>
+        <Point>
+          <coordinates>-78.901495,35.995255,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Parker and Otis</name>
+        <address>324 Blackwell St Bay 4, Durham, NC 27701</address>
+        <description>This cozy cafe and gourmet market sits on American Tobacco Campus, just steps from Bay 7. Order a BLT or shrimp BLT, curry chicken salad or a ham-and-Swiss panini with deviled eggs on the side, then browse the shelves of North Carolina foods, wine, candy and gifts on the way out. The closest lunch to the venue, and a good place to grab souvenirs for home.
+https://www.parkerandotis.com/</description>
+        <Point>
+          <coordinates>-78.9055208,35.992789,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Lutra Cafe and Bakery</name>
+        <address>312 Blackwell St, Noell Building #102, Durham, NC 27701</address>
+        <description><![CDATA[Chris McLaurin's popular pop-up opened its first brick-and-mortar cafe in June 2026 in ATC's Noell Building, across from the historic rail car. It's famous for its buns, sweet and savory in flavors like pistachio-honey and pepperoni pizza, plus a crisp hundred-layer hash brown, with sandwiches, soups and salads at lunch. Counter service on weekdays keeps it quick, and there's a patio for mild days.
+https://lutrabakery.com/]]></description>
+        <Point>
+          <coordinates>-78.9040269,35.9943301,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>East of Texas</name>
+        <address>318 Blackwell St #100, Durham, NC 27701</address>
+        <description>The Winston-Salem Tex-Mex barbecue favorite opened its second location on American Tobacco Campus in late summer 2026. Expect sliced brisket, lime-glazed pulled pork, brisket and barbacoa tacos, smoked cauliflower tacos for vegetarians, and Texas Twinkies (bacon-wrapped, brisket-stuffed jalapeños), with fresh tortillas, queso and guacamole on the side. A big room and new patio make it a good bet for groups.
+https://eastoftexas.com/</description>
+        <Point>
+          <coordinates>-78.90433,35.99329,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Tobacco Road Sports Cafe</name>
+        <address>280 S Mangum St #100, Durham, NC 27701</address>
+        <description><![CDATA[Founded in 2008 by the Amra brothers, this ATC landmark bills itself as a sports restaurant rather than a sports bar, with a scratch-made, Southern-leaning menu sourced locally where possible. The patio looks straight over the Durham Bulls Athletic Park, and favorites include buffalo chicken egg rolls, fried green tomatoes and the bison burger. It's roomy and group-friendly, an easy call when a dozen colleagues want to eat together.
+http://www.tobaccoroadsportscafe.com/]]></description>
+        <Point>
+          <coordinates>-78.903499,35.9925223,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Toast</name>
+        <address>345 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[This Italian paninoteca at Five Points is a longtime downtown lunch favorite built around panini, crostini and homemade soups on crusty bread. The crostini combo is the classic order, with warm goat cheese, prosciutto and garlicky mushroom among the favorites, and daily specials follow what's fresh. Order at the counter and grab a seat inside or on the sidewalk.
+http://toast-fivepoints.com/]]></description>
+        <Point>
+          <coordinates>-78.9039702,35.9967317,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>M Kokko</name>
+        <address>311 Holland St Ste B, Durham, NC 27701</address>
+        <description><![CDATA[From the local group behind M Sushi and M Tempura, this tiny counter on Holland Street is all about fried chicken and noodles. Order the chicken sandwich, Korean-style fried wings, Hainan chicken, pork buns, ramen or the vegan biang biang noodles. Seating is limited and there's often a line, so it's best for a small group or takeout.
+http://mkokko.m-restaurants.com/]]></description>
+        <Point>
+          <coordinates>-78.9012266,35.9973085,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ninth Street Bakery</name>
+        <address>136 E Chapel Hill St, Durham, NC 27701</address>
+        <description>A Durham institution since 1981, Ninth Street Bakery bakes organic breads and pastries at its downtown cafe and roasts its own coffee. Mornings mean croissants, scones and cinnamon buns; at lunch, rotating sandwiches on house bread, like curried chicken salad or roasted turkey, come out fast. Low-key, with outdoor tables, and a handy stop between the hotels and the venue.
+https://www.ninthstbakery.com/</description>
+        <Point>
+          <coordinates>-78.9029143,35.9966967,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Dinner</name>
+      <Placemark>
+        <name>Viceroy</name>
+        <address>335 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[Viceroy dresses like an old London tavern, with vintage decor and portraits from India's past, and cooks classic Indian dishes alongside British-Indian mashups like curried shepherd's pie. Regulars order the lamb lollipops, sausage rolls, chicken korma and seasonal curries with a pint of Guinness or a house cocktail, and vegans get plenty of choice. It sits a couple of doors from SO/IF Bar, so it's an easy dinner around Wednesday's welcome drinks.
+https://www.viceroydurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9036861,35.9965393,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Seraphine</name>
+        <address>324 Blackwell St Ste 4, Durham, NC 27701</address>
+        <description><![CDATA[Durham restaurateurs Brad and Graham Weddington and Chef Christopher Garrett cook their family's Louisiana heritage at this MICHELIN Guide–recommended spot, in the same American Tobacco Campus building as Bay 7. Order broiled oysters, BBQ shrimp, gumbo, crawfish and shrimp and grits, then split beignets or key lime pie. The New Orleans-style patio and polished cocktails make it the natural sit-down group dinner without leaving campus.
+https://seraphinedurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9057665,35.9928259,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Mateo Bar de Tapas</name>
+        <address>109 W Chapel Hill St, Durham, NC 27701</address>
+        <description><![CDATA[Chef Matthew Kelly's Spanish-meets-Southern tapas bar has filled the old Book Exchange building since 2012, backed by a deep Spanish wine list and one of the country's largest sherry selections. Share pan con tomate, roasted bone marrow, pollo frito, croquetas and pulpo, or order paella for the table. It hosts this year's Welcome Party, so come back Thursday or Friday to see it at regular service.
+https://mateotapas.com/]]></description>
+        <Point>
+          <coordinates>-78.9047943,35.9968525,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Alley Twenty Six</name>
+        <address>320 E Chapel Hill St Ste 200, Durham, NC 27701</address>
+        <description><![CDATA[Shannon Healy's cocktail bar set Durham's craft-drinking standard when it opened in 2012, and it still builds seasonal cocktails on house-made syrups and tonic, which it also sells and teaches in its cocktail classes. The upscale bar food holds its own: the burger, deviled eggs, pimento cheese and beef tartare are crowd favorites. A kitchen that runs late makes it one of the few real dinner options after Wednesday's welcome party.
+https://www.alleytwentysix.com/]]></description>
+        <Point>
+          <coordinates>-78.900525,35.996751,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>M Sushi</name>
+        <address>311 Holland St, Durham, NC 27701</address>
+        <description><![CDATA[The restaurant that launched chef Mike Lee's M Restaurants group serves pristine fish in a dim, minimalist room with stone-gray walls and low black chairs. The Lite Omakase is the most-ordered move, and wagyu, smoked cod, seared salmon rolls and tuna crispy rice also draw raves. Seats are limited and there's usually a wait, so book ahead and keep the party small.
+https://msushidurham.m-restaurants.com/]]></description>
+        <Point>
+          <coordinates>-78.9011981,35.9973242,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Little Bull</name>
+        <address>301 E Chapel Hill St, Durham, NC 27701</address>
+        <description>Chef Oscar Diaz cooks what he calls Pocho food: sincere, nostalgic comfort cooking shaped by first-generation immigrant kids, drawing on his Mexican heritage, a Chicago upbringing and North Carolina produce. The MICHELIN Guide–recommended restaurant now fills a bigger two-story downtown space with room for parties. Share ceviche, arepas, octopus, barbacoa and gambas, and save room for the bread pudding.
+https://littlebullnc.com/</description>
+        <Point>
+          <coordinates>-78.9015868,35.9970325,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bar Virgile</name>
+        <address>105 S Mangum St Unit 1, Durham, NC 27701</address>
+        <description><![CDATA[A downtown landmark for craft and classic cocktails, Bar Virgile backs one of the Triangle's biggest spirits collections with a menu of small plates and dinner dishes that changes with the seasons. Fried oysters, deviled eggs, steak frites, risotto and the burger are regulars' picks, eaten at the bar or in the leather banquettes. It's walk-in only and close to DPAC and the Carolina Theatre.
+https://www.barvirgiledurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9007933,35.9947192,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Rue Cler</name>
+        <address>401 E Chapel Hill St, Durham, NC 27701</address>
+        <description><![CDATA[Modeled on the neighborhood bistros of Paris, Rue Cler has served classic French cooking downtown since 2006, now under Executive Chef Gregory Rogers, who builds his menus around local farms and the seasons. Pick the rotating prix fixe or go à la carte with escargot, chicken pâté, coq au vin and duck confit, backed by a wine list with some rare bottles. It's a relaxed, grown-up group dinner on the way to the after party.
+https://rueclerdurham.com/]]></description>
+        <Point>
+          <coordinates>-78.8997435,35.9970869,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>NanaSteak</name>
+        <address>345 Blackwell St, Durham, NC 27701</address>
+        <description>Right on American Tobacco Campus beside DPAC and the Aloft, NanaSteak is a polished two-level steakhouse with hardwood floors, a bar and a patio. Prime rib is the signature, with steak tartare, beef-fat fries, collard greens and an apple crisp worth saving room for. Private dining and plenty of room for groups make it the easiest nice dinner near the venue.
+https://nanasteak.com/</description>
+        <Point>
+          <coordinates>-78.9027412,35.9935313,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>M Tempura</name>
+        <address>111 W Orange St, Durham, NC 27701</address>
+        <description><![CDATA[A rare restaurant devoted to tempura, M Tempura from chef Mike Lee's M Restaurants group fries seafood and vegetables to order in a light, crackling batter. The multi-course omakase and kaiseki-style menus are the reason to go, with scallop and the house ginger ice cream as standouts, and bar seats put you right by the fryer. Book ahead for a slow, special dinner.
+https://mtempura.m-restaurants.com/]]></description>
+        <Point>
+          <coordinates>-78.9005111,35.9961601,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Nerra</name>
+        <address>506 Ramseur St Ste 2, Durham, NC 27701</address>
+        <description>Nerra is a seasonal, seafood-forward kitchen that sources from North Carolina fishers, farmers and foragers, served at a marble bar or out on the patio on Ramseur Street. Expect coastal catches like red snapper and salmon alongside ceviche, shrimp and grits, gumbo and a Cajun seafood pasta, with creative cocktails to match. Daily happy hour brings half-price appetizers at the bar.
+https://nerradurham.com/</description>
+        <Point>
+          <coordinates>-78.8964666,35.9903696,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Flying Bull Restaurant and Brewery</name>
+        <address>300 Morris St Ste 103, Durham, NC 27701</address>
+        <description><![CDATA[This veteran-owned brewery's Morris Street restaurant and brewhouse is now its home base, a big, easygoing room a few blocks from Foster Street. Pair a flight of house beers, Scottish ale included, with a smash burger, deviled eggs, Brussels sprouts or truffle fries, or switch to an espresso martini. Reservations and private event space make it an easy group dinner on the way to the after party.
+https://www.flyingbullbeercompany.com/morris-street-restaurant-and-brewery]]></description>
+        <Point>
+          <coordinates>-78.9034592,36.000063,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>M Nikkei</name>
+        <address>101 E Chapel Hill St, Durham, NC 27701</address>
+        <description>Chef Mike Lee has turned his former M Pocha space at Five Points into M Nikkei, a Japanese-Peruvian restaurant built around robatayaki charcoal grilling and sushi hand rolls. Nikkei cooking marries Japanese technique with Peruvian ingredients, so expect charcoal-grilled seafood, meats and vegetables plus hand rolls to share. It opens the week before the conference, making it the newest table in town for adventurous eaters.
+https://mnikkei.m-restaurants.com/</description>
+        <Point>
+          <coordinates>-78.903763,35.9970467,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Mothers & Sons Trattoria]]></name>
+        <address>107 W Chapel Hill St, Durham, NC 27701</address>
+        <description>Chef-owner Josh DeCarolis built this regional Italian trattoria around handmade pasta and the family meals of his Italian American childhood. Squid ink pasta, cacio e pepe, arancini and porchetta are the dishes regulars rave about, on a menu that turns with the seasons. It takes reservations, works well for groups and sits right next door to Mateo.
+https://www.mothersandsonsnc.com/</description>
+        <Point>
+          <coordinates>-78.9047132,35.996868,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Cucciolo Osteria Durham</name>
+        <address>601 W Main St Ste C, Durham, NC 27701</address>
+        <description>Cucciolo Osteria serves modern Italian cooking in a cozy, always-busy room on West Main Street, close to the train tracks. House-made pastas lead the menu, with the white ragù and truffle pasta drawing the most praise, alongside arancini, a daily fish and a bread pudding worth sharing. Reservations are close to essential, and it handles groups well.
+https://cucciolonc.com/osteria/</description>
+        <Point>
+          <coordinates>-78.9064199,35.9979014,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Zweli's Ekhaya]]></name>
+        <address>406 Blackwell St Ste 100, Durham, NC 27701</address>
+        <description><![CDATA[This American Tobacco Campus spot from the Zweli's team serves Southern African cooking as shareable small plates. Try the bobotie, sausage rolls, steak kabobs and roasted cauliflower, and vegans will find real choices. It's a few minutes from the Thursday rail-car happy hour, so a group can roll straight from drinks into dinner.
+https://zwelisekhaya.com/]]></description>
+        <Point>
+          <coordinates>-78.9050879,35.9922942,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Taberna Tapas</name>
+        <address>325 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[Taberna Tapas turns out a long menu of Spanish small plates and paellas made for passing around the table. Regulars go for the short rib, bacon-wrapped dates and Brussels sprouts, then finish with churros or chocolate mousse. It sits next door to SO/IF Bar on West Main, so it's a natural group stop before Wednesday's welcome party or for a Thursday dinner that runs past 9.
+https://tabernatapas.com/]]></description>
+        <Point>
+          <coordinates>-78.9034589,35.9964204,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Cheeni</name>
+        <address>202 N Corcoran St Ste 100, Durham, NC 27701</address>
+        <description><![CDATA[Owner Preeti named Cheeni after her earlier street-style kiosk, and this downtown restaurant serves homestyle regional Indian food with its own bar, Bar Beej. The paneer dishes, lamb vindaloo, samosas, aloo chaat and fresh naan are the hits. It's a handy group dinner between campus and Foster Street before the BOOM Club after party.
+https://cheeni-durham-rtp.squarespace.com/]]></description>
+        <Point>
+          <coordinates>-78.9012588,35.9967698,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Nikos</name>
+        <address>905 W Main St Unit 21B, Durham, NC 27701</address>
+        <description><![CDATA[Restaurateur Giorgios Bakatsias honors his Greek family heritage at Nikos, a MICHELIN Guide–recommended restaurant in Brightleaf Square's old tobacco warehouses, built around philoxenia, the Greek tradition of welcoming strangers. Share hummus, spanakopita and zucchini cakes, and grab patio seats when the weather cooperates. Reservations and private event space make it a strong pick for a team dinner.
+https://www.nikosdurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9103777,36.0002225,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Convivio Restaurant</name>
+        <address>104 City Hall Plaza Ste 100, Durham, NC 27701</address>
+        <description>Convivio is a downtown Italian restaurant and wine bar where the kitchen makes everything from scratch, leaning on seasonal ingredients and fresh truffle. Start with burrata and a charcuterie board, let the staff pair a wine with your pasta, and finish with an affogato. It takes reservations and seats groups, making it an easy sit-down dinner on the walk toward Foster Street.
+https://www.conviviorestaurant.com/</description>
+        <Point>
+          <coordinates>-78.8994022,35.9957585,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Goorsha</name>
+        <address>910 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[Named for gursha, the Ethiopian custom of feeding a friend a bite by hand, Goorsha near Brightleaf Square is built for sharing. Big platters of stews and vegetables arrive on injera for the whole table: get the doro wot, sambusa and collard greens, with wine, beer or cider alongside. The shared-platter format suits groups, and there's a patio for mild evenings.
+https://www.goorshadurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9098046,36.0006213,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Drinks</name>
+      <Placemark>
+        <name>delafia</name>
+        <address>1103 S Roxboro St, Durham, NC 27707</address>
+        <description><![CDATA[Tucked into a white-brick corner building on South Roxboro Street, delafia is Durham's natural-wine hideout: small-producer, low-intervention bottles poured from a by-the-glass list that changes constantly, with a bottle shop on one side and an L-shaped bar on the other. Snack on olives, cheese and tinned fish, catch the occasional food pop-up, and drift out to the patio. It's the pick for anyone who wants something funky and unfamiliar in the glass.
+https://www.instagram.com/delafiabar]]></description>
+        <Point>
+          <coordinates>-78.9026308,35.9832881,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Weldon Mills Distillery Durham</name>
+        <address>300 E Main St, Ste 001, Durham, NC 27701</address>
+        <description>The downtown tasting room of Weldon Mills, a craft distillery from Weldon, North Carolina, is a low-key, speakeasy-style lounge on East Main Street pouring its own bourbons, whiskeys, gin, rum and agave spirits in flights and house cocktails. Book a bourbon tasting, pair it with a charcuterie board or basil deviled eggs, and sink into the comfy seating; live jazz shows up on some nights. Bottles are sold to go if you want a Bull City souvenir.
+http://weldonmillsdurham.com/</description>
+        <Point>
+          <coordinates>-78.8983669,35.9934615,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Honeygirl Meadery & Tasting Room]]></name>
+        <address>312 Blackwell St, Suite 103, Durham, NC 27701</address>
+        <description><![CDATA[Durham's urban meadery now pours as Ment Beverage Co., a lower-level tasting room on American Tobacco Campus with two dozen taps. Honeygirl's honey wines run from dry to sparkling and barrel-aged, joined by house ciders, seltzers, nonalcoholic picks and what the makers bill as Durham's first sake. Order a mead flight, bring takeout from the ATC restaurants (outside food is welcome), and try something you can't get back home.
+https://www.mentbev.com/]]></description>
+        <Point>
+          <coordinates>-78.9040098,35.9941544,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bull City Ciderworks Durham</name>
+        <address>305 S Roxboro St, Durham, NC 27701</address>
+        <description>Bull City Ciderworks keeps a long, rotating board of hard ciders, from tart cherry to hopped and seasonal experiments, in a rustic, industrial-chic taproom with outdoor seating. Food trucks park outside most nights, while board games, a pool table and trivia keep groups entertained, and mocktails and THC seltzers cover anyone skipping alcohol. An easygoing, unfussy stop a few blocks east of ATC.
+https://bullcityciderworks.com/durham/</description>
+        <Point>
+          <coordinates>-78.8993013,35.9909566,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Ponysaurus Brewing Co.</name>
+        <address>219 Hood St, Durham, NC 27701</address>
+        <description><![CDATA[Born in an attic nanobrewery and brewing on Hood Street since 2015, Ponysaurus is one of Durham's homegrown favorites, with a sprawling, dog-friendly beer garden full of picnic tables. The taproom now runs its own pizzeria window, so pies, garlic knots and salads make it a casual dinner stop too. Reviewers single out the Scottish ale, and the brewery also makes High Horse, a cannabis-infused sparkling drink.
+https://www.ponysaurusbrewing.com/taproom]]></description>
+        <Point>
+          <coordinates>-78.8952496,35.9895842,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Fullsteam</name>
+        <address>320 Blackwell St, Suite 100, Durham, NC 27701</address>
+        <description><![CDATA[Fullsteam, Durham's plow-to-pint brewery, is back downtown in the American Tobacco Campus Power Plant, right beside Bay 7. The new Public House pours Southern-sourced beers such as Carver Sweet Potato Lager, Southern Basil Saison and pawpaw sours, plus Wyndfall cider, wine and nonalcoholic drinks, with Southern bar food from the kitchen. A 100-seat theater and private Stoker Club room host events, so check what's on.
+https://www.fullsteam.ag/visit/durham]]></description>
+        <Point>
+          <coordinates>-78.9045813,35.9937821,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[The Velvet Hippo Bar & Lounge]]></name>
+        <address>119 W Orange St, 3rd Floor, Durham, NC 27701</address>
+        <description>Head up to the third floor of an Orange Street building to find this tropical-themed rooftop lounge, which bills itself as a neighborhood bar for everyone and pairs Cheers-style friendliness with getaway decor. Expect signature cocktails, local beers, thoughtful mocktails and a kitchen that runs late, with DJs on some nights. Leashed, well-behaved pups are welcome on the roof deck on weekend afternoons. A breezy, unpretentious place to regroup with a crew.
+https://www.velvethippodurham.com/</description>
+        <Point>
+          <coordinates>-78.9004895,35.9964307,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Dram and Draught</name>
+        <address>701 W Main St, Ste 123, Durham, NC 27701</address>
+        <description><![CDATA[The 2016 original of what is now a small North Carolina bar group, Dram & Draught on West Main is a laid-back haven for brown-spirit fans, with a deep list of whiskeys plus agave, rum and brandy pours. Bartenders happily guide you to something new or shake a classic like the house-favorite Penicillin, and the draft list rotates. A grown-up, conversation-friendly bar for a nightcap near Brightleaf.
+https://www.dramanddraught.com/durham]]></description>
+        <Point>
+          <coordinates>-78.9080672,35.9989879,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Boxcar Bar + Arcade</name>
+        <address>621 Foster St, Durham, NC 27701</address>
+        <description><![CDATA[Boxcar packs classic and modern arcade cabinets, pinball, skee-ball and air hockey into a big bar with rotating craft drafts, cocktails and house-made pizza. Its patio with fire pits overlooks the old Durham Athletic Park, where Bull Durham was filmed, and it sits just up Foster Street from BOOM Club, so it's an easy team outing or a warm-up before Thursday's after party.
+https://theboxcarbar.com/durham/]]></description>
+        <Point>
+          <coordinates>-78.9016694,36.003381,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Kingfisher</name>
+        <address>321 E Chapel Hill St, Durham, NC 27701</address>
+        <description>Next door to The Durham Hotel and down a flight of stairs, Kingfisher is an artful basement bar built around ground-to-glass cocktails that lean on North Carolina produce and foraged ingredients, with seasonal menus and striking presentation. Jazz nights pop up on the calendar, and a supper club series adds food-focused evenings. Ideal for a thoughtful, creative drink, and an easy hop for anyone staying at The Durham or 21c.
+https://www.kingfisherdurham.com/</description>
+        <Point>
+          <coordinates>-78.9008011,35.9970432,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Hi-Wire Brewing Durham</name>
+        <address>800 Taylor St, #9-150, Durham, NC 27701</address>
+        <description>Asheville-born Hi-Wire runs a big, mural-wrapped taproom on the Golden Belt campus east of downtown, with a large covered patio and plenty of room for a crowd. Ping-pong tables, cornhole and pinball keep things lively, the taps run from crisp lagers to hazy IPAs, and neighboring Cugino Forno will deliver Neapolitan pizza to your table. N/A beer, mocktails and THC seltzers round out the menu.
+https://hiwirebrewing.com/durham/</description>
+        <Point>
+          <coordinates>-78.8900261,35.9915365,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>West End Social</name>
+        <address>601 W Main St, Ste E, Durham, NC 27701</address>
+        <description><![CDATA[Durham's longtime West Main Street wine bar has grown into West End Social, an upscale lounge with an elegant downstairs bar, cozy mezzanine seating and an outdoor patio, run alongside West End Billiards. The wine list is still a draw, backed by house cocktails, mocktails and nightly deals such as discounted select bottles on Wednesdays and $5 drafts on Thursdays. Arrive early for conversation before DJs take over later in the night.
+https://www.westenddurham.com/social]]></description>
+        <Point>
+          <coordinates>-78.9063091,35.998049,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>DSSOLVR Durham</name>
+        <address>630 Rigsbee Ave, Durham, NC 27701</address>
+        <description><![CDATA[Asheville's DSSOLVR brings its trippy, alien-art aesthetic to a Rigsbee Avenue taproom pouring everything from Mexican-style lagers and Italian pilsners to hazy IPAs, sours, ciders and hard seltzers, with gluten-free options in the mix. Board games and a dog-friendly crowd keep it casual, and daily specials include $8 cocktails on Thursdays. A fun, low-stakes meeting point in the Warehouse District.
+https://dssolvr.com/location/dssolvr-durham/]]></description>
+        <Point>
+          <coordinates>-78.8997983,36.0018623,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>La Mala Mexican Inspired Cocktails</name>
+        <address>110 Corcoran St, Durham, NC 27701</address>
+        <description>La Mala shakes Mexican-inspired cocktails with fresh-squeezed fruit and good tequila, and backs them with street food made in house daily, like bright ceviche and loaded Mexican fries. The colorful, mural-covered room a short stroll from DPAC has real party energy, and the margaritas are the order. A crowd-pleasing group pick when you want a drink and a bite in one stop.
+https://lamalamx.com/home/</description>
+        <Point>
+          <coordinates>-78.9016279,35.9956818,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Durham Beer Garden</name>
+        <address>812 N Mangum St, Durham, NC 27701</address>
+        <description>This neighborhood bottle shop and beer garden on North Mangum Street keeps about 20 rotating taps flowing, with a full kitchen turning out burgers, fries and pub classics and roomy indoor and outdoor seating for groups. Dogs and families are welcome, and live music and community events fill the calendar. A relaxed place to refuel on the north side of downtown.</description>
+        <Point>
+          <coordinates>-78.8948379,36.0020079,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>The Wine Feed</name>
+        <address>307 S Roxboro St, Durham, NC 27701</address>
+        <description>Part bottle shop, part wine bar and part restaurant, The Wine Feed on South Roxboro Street stocks its shelves with small, family-owned producers from around the world, and the staff love steering you toward something new. Pair a glass or bottle with the globally inspired dinner menu or a cheese and charcuterie board, or catch one of its wine dinners and classes. A polished, cozy change of pace from the brewery circuit.
+https://thewinefeed.com/</description>
+        <Point>
+          <coordinates>-78.8995761,35.9910474,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Eve</name>
+        <address>108 E Parrish St, Durham, NC 27701</address>
+        <description>Opened in early 2026 by Uma Ramiah and Jessica Breland, Eve is a woman-owned, plant-draped lounge on East Parrish Street styled as a reclaimed Garden of Eden, with towering bookshelves, a rolling ladder and a resin bar studded with dried flowers and butterflies. The cocktails lean botanical: try the Serpentine, a smoky mezcal margarita, or the Night Orchard, a bitter Negroni riff. Zero-proof drinks, a back patio and a record-spinning DJ booth round it out.
+https://evedurham.com/</description>
+        <Point>
+          <coordinates>-78.8999299,35.9952399,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>The Pinhook</name>
+        <address>117 W Main St, Durham, NC 27701</address>
+        <description>A West Main Street fixture, The Pinhook is a scrappy, queer-friendly bar and live-music room that swings from touring indie bands to karaoke and dance nights, depending on the calendar. The drinks are no-frills, the crowd is welcoming, and the energy builds the later it gets. A very Durham way to stretch a night out downtown.
+https://thepinhook.com/</description>
+        <Point>
+          <coordinates>-78.901501,35.995254,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>High Dive Durham</name>
+        <address>101 W Main St Ste Lo2, Durham, NC 27701</address>
+        <description>A dive bar with good manners, High Dive fills the lower level of the historic Kress building with pool, pinball, darts, foosball, Golden Tee and a vintage jukebox. It comes from the team behind Bar Virgile, so the drafts are cheap, the cocktails are thoughtful, there are a few zero-proof picks and the popcorn is free. Bring a group, claim the pool table and settle the canonical-tag debate over a game of eight-ball.
+http://www.highdivedurham.com/</description>
+        <Point>
+          <coordinates>-78.9010196,35.9948848,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>The Daily Beer Bar</name>
+        <address>108 E Main St Suite 101, Durham, NC 27701</address>
+        <description><![CDATA[The Daily is an independently owned bar and café that changes gears all day: Yonder Coffee and local bakery pastries in the morning, sandwiches from the kitchen at lunch, then a rotating lineup of local craft beer and wine into the evening. It's cozy and unhurried, the kind of place for a quiet pint, a laptop catch-up or a proper conversation before the night gets loud.
+http://www.thedailybeerbar.com/]]></description>
+        <Point>
+          <coordinates>-78.9004488,35.9947478,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>The Glass Jug Beer Lab - Downtown Durham</name>
+        <address>545 Foster St Ste 10, Durham, NC 27701</address>
+        <description><![CDATA[The downtown taproom of family-run Glass Jug pours the brewery's own small-batch beers alongside a solid wine list and draft cocktails, in a bright space beside Durham Central Park. It sits just down Foster Street from BOOM Club, which makes it the natural place to gather your crew for a pint before the Thursday after party.
+https://www.glass-jug.com/downtown-durham]]></description>
+        <Point>
+          <coordinates>-78.9016062,36.0013327,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Rhythm & Brews Bar and Grill]]></name>
+        <address>908 Fayetteville St #101, Durham, NC 27701</address>
+        <description><![CDATA[This lively Fayetteville Street bar and grill pairs a music-driven atmosphere with a menu that runs from bar classics to signature plates, and the crispy wings get plenty of love in reviews. Expect creative cocktails and mocktails, local and international beers, live music and a friendly crew behind the bar. It's a few blocks from delafia, a handy stop for anyone already heading south for Friday's farewell party.
+https://rhythmandbrewsbg.com/]]></description>
+        <Point>
+          <coordinates>-78.8994718,35.9846018,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Atomic Clock Brewing Company</name>
+        <address>501 Washington St Suite A, Durham, NC 27701</address>
+        <description>Siblings Brian and Colleen Quinn opened Atomic Clock in 2024 inside a historic city garage on Washington Street, turning it into a polished, roomy taproom. About ten house beers rotate across IPAs, lagers and sours, backed by a full kitchen with a rotating menu, plus cocktails and wine. It handles groups easily, and BOOM Club is a short stroll away for the Thursday after party.</description>
+        <Point>
+          <coordinates>-78.9041536,36.0025519,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Ramblers Beer & Wine]]></name>
+        <address>115 Fuller St, Durham, NC 27701</address>
+        <description><![CDATA[Ramblers is a chill, modern-rustic neighborhood bar with rotating craft drafts, a well-chosen wine list and a bottle shop for anything you want to take back to the hotel. It's relaxed and conversation-friendly, the right call when you want a great pint without shouting over a DJ.
+https://www.instagram.com/ramblersnc/]]></description>
+        <Point>
+          <coordinates>-78.906942,35.9996361,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Clouds Brewing - Durham Brewcade + Kitchen</name>
+        <address>Brightleaf Square, 905 W Main St #22, Durham, NC 27701</address>
+        <description><![CDATA[Clouds brings its German-inspired, American-made beers to a big brick-walled brewpub in Brightleaf Square, where self-serve taps let you pour a few ounces of everything. Arcade games, sports on TV and a full New American kitchen make it an easy fit for a hungry group that can't agree on one beer. The Raleigh-born brewery opened this Durham outpost in 2016.
+https://cloudsbrewing.com/durham]]></description>
+        <Point>
+          <coordinates>-78.9104668,36.0000348,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>The Waiting Room</name>
+        <address>300 Blackwell St Suite 100, Durham, NC 27701</address>
+        <description><![CDATA[Tucked into the American Tobacco building just steps from Bay 7, The Waiting Room is a cozy cocktail lounge that two friends built as a true community meeting place. Expect carefully crafted cocktails, small plates and desserts, plus couches made for long conversations. It operates as a private club, so it's strictly 21+, though no membership is needed.
+http://waitingroomdurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9037368,35.9946808,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Bull City Burger and Brewery</name>
+        <address>107 E Parrish St #105, Durham, NC 27701</address>
+        <description><![CDATA[Durham's homegrown brewpub has brewed its own beer on site since 2011 and grinds pasture-raised North Carolina beef in house for burgers on house-baked buns. Add duck-fat fries or pretzel-crusted pickle chips, and the Joan Jett veggie burger covers non-meat eaters. With about 90 seats, a year-round patio and a semi-private room, it handles a big conference group for lunch or an evening pint.
+http://www.bullcityburgerandbrewery.com/]]></description>
+        <Point>
+          <coordinates>-78.8997764,35.9954939,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Primrose Bar and Lounge</name>
+        <address>111 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[Primrose is a whimsical, flower-filled cocktail lounge on West Main with a playful menu of inventive drinks and Latin American bites through its partnership with Luna Rotisserie and Empanadas. Readers named it a 2026 Best of Durham winner in Durham Magazine's poll for best cocktail, best date night and best new business. It's a stylish, upbeat place to keep the night going.
+https://primrosedurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9012738,35.995129,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Conniption Bar & Lounge]]></name>
+        <address>715 Washington St Suite B, Durham, NC 27701</address>
+        <description><![CDATA[Durham Distillery's own cocktail bar, formerly known as Corpse Reviver, is an elegant Art Deco-inspired lounge on the distillery's lower level, home turf of Conniption Gin. The subzero house martini comes straight from the freezer, and Thursdays bring choose-your-own martini flights, alongside house-made tonics, seasonal cocktails, spirit-free drinks and small bites. It's a polished stop on the way to BOOM Club.
+https://durhamdistillery.com/pages/conniption-bar]]></description>
+        <Point>
+          <coordinates>-78.9029041,36.0046403,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Pour Taproom</name>
+        <address>202 N Corcoran St #200, Durham, NC 27701</address>
+        <description>Pour hands you a wristband and turns you loose on a wall of self-serve taps, so you can sip beer, cider, wine and kombucha by the ounce instead of committing to a full pint. Born in Asheville, the Durham taproom sits on CCB Plaza near the Major bull statue and has room for groups of 10 to 100, which makes it an easy regroup point for a crowd.
+https://www.pourtaproomdurham.com/</description>
+        <Point>
+          <coordinates>-78.9012878,35.9966673,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA[Bull McCabe's Irish Pub]]></name>
+        <address>427 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[Bull McCabe's is a classic Five Points pub with about 20 drafts, a covered and heated patio, and a lawn full of picnic tables, games and Adirondack chairs. The TanDurm Kitchen, from the team behind Viceroy, pairs Irish pub staples like fish and chips with Indian and international street food. It's right around the corner from Mateo, a natural landing spot once the welcome party wraps.
+https://www.bullmccabesirishpub.com/]]></description>
+        <Point>
+          <coordinates>-78.9050297,35.9972605,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Arcana Bar and Lounge</name>
+        <address>331 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[Open since 2015, Arcana is an intimate, tarot-themed cocktail lounge with tarot and astrology readers on hand most nights and a busy calendar of community events. It proudly calls itself a lesbian bar and welcomes everyone, with its entrance tucked behind 331 W Main St, the same building as SO/IF Bar. It's a short hop from Mateo when you want a quieter, slightly magical nightcap.
+https://www.arcanadurham.com/]]></description>
+        <Point>
+          <coordinates>-78.9037318,35.9964812,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>106 Main</name>
+        <address>106 E Main St, Durham, NC 27701</address>
+        <description><![CDATA[106 Main is a cozy, unfussy neighborhood bar on East Main Street, and reviewers keep mentioning its vibe and its friendly bartenders. Local craft beer leads the draft list, backed by a deep liquor and whiskey shelf, cocktails including martinis, cider and wine. It's an easy place to wind down with a small group after the welcome party, right next door to The Daily.
+https://www.facebook.com/106Main/]]></description>
+        <Point>
+          <coordinates>-78.90051,35.9947366,0</coordinates>
+        </Point>
+      </Placemark>
+    </Folder>
+    <Folder>
+      <name>Things to do</name>
+      <Placemark>
+        <name>American Tobacco Campus</name>
+        <address>300 Blackwell St, Durham, NC 27701</address>
+        <description><![CDATA[Bay 7 sits inside this former American Tobacco Company factory, where Lucky Strikes were once made and where Capitol Broadcasting reopened the brick warehouses as offices, restaurants and stages in 2004. Look up at the Lucky Strike water tower and smokestack, follow the quarter-mile man-made river as it tumbles through the middle of campus, and find the Art Moderne Power Plant. Thursday's happy hour is poured from a vintage rail car right beside it.
+https://americantobacco.co/]]></description>
+        <Point>
+          <coordinates>-78.9041667,35.9933333,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Durham Bulls Athletic Park</name>
+        <address>409 Blackwell St, Durham, NC 27701</address>
+        <description><![CDATA[There's no baseball in November, so treat the Bulls' home since 1995 as a quick landmark stop rather than a night out. The Triple-A Tampa Bay Rays affiliate plays beneath the 32-foot Blue Monster wall in left field, and the Ballpark Corner Store stays open in the offseason for caps, jerseys and Bull City souvenirs. The American Tobacco Trail starts just across Morehead Avenue, if you'd rather stretch your legs.
+https://www.milb.com/durham]]></description>
+        <Point>
+          <coordinates>-78.9049079,35.991542,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name><![CDATA["Major" – Durham Bull Bronze Sculpture]]></name>
+        <address>CCB Plaza, 201 N Corcoran St, Durham, NC 27701</address>
+        <description><![CDATA[Unveiled in 2004, Major is Durham's ten-foot bronze bull and the obvious spot for a group photo, now holding court in CCB Plaza on Corcoran Street. Local Liberty Arts sculptors Michael and Leah Foushee Waller cast him, and he's named for banker and civic leader George Watts "Major" Hill. He stands at the head of Parrish Street, the historic "Black Wall Street," right beside 21c Museum Hotel.
+https://www.libertyartsnc.org/major-the-bull]]></description>
+        <Point>
+          <coordinates>-78.9017088,35.9964874,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Museum of Durham History</name>
+        <address>500 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[The Museum of Durham History's free History Hub fills a former city bus station on West Main with the story of how a tobacco town became the Bull City. Its new exhibit, Playhouses and Picture Palaces, traces downtown's theaters from the 1880s to the 1970s, including the Carolina Theatre as it turns 100, and the Story Room plays back locals' recorded memories. It's small enough for a lunch-break detour.
+https://www.museumofdurhamhistory.org/]]></description>
+        <Point>
+          <coordinates>-78.9049802,35.9982755,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Durham Central Park</name>
+        <address>501 Foster St, Durham, NC 27701</address>
+        <description><![CDATA[Downtown's backyard on Foster Street mixes gardens, a skate park, a playground and the open-air pavilion that hosts the Durham Farmers' Market. The Wednesday market has wrapped for the season and Saturday's lands the day after the conference, but the park still makes a pleasant stroll, with the Liberty Arts sculpture foundry on its edge and free Durham FRINGE Festival performances during conference week. BOOM Club, Thursday's after-party venue, is just up the street.
+https://durhamcentralpark.org/]]></description>
+        <Point>
+          <coordinates>-78.901347,36.0006687,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Boxcar Bar + Arcade</name>
+        <address>621 Foster St, Durham, NC 27701</address>
+        <description><![CDATA[Boxcar packs classic and modern arcade cabinets, pinball, skee-ball and air hockey into a big bar with rotating craft drafts, cocktails and house-made pizza. Its patio with fire pits overlooks the old Durham Athletic Park, where Bull Durham was filmed, and it sits just up Foster Street from BOOM Club, so it's an easy team outing or a warm-up before Thursday's after party.
+https://theboxcarbar.com/durham/]]></description>
+        <Point>
+          <coordinates>-78.9016694,36.003381,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Durham Performing Arts Center (DPAC)</name>
+        <address>123 William V Bill Bell Way, Durham, NC 27701</address>
+        <description><![CDATA[Opened in 2008 and owned by the City of Durham, the 2,700-seat Durham Performing Arts Center is the Triangle's big stage for Broadway tours and touring headliners, and it sits right next door to American Tobacco Campus. Conference week brings Waiting to Exhale in Concert on Thursday and country hitmakers Little Big Town on Friday, if you want to fit a show night into your trip.
+https://www.dpacnc.com/]]></description>
+        <Point>
+          <coordinates>-78.9021923,35.993248,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>The Carolina Theatre</name>
+        <address>309 W Morgan St, Durham, NC 27701</address>
+        <description><![CDATA[Opened in 1926 as the Durham Auditorium, this grand downtown theater is marking its centennial with a packed season in its 1,016-seat Fletcher Hall and two cinemas, from retro film series to concerts and comedy. It's also presenting the first Durham FRINGE Festival across downtown during conference week, and Thursday brings One Night on Sugar Hill, a Sugar Hill Records tribute featuring dobro master Jerry Douglas.
+https://carolinatheatre.org/]]></description>
+        <Point>
+          <coordinates>-78.9027674,35.9976533,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>American Tobacco Trail (downtown trailhead)</name>
+        <address>American Tobacco Trail, northern trailhead off Morehead Ave (across from Durham Bulls Athletic Park), Durham, NC 27701</address>
+        <description><![CDATA[The northern end of this 22-mile rail-trail sits across Morehead Avenue from the Bulls' ballpark, so a pre-session run or a head-clearing walk starts almost at the venue. The Durham stretch is a paved, ten-foot-wide greenway on a former railroad line, gentle enough for an easy out-and-back, and it's popular with local runners and cyclists.
+https://www.triangletrails.org/]]></description>
+        <Point>
+          <coordinates>-78.9062474,35.990513,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>Letters Community Bookshop</name>
+        <address>116 W Main St, Durham, NC 27701</address>
+        <description><![CDATA[Founded in 2013 and now run as a worker- and community-owned co-op, Letters Community Bookshop on West Main mixes new releases with fairly priced used books under a skylit glass ceiling. Reviewers single out the friendly staff and their picks, and it's a calm break from the conference buzz or a good place to grab a paperback for the flight home.
+https://www.lettersbookshop.com/]]></description>
+        <Point>
+          <coordinates>-78.9010528,35.9954863,0</coordinates>
+        </Point>
+      </Placemark>
+      <Placemark>
+        <name>State of Golf</name>
+        <address>318 Blackwell St, Suite 240, Durham, NC 27701</address>
+        <description>Founded in 2024 by Brandon and Virginia Baker, State of Golf brings three Full Swing simulators with 40-plus virtual courses to American Tobacco Campus, plus multi-sport games for the non-golfers in your group. A bar pours craft cocktails, wine and beer, so booking a bay makes an easy, low-key hangout once sessions wrap.
+https://stateofgolfnc.com/</description>
+        <Point>
+          <coordinates>-78.9044638,35.993246,0</coordinates>
         </Point>
       </Placemark>
     </Folder>

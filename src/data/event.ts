@@ -1,22 +1,22 @@
 import type { ConferenceDay } from "@/lib/types";
 
 // Conference details shown across the app and returned by the MCP server.
-// Still the 2025 values until the 2026 content update.
 export const event = {
   name: "Tech SEO Connect",
   city: "Durham, NC",
-  venueName: "The Fruit",
-  dateRange: "December 4-5, 2025",
-  shortDateRange: "Dec 4-5, 2025",
+  venueName: "Bay 7",
+  dateRange: "November 5-6, 2026",
+  shortDateRange: "Nov 5-6, 2026",
   timezone: "America/New_York",
   website: "https://www.techseoconnect.com",
   appUrl: "https://app.techseoconnect.com",
-  mapCenter: [35.994, -78.8986] as [number, number],
+  // Between Bay 7 and the downtown core. Bay 7 itself is 35.9934627, -78.9052607.
+  mapCenter: [35.9955, -78.9025] as [number, number],
   // Dates of the bundled fallback schedule. The live schedule's days come
   // from the synced data (see getScheduleDays).
   days: [
-    { day: 1, date: "2025-12-04", label: "Day 1 - Dec 4" },
-    { day: 2, date: "2025-12-05", label: "Day 2 - Dec 5" },
+    { day: 1, date: "2026-11-05", label: "Day 1 - Nov 5" },
+    { day: 2, date: "2026-11-06", label: "Day 2 - Nov 6" },
   ] satisfies ConferenceDay[],
 };
 

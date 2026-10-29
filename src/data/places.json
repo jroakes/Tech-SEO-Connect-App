@@ -1,44 +1,52 @@
 [
   {
-    "id": "the-fruit-conference-venue",
-    "name": "The Fruit -Conference Venue",
+    "id": "bay-7-conference-venue",
+    "name": "Bay 7 - Conference Venue",
     "category": "Conference Main Locations",
-    "lat": 35.99063,
-    "lng": -78.8966214,
-    "narrative": "Originally the Durham Fruit and Produce Company from 1926, this 22,000-square-foot warehouse once stored fruits arriving by train and now pulses as Durham's most experimental arts venue. Voted 'Best Kept Secret' and 'Best Place to Dance' in the Triangle, The Fruit bridges Durham's industrial tobacco-town roots with its vibrant creative present, hosting everything from EDM to photography showcases in a space that still features original loading dock doors and wooden beams.",
+    "lat": 35.9934627,
+    "lng": -78.9052607,
+    "narrative": "Home base for Tech SEO Connect on Thursday, Nov 5 and Friday, Nov 6: check-in and coffee from 8 AM, talks from 9 AM to 5 PM, and a long lunch break from 11:30 to 1. Between sessions there's an all-day espresso bar from Liturgy Beverage Company, Boulted Bread pastries each morning and live sign painting. Bay 7 itself is a restored brick-and-timber tobacco warehouse bay on American Tobacco Campus, with tall windows and a wraparound balcony.",
     "isVenue": true
   },
   {
-    "id": "the-durham-hotel-welcome-party",
-    "name": "The Durham Hotel -Welcome Party",
+    "id": "so-if-bar-welcome-drinks",
+    "name": "SO/IF Bar - Welcome Drinks",
     "category": "Conference Main Locations",
-    "lat": 35.9970358,
-    "lng": -78.9009182,
-    "narrative": "Built in 1968 as the Home Savings and Loan headquarters, this mid-century modern landmark with its distinctive gold accents and angular tower has watched over downtown Durham's transformation for over 50 years. The only independently owned downtown hotel, it celebrates local character with Counter Culture coffee, Raleigh Denim blankets, and North Carolina artist installations, embodying Durham's past and present in Perry C. Langston's architectural icon."
+    "lat": 35.9965255,
+    "lng": -78.9036678,
+    "narrative": "Welcome Drinks, Wednesday, Nov 4, 5–7 PM: the first toast of Tech SEO Connect, free with your conference badge, before everyone strolls a few blocks over to the Welcome Party at Mateo. SO/IF is a tiny, 13-seat coffee-and-cocktail bar from the team behind delafia, set inside the 1930 Art Deco Snow Building on West Main. Espresso by day, spritzes and cocktails by night, and no Wi-Fi, so pocket the phone and talk shop."
   },
   {
-    "id": "21c-museum-hotel-durham-main",
-    "name": "21c Museum Hotel Durham - Main",
+    "id": "mateo-bar-de-tapas-welcome-party",
+    "name": "Mateo Bar de Tapas - Welcome Party",
     "category": "Conference Main Locations",
-    "lat": 35.996052,
-    "lng": -78.9017456,
-    "narrative": "Housed in the 1930s Art Deco Durham Bank & Trust building designed by the same architects who created the Empire State Building, this contemporary art museum-hotel offers 10,500 square feet of free public exhibitions. Chef Melanie Wilkerson, a Durham native, leads Counting House restaurant celebrating North Carolina's coastal bounty, while the hotel serves as a cultural hub in the Research Triangle connecting international art with local culinary heritage."
+    "lat": 35.9968525,
+    "lng": -78.9047943,
+    "narrative": "Welcome Party, Wednesday, Nov 4, 7–10 PM: Tech SEO Connect takes over the whole restaurant for the official kickoff, hosted by The SEO Community and Noah Learner, with tapas spread across both floors. Free with your conference badge. Mateo marries Spanish tapas with Southern ingredients, and regulars swear by the roasted bone marrow, pollo frito and croquetas; the upstairs room gives the crowd extra space to mingle."
   },
   {
-    "id": "21c-museum-hotel-durham",
-    "name": "21c Museum Hotel Durham",
-    "category": "Hotels",
-    "lat": 35.996052,
-    "lng": -78.9017456,
-    "narrative": "This historic 1930s bank building transformed into a contemporary art museum and boutique hotel showcases rotating international exhibitions free to the public 24/7. Durham native Chef Melanie Wilkerson helms Counting House restaurant, serving Carolina's fresh seafood and local ingredients in a space where Art Deco details meet modern design, making it a destination for both art lovers and those seeking authentic North Carolina flavors."
+    "id": "american-tobacco-campus-rail-car-happy-hour",
+    "name": "American Tobacco Campus Rail Car - Happy Hour",
+    "category": "Conference Main Locations",
+    "lat": 35.9937321,
+    "lng": -78.9045627,
+    "narrative": "Happy Hour, Thursday, Nov 5, 5–7 PM: when the last session wraps, walk a minute from Bay 7 to the 1930s-era rail car parked beside the Power Plant, the brick building that once powered the tobacco factory. Live jazz from Butler Knowles and friends, beer and wine poured by delafia, and English muffin personal pizzas from Redstart Foods, all free with your badge. Around you is the restored American Tobacco complex, Lucky Strike water tower and all."
   },
   {
-    "id": "the-durham-hotel",
-    "name": "The Durham Hotel",
-    "category": "Hotels",
-    "lat": 35.9970358,
-    "lng": -78.9009182,
-    "narrative": "Perry C. Langston's 1968 mid-century masterpiece stands as downtown Durham's only independent hotel, with its iconic angled tower and gold facade symbolizing the city's architectural heritage. Inside, every detail celebrates North Carolina—Counter Culture coffee roasted locally, Raleigh Denim blankets, Burt's Bees amenities, and art by NC-based creators—creating a true Durham experience that honors both the building's history and the community's creative spirit."
+    "id": "boom-club-after-party",
+    "name": "BOOM Club - After Party",
+    "category": "Conference Main Locations",
+    "lat": 36.002354,
+    "lng": -78.9010113,
+    "narrative": "After Party, Thursday, Nov 5, 9 PM–2 AM: SEO and DJ Lily Ray takes the decks with Ash Lauryn, LexOnLoud and thefacesblur, free with your conference badge. BOOM Club, short for Building Our Own Music, is a Durham electronic-music clubhouse stocked with playable vintage and modern synths and drum machines. It began as a pop-up inside the American Tobacco rail car and moved this spring into the former PS37 space on Foster Street, near Durham Central Park."
+  },
+  {
+    "id": "delafia-farewell-party",
+    "name": "delafia - Farewell Party",
+    "category": "Conference Main Locations",
+    "lat": 35.9832881,
+    "lng": -78.9026308,
+    "narrative": "Farewell Party, Friday, Nov 6, 5 PM–midnight: wander over after the closing remarks for tacos from Taqueria La Vaquita (6–8 PM) and live jazz from Butler Knowles and friends (7–10 PM), all free with your conference badge. delafia is a cozy natural-wine bar and bottle shop on South Roxboro Street, loved for its orange and natural wines, good snacks and a laid-back patio, and it gets properly packed on a Friday night."
   },
   {
     "id": "aloft-durham-downtown",
@@ -46,645 +54,47 @@
     "category": "Hotels",
     "lat": 35.9931769,
     "lng": -78.9027894,
-    "narrative": "This loft-inspired hotel sits adjacent to Durham Performing Arts Center in the American Tobacco Historic District, offering modern travelers prime access to the revitalized tobacco warehouses that once made Durham the tobacco capital of the world. With 134 rooms and WXYZ Lounge, it's perfectly positioned for experiencing downtown's transformation from industrial powerhouse to cultural destination."
+    "narrative": "The official Tech SEO Connect hotel and the closest bed to Bay 7, just across Blackwell Street next to DPAC on the edge of American Tobacco Campus. Expect bright, modern loft-style rooms, a lively lobby bar, a 24-hour gym and an outdoor plunge pool. Our room block is sold out, but some rooms may still be available at standard rates if you book directly with the hotel."
   },
   {
-    "id": "springhill-suites-by-marriott-durham-city-view",
-    "name": "SpringHill Suites by Marriott Durham City View",
+    "id": "21c-museum-hotel-durham",
+    "name": "21c Museum Hotel Durham",
     "category": "Hotels",
-    "lat": 35.988558,
-    "lng": -78.903244,
-    "narrative": "Located in downtown Durham with skyline views, this 104-room hotel offers modern comfort within walking distance of Durham Central Park and the American Tobacco Campus. Its central location makes it an ideal base for exploring the Bull City's restaurants, breweries, and historic sites that tell the story of Durham's evolution from tobacco town to thriving innovation hub."
+    "lat": 35.996052,
+    "lng": -78.9017456,
+    "narrative": "A boutique hotel and contemporary-art museum rolled into the 1937 Hill Building, the Art Deco tower designed by the firm behind the Empire State Building. The galleries are free and open to the public, so even non-guests can wander through between sessions, and the on-site Counting House restaurant and bar plus a spa round things out. It's right in the middle of downtown's restaurant and bar blocks."
   },
   {
-    "id": "unscripted-durham-jdv-by-hyatt",
-    "name": "Unscripted Durham - JDV by Hyatt",
+    "id": "the-durham-hotel",
+    "name": "The Durham Hotel",
     "category": "Hotels",
-    "lat": 35.9965896,
-    "lng": -78.9013137,
-    "narrative": "Reimagined in 2017 and joining JdV by Hyatt in 2023, this 74-room boutique hotel in an iconic downtown building offers guests an authentic Durham experience with easy access to the American Tobacco Campus. Its location near Durham's entertainment district and thoughtful design make it a comfortable home base for exploring the city's vibrant food, arts, and brewery scene."
+    "lat": 35.9970358,
+    "lng": -78.9009182,
+    "narrative": "Downtown's mid-century modern landmark: a 1960s bank building reborn as an independent boutique hotel with a playful, retro interior. The big draw is the rooftop bar, with raw-bar bites and sunset views over the skyline, plus a ground-floor coffee bar for early starts. It sits on East Chapel Hill Street in the heart of downtown, steps from dinner and drinks."
   },
   {
     "id": "durham-marriott-city-center",
     "name": "Durham Marriott City Center",
     "category": "Hotels",
-    "lat": 35.9973001,
-    "lng": -78.9018093,
-    "narrative": "Connected to the Durham Convention Center and steps from Carolina Theatre and Durham Performing Arts Center, this downtown hotel features Table South Kitchen & Bar serving Southern cuisine and local Starbucks coffee. With views of the Durham Bulls Athletic Park and within walking distance of American Tobacco Campus, it's positioned at the heart of the Bull City's revitalized downtown where visitors can experience Durham's transformation from tobacco powerhouse to cultural destination."
+    "lat": 35.9970476,
+    "lng": -78.9027052,
+    "narrative": "A full-service downtown tower connected to the Durham Convention Center, a dependable pick if you want a big-brand hotel and your Marriott points. It sits beside the historic Carolina Theatre, a short walk north of American Tobacco Campus, so Bay 7, the Wednesday welcome spots and downtown's bars are all within easy reach on foot."
   },
   {
     "id": "aaktun-coffee-restaurant-and-bar",
     "name": "Aaktun Coffee, Restaurant and Bar",
-    "category": "Lunch",
-    "lat": 35.9893315,
-    "lng": -78.8957363,
-    "narrative": "From the Mezcalito hospitality group and two-time James Beard semifinalist Chef Oscar Diaz, this Tulum-inspired spot transforms from daytime coffee cafe to upscale evening destination. With Mexican-influenced cuisine featuring fresh ingredients and tropical cenote-inspired decor, Aaktun showcases Durham's diverse culinary scene while bringing global flavors to downtown's Innovation District."
-  },
-  {
-    "id": "press-coffee-crepes-cocktails",
-    "name": "PRESS Coffee Crêpes Cocktails",
-    "category": "Lunch",
-    "lat": 35.9925992,
-    "lng": -78.904263,
-    "narrative": "This European-inspired cafe in American Tobacco Campus serves Durham-roasted Counter Culture Coffee alongside made-to-order crepes and craft cocktails in an Italian espresso bar meets Provencal bistro setting. With an open kitchen, separate cocktail bar, and covered patio overlooking the historic tobacco warehouses, PRESS offers 'A Carolina Twist' on European cafe culture using scratch-made dishes and local ingredients."
-  },
-  {
-    "id": "queenburger",
-    "name": "QueenBurger",
-    "category": "Lunch",
-    "lat": 35.9927674,
-    "lng": -78.9039817,
-    "narrative": "Born from wildly popular pandemic pop-ups by Queeny's, this American Tobacco Campus smashburger spot grinds farm-raised, grass-fed North Carolina beef daily with house-made pickles, local cheese, and special sauce. Opening in 2020 and moving to brick-and-mortar, QueenBurger exemplifies Durham's innovative food scene with creative options like the PBJ burger with peanut butter and strawberry bacon jelly."
-  },
-  {
-    "id": "bull-city-burger-and-brewery",
-    "name": "Bull City Burger and Brewery",
-    "category": "Lunch",
-    "lat": 35.9954939,
-    "lng": -78.8997764,
-    "narrative": "Since 2011, Durham's longest-running brewpub has championed local agriculture with 100% pasture-raised, grass-fed NC beef ground in-house daily, house-made buns, condiments, and ingredients sourced from local farmers within 70 miles. This farm-to-fork establishment on East Parrish Street embodies Durham's commitment to sustainable, local food while supporting North Carolina's agricultural community."
-  },
-  {
-    "id": "durham-food-hall",
-    "name": "Durham Food Hall",
-    "category": "Lunch",
-    "lat": 36.0013101,
-    "lng": -78.9013355,
-    "narrative": "Durham's first food hall features 10 locally-owned vendors including Locals Seafood bringing NC coast-to-table offerings, Everything Bagels with avant-garde creations, and the Auctioneer Bar showcasing North Carolina spirits and beers. Housed at 530 Foster Street, this community gathering space emphasizes local sourcing and sustainability while celebrating Durham's diverse culinary talents and commitment to supporting neighborhood businesses."
-  },
-  {
-    "id": "anjappar-chettinad-indian-restaurant-durham",
-    "name": "Anjappar Chettinad Indian Restaurant, Durham",
-    "category": "Lunch",
-    "lat": 35.9942028,
-    "lng": -78.8987389,
-    "narrative": "Part of the globally recognized Anjappar chain established in Chennai in 1964, this Downtown Durham location brings authentic South Indian Chettinad cuisine within walking distance of DPAC. With over 20 varieties of dosa and bold, aromatic dishes using fresh spices, it's quickly become a beloved addition to Durham's international food scene in the historic Register of Deeds building."
-  },
-  {
-    "id": "mezcalito-durham",
-    "name": "Mezcalito Durham",
-    "category": "Lunch",
-    "lat": 35.9890737,
-    "lng": -78.8954489,
-    "narrative": "Opened in 2019 in Durham's food district, this vibrant Tex-Mex spot offers an extensive array of mezcal, tequila, and margaritas with fresh Mezcalito Mix in flavors from strawberry to passion fruit. With its festive atmosphere, family-friendly vibe, and walkable proximity to Ponysaurus Brewery, Mezcalito has become a Durham favorite for authentic Mexican flavors and creative cocktails."
-  },
-  {
-    "id": "counting-house",
-    "name": "Counting House",
-    "category": "Lunch",
-    "lat": 35.9959681,
-    "lng": -78.9018032,
-    "narrative": "Led by Durham native Chef Melanie Wilkerson at 21c Museum Hotel, this restaurant celebrates North Carolina's rich seafood heritage in the historic Hill Building where the name references the space's banking past. The seafood-forward menu transforms regional coastal fare with playful execution and local ingredients, while the dining room features contemporary art, historic terrazzo floors, and double-height windows showcasing downtown Durham."
-  },
-  {
-    "id": "thaiangle-restaurant",
-    "name": "Thaiangle Restaurant",
-    "category": "Lunch",
-    "lat": 35.9957636,
-    "lng": -78.8999034,
-    "narrative": "Opened in 2024 by the Ungsriwong family with over two decades in the restaurant business, this sophisticated Thai spot at 200 N. Mangum offers Chef's Special Crispy Duck, Salmon in Banana Leaves, and house-brewed Thai tea cocktails. Already voted Best Japanese Restaurant and Best New Restaurant by Indy Week readers, Thaiangle brings authentic Thai flavors with Durham flair to downtown's vibrant dining scene."
-  },
-  {
-    "id": "queeny-s",
-    "name": "Queeny's",
-    "category": "Lunch",
-    "lat": 35.9970318,
-    "lng": -78.9007613,
-    "narrative": "Open until 2 AM with a kitchen serving late-night comfort food, this uniquely Durham gathering place features arguably the best chicken tenders in town, killer burgers, and an on-site podcast studio plus Rubyfruit bookshop stocked with inclusive literature. Inspired by communal potluck spirit, Queeny's at 321 E. Chapel Hill Street hosts community events and brings casual, welcoming vibes to downtown's nightlife with options for vegetarians, vegans, and carnivores alike."
-  },
-  {
-    "id": "gym-tacos",
-    "name": "Gym Tacos",
-    "category": "Lunch",
-    "lat": 35.9959033,
-    "lng": -78.8995789,
-    "narrative": "Since 2019, Gym Tacos has brought authentic Mexican flavor to Durham's center with handmade corn tortillas, traditional tacos, tortas, and tostadas that locals rave are 'the best tacos I ever had.' Located at 102 City Hall Plaza with bright, casual atmosphere perfect for family gatherings or happy hour, this is the taqueria Durham needed to satisfy cravings for genuine Mexican street food."
-  },
-  {
-    "id": "luna-rotisserie-and-empanadas",
-    "name": "Luna Rotisserie and Empanadas",
-    "category": "Lunch",
-    "lat": 35.9953339,
-    "lng": -78.9009837,
-    "narrative": "Established in 2015 at 112 W Main Street, this casual fusion spot serves South American-inspired empanadas, arepas, and Luna Grain Bowls with generous portions of perfectly seasoned chicken, pork, and brisket. As one of the top restaurants near DPAC, Luna brings flavorful Latin American comfort food to downtown Durham's thriving culinary landscape."
-  },
-  {
-    "id": "dashi-ramen-and-izakaya-cocktail-bar",
-    "name": "Dashi Ramen and Izakaya Cocktail Bar",
-    "category": "Lunch",
-    "lat": 35.9970933,
-    "lng": -78.8992279,
-    "narrative": "This two-story Japanese restaurant opened in February to immediate acclaim, voted Best Japanese Restaurant and Best New Restaurant by Indy Week readers. The first-floor ramen shop serves steamy bowls in a cozy open kitchen, while the upstairs izakaya features an 18-page drink menu (a mecca for whiskey enthusiasts) and omakase dining, with both vegan and gluten-free options available in downtown Durham."
-  },
-  {
-    "id": "barsa-new-indian",
-    "name": "Barsa New Indian",
-    "category": "Lunch",
-    "lat": 35.9976495,
-    "lng": -78.8988562,
-    "narrative": "Under new management with a chef from Michelin-starred restaurants who grinds and blends fresh herbs and spices daily, Barsa was voted 'The Best Indian Restaurant in the Triangle' by The News & Observer. Led by chef Vinod Kumar (formerly of NYC's Michelin-starred Semma), this modern upscale spot at 105 W Morgan Street reimagines beloved Indian flavors with dishes like Lobster Moilee and banana leaf-wrapped salmon."
-  },
-  {
-    "id": "pokeworks",
-    "name": "Pokeworks",
-    "category": "Lunch",
-    "lat": 35.995535,
-    "lng": -78.901368,
-    "narrative": "This build-your-own poke restaurant at 122 W Main Street emphasizes fresh, healthy Hawaiian-inspired bowls, burritos, and salads with responsibly-sourced seafood. With customizable options for vegans and gluten-free diners, plus signature works featuring ahi tuna, salmon, free-range chicken, and tofu, Pokeworks brings island flavors and nutritious fast-casual dining to downtown Durham."
-  },
-  {
-    "id": "pizzeria-toro",
-    "name": "Pizzeria Toro",
-    "category": "Lunch",
-    "lat": 35.9971175,
-    "lng": -78.9036011,
-    "narrative": "Since opening at 105 E Chapel Hill Street, this wood-fired pizzeria has earned acclaim for authentic Italian-style pizza that an Italian friend called 'the best outside of his country.' Using North Carolina ingredients like local corn, okra, and tomatoes with pizza perfectly baked in their central wood-burning oven, Pizzeria Toro has become a beloved Durham destination where the kale salad ranks among the city's most popular dishes."
-  },
-  {
-    "id": "pie-pushers",
-    "name": "Pie Pushers",
-    "category": "Lunch",
-    "lat": 35.995255,
-    "lng": -78.901495,
-    "narrative": "Starting as a food truck and evolving to a downtown location plus concessions at Durham Bulls Athletic Park, Pie Pushers serves 'Durham-style' hand-tossed thin crust pizza using a decade-perfected family recipe. With their motto 'Local Pies for the People,' they top pizzas with seasonal, eclectic ingredients supporting local farmers and artisans, offering gluten-free and vegan options that showcase Durham's creative food scene."
-  },
-  {
-    "id": "koki-creative-puerto-rican-kitchen",
-    "name": "koki - Creative Puerto Rican Kitchen",
-    "category": "Lunch",
-    "lat": 35.9957585,
-    "lng": -78.8994022,
-    "narrative": "Originally launched as food truck Spanglish in 2016, koki now serves modern Puerto Rican cuisine at 104 City Hall Plaza with breakfast, lunch, and dinner including empanadas, mofongo, rice bowls, and sandwiches. Their motto 'Barriga Llena, Corazón Contento' (Full Belly, Happy Heart) captures the warm spirit of this locally-owned spot bringing authentic Puerto Rican flavors with keto, vegan, and vegetarian options to downtown Durham."
-  },
-  {
-    "id": "parker-and-otis",
-    "name": "Parker and Otis",
-    "category": "Lunch",
-    "lat": 35.992789,
-    "lng": -78.9055208,
-    "narrative": "Created by Jennings Brody at American Tobacco Campus, this quaint European-style cafe serves Counter Culture Coffee roasted in Durham, legendary iced coffee, fresh breakfast and lunch with local ingredients, plus a gourmet market featuring NC products, specialty foods, cheese, wine, and gifts. The Avocado Toast, Pimento Cheese sandwich, and spectacular cheddar biscuits showcase Durham's commitment to quality local ingredients in a charming setting."
-  },
-  {
-    "id": "viceroy",
-    "name": "Viceroy",
-    "category": "Dinner",
-    "lat": 35.9965393,
-    "lng": -78.9036861,
-    "narrative": "This British pub meets Indian restaurant at 335 W Main Street serves Classic Indian and fusion fare like curried shepherd's pie in an atmosphere reminiscent of London with vintage decor and historic Indian portraits. Open since 2015, Viceroy has earned a 4.6 rating on OpenTable with customers calling it '#1 of the best restaurant in downtown Durham' for its top-shelf service, unique flavors, and extensive menu including several vegan options."
-  },
-  {
-    "id": "seraphine",
-    "name": "Seraphine",
-    "category": "Dinner",
-    "lat": 35.9928259,
-    "lng": -78.9057665,
-    "narrative": "From local restaurateurs Graham and Brad Weddington, Seraphine brings Louisiana-inspired cuisine to American Tobacco Campus with raw oysters, barbeque shrimp, fried catfish, shrimp and grits, and beignets. This New Orleans-style spot explores family Louisiana heritage through modern interpretations of Southern classics, offering warmth, carefully crafted cocktails, and attractive outdoor patio dining in the heart of downtown Durham."
-  },
-  {
-    "id": "mateo-bar-de-tapas",
-    "name": "Mateo Bar de Tapas",
-    "category": "Dinner",
-    "lat": 35.9968525,
-    "lng": -78.9047943,
-    "narrative": "Since 2012, chef Matthew Kelly's first solo venture has blended Spanish heart with Southern soul in the old Book Exchange building at 109 W Chapel Hill Street. Offering Spanish small plates with Southern inflection and one of the largest sherry collections in the country, Mateo serves dishes like Pan Con Tomate that customers call 'the best I've ever had, including in Spain,' making it a perfect pre-DPAC dining destination."
-  },
-  {
-    "id": "alley-twenty-six",
-    "name": "Alley Twenty Six",
-    "category": "Dinner",
-    "lat": 35.996751,
-    "lng": -78.900525,
-    "narrative": "Opened in 2012 by Shannon Healy as North Carolina's first James Beard Award finalist for Outstanding Bar Program, this craft cocktail pioneer at 320 E Chapel Hill Street crafts seasonally-based drinks with locally sourced ingredients. With Chef Carrie Schleiffer's upscale food pairings added in 2017, plus house-made syrups and tonic, Alley Twenty Six continues to set Durham's standard for artisanal cocktails and creative bartending."
-  },
-  {
-    "id": "m-sushi",
-    "name": "M Sushi",
-    "category": "Dinner",
-    "lat": 35.9972588,
-    "lng": -78.9011587,
-    "narrative": "Chef Mike Lee's flagship restaurant was the Triangle's first dedicated sushi and seafood restaurant, now with two locations including downtown Durham's minimalist vault-like den. Part of the acclaimed M Restaurants group (including M Tempura named one of Bon Appetit's top 50 best new restaurants in 2019), M Sushi showcases high-quality ingredients and expert Japanese craftsmanship in the heart of Bull City."
-  },
-  {
-    "id": "little-bull",
-    "name": "Little Bull",
-    "category": "Dinner",
-    "lat": 36.0018509,
-    "lng": -78.8948962,
-    "narrative": "Chef Oscar Diaz, who refined his skills at Michelin-starred Alizé in Las Vegas, opened Little Bull at 810 N Mangum to showcase 'Pocho cuisine'—sincere comfort food inspired by first-generation immigrant kids. The menu features innovative Mexican-American fusion like birria dumplings with goat, whole NC speckled trout, and grilled octopus, earning regional acclaim as one of the Triangle's top restaurants celebrating immigrant influence on American food."
-  },
-  {
-    "id": "bar-virgile",
-    "name": "Bar Virgile",
-    "category": "Dinner",
-    "lat": 35.9947192,
-    "lng": -78.9007933,
-    "narrative": "Since 2006, Bar Virgile at 105 S Mangum has been serving craft and classic cocktails with an ever-changing dinner and small plates menu near Durham Performing Arts Center and Carolina Theater. With talented bartenders spinning fresh-ingredient cocktails at reasonable prices in a space featuring a wonderful stamped metal ceiling and New Orleans ambience, this downtown gem offers one of the top 10 burgers in the area and no-reservation walk-in service."
-  },
-  {
-    "id": "rue-cler",
-    "name": "Rue Cler",
-    "category": "Dinner",
-    "lat": 35.9970869,
-    "lng": -78.8997435,
-    "narrative": "Since 2006, Rue Cler has brought simple, classic French preparations to downtown Durham at 401 E Chapel Hill Street, inspired by Parisian neighborhood restaurants. Chef Todd Whitney's kitchen uses southeastern ingredients and seasonal, local products including baguettes from Durham's Loaf bakery, serving beloved dishes like coq au vin, duck confit, and steak frites with warm, friendly service that greets regulars by name."
-  },
-  {
-    "id": "nanasteak",
-    "name": "NanaSteak",
-    "category": "Dinner",
-    "lat": 35.9935313,
-    "lng": -78.9027412,
-    "narrative": "Opened in February 2016 next to Durham Performing Arts Center and Aloft Hotel, NanaSteak pays homage to Durham's tobacco history with bar tops and tables inlaid with real tobacco leaves crafted by Artisan Leaf. This upscale steakhouse offers North Carolina fare and an award-winning Wine Spectator wine program, celebrating Durham's past while serving contemporary diners in the revitalized American Tobacco Campus."
-  },
-  {
-    "id": "m-tempura",
-    "name": "M Tempura",
-    "category": "Dinner",
-    "lat": 35.9961601,
-    "lng": -78.9005111,
-    "narrative": "Named by Bon Appetit as one of the top 50 best new restaurants in the country in 2019, M Tempura at 311 Holland Street is one of only a handful of true tempura restaurants on the East Coast. Part of Chef Mike Lee's M Restaurants group and home to Chef Savannah Miller (Top Chef season 21), it showcases expert Japanese tempura craftsmanship alongside Durham's innovative culinary scene."
-  },
-  {
-    "id": "nerra",
-    "name": "Nerra",
-    "category": "Dinner",
-    "lat": 35.9903696,
-    "lng": -78.8964666,
-    "narrative": "Led by Durham native Executive Chef Lex at 506 Ramseur Street, this seasonal, seafood-forward restaurant partners with local NC farmers, fishers, and foragers to create a menu celebrating the Carolinas' coastal traditions. From briny shellfish and coastal catches to charred vegetables and heirloom grains, Nerra blends local sourcing with global technique in a rustic nautical space featuring a marble bar and cozy patio."
-  },
-  {
-    "id": "flying-bull-restaurant-and-brewery",
-    "name": "Flying Bull Restaurant and Brewery",
-    "category": "Dinner",
-    "lat": 36.000063,
-    "lng": -78.9034592,
-    "narrative": "Starting in Durham's 9th Street neighborhood in 2020 and expanding to Morris Street in 2024, this veteran-owned and women-owned brewery showcases 20 innovative Durham-crafted beers from Old World classics to New England IPAs. Rooted in building community through good food and great beer, Flying Bull has been voted one of Durham's Best Breweries while supporting local causes and collaborating with neighborhood makers."
-  },
-  {
-    "id": "m-pocha",
-    "name": "M Pocha",
-    "category": "Dinner",
-    "lat": 35.9970467,
-    "lng": -78.903763,
-    "narrative": "Part of Chef Mike Lee's acclaimed M Restaurants group, M Pocha serves Korean street food inspired by Pojanmacha ('Tented Cart on Wheels') in a brick-and-mortar style similar to Japanese izakaya. With tapas-style dishes meant for sharing while drinking, M Pocha brings authentic Korean pub culture to Durham's diverse international dining scene alongside sister restaurants M Sushi and M Tempura."
-  },
-  {
-    "id": "mothers-sons-trattoria",
-    "name": "Mothers & Sons Trattoria",
-    "category": "Dinner",
-    "lat": 35.996868,
-    "lng": -78.9047132,
-    "narrative": "Chef Matthew Kelly and Josh 'Skinny' DeCarolis opened this regional Italian trattoria at 107 W. Chapel Hill Street in 2016, featuring handmade pasta fatta a mano—the first restaurant in the South focused on this craft. With seasonal dishes like bucatini al amatriciana and squid ink tonnarelli, plus wood-fired fare, Mothers & Sons showcases Kelly's expertise from his work at Fearrington House, Vin Rouge, and Mateo."
-  },
-  {
-    "id": "cucciolo-osteria-durham",
-    "name": "Cucciolo Osteria Durham",
-    "category": "Dinner",
-    "lat": 35.9979014,
-    "lng": -78.9064199,
-    "narrative": "Cousins Jimmy and Julian Kim brought their modern Italian concept from Seoul to Durham's West Main Street in 2018, offering pasta specialties from classic Cacio e Pepe to Truffle Tajarin and unique bruschette. With an intimate, cozy space always busy with Durham diners enjoying impeccable service and dishes like butter chicken and Porchetta, Cucciolo has become a top-rated destination requiring advance reservations."
-  },
-  {
-    "id": "delafia",
-    "name": "delafia",
-    "category": "Drinks",
-    "lat": 35.9832881,
-    "lng": -78.9026308,
-    "narrative": "This wine bar and retail shop at 1103 S Roxboro Street specializes in natural wines—the farm-to-table version of wine made on smaller scale with minimal intervention. With a rapidly changing by-the-glass list, extensive retail selection, large patio, and funky wines from small producers, delafia offers gritty speakeasy vibes in a somewhat hidden corner white brick building, serving Durham's natural wine lovers with rotating selections and intimate atmosphere."
-  },
-  {
-    "id": "weldon-mills-distillery-durham",
-    "name": "Weldon Mills Distillery Durham",
-    "category": "Drinks",
-    "lat": 35.9934615,
-    "lng": -78.8983669,
-    "narrative": "The most awarded small batch spirits distillery and #1 Micro-Distillery in America opened its second location downtown at 300 E. Main Street in March 2023. This speakeasy-like space produces bourbon, whiskey, vodka, gin, rum, and tequila using NC corn, malted wheat, barley, and Roanoke River water, earning top honors including Best Distillery 2022-2023 and serving as Official Spirit of the Durham Bulls."
-  },
-  {
-    "id": "honeygirl-meadery-tasting-room",
-    "name": "Honeygirl Meadery & Tasting Room",
-    "category": "Drinks",
-    "lat": 35.9941544,
-    "lng": -78.9040098,
-    "narrative": "At American Tobacco Campus (312 Blackwell Street), Durham's award-winning urban meadery celebrates honeybees by fermenting local and global true source honey with NC fruits, flowers, and herbs into small-batch seasonal meads. Now part of Ment Beverage Co., Honeygirl offers flights, tastings, and bottles in an open, beautiful space while supporting Bee Downtown and Bee City Durham initiatives for pollinators."
-  },
-  {
-    "id": "bull-city-ciderworks-durham",
-    "name": "Bull City Ciderworks Durham",
-    "category": "Drinks",
-    "lat": 35.9909566,
-    "lng": -78.8993013,
-    "narrative": "Founded in a backyard cutting North Carolina apples with a modified garbage disposal grinder, Bull City Ciderworks now operates three taprooms including the Durham location at 305 S Roxboro Street. Making ciders with 100% apple juice never back-sweetened with corn syrup, they bridge wine and beer using unique local ingredients like hops, tea, honey, and ginger—producing roughly 5,500 gallons per batch of over 70 award-winning ciders."
-  },
-  {
-    "id": "ponysaurus-brewing-co",
-    "name": "Ponysaurus Brewing Co.",
-    "category": "Drinks",
-    "lat": 35.9895842,
-    "lng": -78.8952496,
-    "narrative": "Starting in an attic above The Cookery in 2015, Ponysaurus has become one of Durham's most inventive breweries at 219 Hood Street with one of the largest outdoor patios in the city. Named a 'Next Level Brewery' by Food & Wine and brewing 'the best pint in Durham' per Thrillist, this Durham-native brewery creates beer for everyone to enjoy with fire pits, wood benches, and string lights in the Downtown East neighborhood."
-  },
-  {
-    "id": "fullsteam",
-    "name": "Fullsteam",
-    "category": "Drinks",
-    "lat": 35.9937821,
-    "lng": -78.9045813,
-    "narrative": "Since 2010, Fullsteam has pioneered the Southern Beer Economy, purchasing over $850,000 in Southern-farmed ingredients from local barley to foraged black walnuts. As a Craft Malt Certified brewery, their Plow to Pint beers use 100% North Carolina malt, seasonal fruits like persimmons and paw paws, sweet potatoes, and basil—building a landmark location at Durham's American Tobacco Campus while maintaining their Boxyard RTP taproom."
-  },
-  {
-    "id": "the-velvet-hippo-bar-lounge",
-    "name": "The Velvet Hippo Bar & Lounge",
-    "category": "Drinks",
-    "lat": 35.9964307,
-    "lng": -78.9004895,
-    "narrative": "Opening August 2023 on the third-floor rooftop at 119 Orange Street, this tropical neighborhood bar for everybody offers signature cocktails, local beers, creative mocktails, and light bites from Chef Regina Jones. Named as a nickname for the owner's pitbull pup, The Velvet Hippo creates vacation vibes in downtown Durham with dog-friendly 'Yappy Hours' on weekends and Latin nights every 1st and 3rd Friday."
-  },
-  {
-    "id": "dram-and-draught",
-    "name": "Dram and Draught",
-    "category": "Drinks",
-    "lat": 35.9989879,
-    "lng": -78.9080672,
-    "narrative": "Since 2016, this private club (21+ only) at 701 W. Main Street has served Durham's whiskey fanatics, craft beer fans, cocktail enthusiasts, and wine lovers as a great neighborhood bar. With over 300 whiskeys from around the world, hand-crafted cocktails, draught beer from Raleigh and beyond, and super friendly, knowledgeable staff, Dram & Draught offers a chilled, laid-back environment for slow sipping and exploring new spirits."
-  },
-  {
-    "id": "boxcar-bar-arcade",
-    "name": "Boxcar Bar + Arcade",
-    "category": "Drinks",
-    "lat": 36.003381,
-    "lng": -78.9016694,
-    "narrative": "Located at 621 Foster Street overlooking historic Durham Athletic Park, Boxcar features 70+ classic and modern arcade games including Pac-Man, Street Fighter, Mortal Kombat, NBA Jam, plus skeeball, air hockey, and DDR. With a 7,000 square foot patio with fire pits, outdoor games, live music, local beers, seasonal cocktails, and fresh pizzas, this entertainment venue hosts Tuesday karaoke and Wednesday skeeball tournaments in downtown Durham."
-  },
-  {
-    "id": "kingfisher",
-    "name": "Kingfisher",
-    "category": "Drinks",
-    "lat": 35.9970432,
-    "lng": -78.9008011,
-    "narrative": "Opening in 2019 as one of the country's best new cocktail bars and North Carolina's second James Beard Awards Outstanding Bar Program semifinalist, Kingfisher at 321 E. Chapel Hill Street crafts ground-to-glass cocktails in handmade ceramic glassware. This intimate underground speakeasy beside The Durham Hotel highlights NC produce, foraged ingredients, and local products—like preserved strawberries from Lil' Farm in Timberlake—with regular jazz nights and a backyard garden."
-  },
-  {
-    "id": "hi-wire-brewing-durham",
-    "name": "Hi-Wire Brewing Durham",
-    "category": "Drinks",
-    "lat": 35.9915365,
-    "lng": -78.8900261,
-    "narrative": "Asheville's Hi-Wire Brewing opened their first taproom outside Asheville at Golden Belt (800 Taylor Street) in 2018, featuring 8,844 square feet with an outdoor covered patio and beer garden. With 24 taps pouring Hi-Wire's full lineup including Hi-Wire Lager, Bed of Nails Brown, and Hi-Pitch Mosaic IPA, plus shuffleboard, soccer pool, table tennis, and Neapolitan pizza from neighboring Cugino Forno, it's a game-heavy destination for craft beer enthusiasts."
-  },
-  {
-    "id": "west-end-social",
-    "name": "West End Social",
-    "category": "Drinks",
-    "lat": 35.998049,
-    "lng": -78.9063091,
-    "narrative": "Durham's Original Wine Bar since 1997 at 601 W Main Street offers over 40 wines by the glass, custom cocktails, two dozen beers, and upscale food from Chef Carrie Schleiffer in a lounge with upstairs mezzanine and outdoor patio. With local cheese plates, specialty entrees, and extensive board game selection, West End Social provides elegant atmosphere perfect for casual nights or dressed-up date nights between downtown and Brightleaf District."
-  },
-  {
-    "id": "dssolvr-durham",
-    "name": "DSSOLVR Durham",
-    "category": "Drinks",
-    "lat": 36.0018623,
-    "lng": -78.8997983,
-    "narrative": "This Asheville-based brewery's 2023 Durham taproom at 630 Rigsbee Avenue serves 20 drafts ranging from Mexican lagers to hazy IPAs, including their best-selling Cold Caprese Pizza Italian Pilsner. With psychedelic alien-themed art, dog-friendly atmosphere, free NES gameplay, weekly art workshops, and partnerships with local restaurants, DSSOLVR brings surreal, experimental brewing—brewed till surreal—plus hard seltzers, gluten-free sours, natural wine, and ciders to the Warehouse District."
-  },
-  {
-    "id": "congress-social-bar",
-    "name": "Congress Social Bar",
-    "category": "Drinks",
-    "lat": 35.9801959,
-    "lng": -78.8788589,
-    "narrative": "East Durham's neighborhood joy bar, music spot, and event space at 471 South Driver Street creates a third place for the community—a Black-owned convivial gathering spot where neighbors linger and connect. With amazing BBQ from Mike Ds next door, Hip Hop, R&B, and Soca from DJs, and food trucks like Amagees Jamaican outside, Congress offers grown and sexy vibes in an upcoming section where Black-owned businesses are transforming East Durham."
-  },
-  {
-    "id": "la-mala-mexican-inspired-cocktails",
-    "name": "La Mala Mexican Inspired Cocktails",
-    "category": "Drinks",
-    "lat": 35.9956818,
-    "lng": -78.9016279,
-    "narrative": "This trendy downtown spot at 110 Corcoran Street brings Mexican-inspired cocktails made with freshly squeezed fruits and high-quality tequilas, plus authentic street food made fresh daily. With Latin music from DJs on Friday nights, drinks like the glow-in-the-dark La Buenota, beautiful murals for photos, and a location perfect for pre-DPAC shows, La Mala offers vibrant dining and bar-hopping energy to downtown Durham."
-  },
-  {
-    "id": "fizzwerks",
-    "name": "Fizzwerks",
-    "category": "Drinks",
-    "lat": 35.9896134,
-    "lng": -78.8960683,
-    "narrative": "Durham's first seltzer brewery opened March 2024 at 618 Ramseur Street, brewing hard seltzers with fresh fruits (peach from orchards two hours south, cantaloupe from owners' garden), botanicals, and teas. Inside a former tile factory with the best roof deck in Durham seating 200, Fizzwerks also serves hard root beer, Delta-9 drinks, nonalcoholic seltzers, and fresh shareable foods like flatbreads, sandwiches, and homemade pierogies using seasonal local ingredients."
-  },
-  {
-    "id": "durham-beer-garden",
-    "name": "Durham Beer Garden",
-    "category": "Drinks",
-    "lat": 36.0020079,
-    "lng": -78.8948379,
-    "narrative": "Located on North Mangum Street in Old Five Points, this family- and dog-friendly space features 20 rotating taps including Durham's Durty Bull Extra Crispy Pilsner and Booneshine High Country Honey. With 18 TVs, expansive indoor/outdoor areas for large groups, and Music on Mangum events every Saturday night 6-9 PM, Durham Beer Garden provides a refreshing casual atmosphere dedicated to beer, food, and camaraderie."
-  },
-  {
-    "id": "high-dive-durham",
-    "name": "High Dive Durham",
-    "category": "Drinks",
-    "lat": 35.9948385,
-    "lng": -78.9009397,
-    "narrative": "Opening August 2024 at 101 W Main Street from the owners of Bar Virgile and Annexe, High Dive offers stylish dive bar charm with pool, darts, foosball, pinball, Golden Tee, vintage jukebox, and some of Durham's cheapest drinks. This hidden gem in the old Quarter Horse location provides classy dive bar vibes without pretentiousness, featuring house-made pickled jalapeños, customized foosball table, free popcorn, and non-alcoholic options."
-  },
-  {
-    "id": "the-daily-beer-bar",
-    "name": "The Daily Beer Bar",
-    "category": "Drinks",
-    "lat": 35.9947478,
-    "lng": -78.9004488,
-    "narrative": "Opened December 2022 by former Hop Culture Managing Editor John Paradiso at 108 E Main Street, The Daily serves Yonder Coffee and local bakery pastries in morning, sandwiches with local ingredients for lunch, and 30+ rotating local artisanal beers into evening. This independently-owned neighborhood bar and cafe creates a cozy, relaxed atmosphere perfect for catching up with friends or quiet time with a book—quickly becoming one of Durham's best hidden-gem drinking spots."
-  },
-  {
-    "id": "baryo",
-    "name": "Baryo",
-    "category": "Drinks",
-    "lat": 35.9903696,
-    "lng": -78.8964666,
-    "narrative": "At Durham Bottling Co. (506 Ramseur Street), Baryo serves morning espresso, afternoon wine, late-night cocktails, and zero-proof THC creations in Durham's gathering place for every moment. This coffee and cocktail bar inspired by Durham's resilience and reinvention fosters conversation and community with beautiful patio, calming vibes, great wifi for remote work, and food available next door from Krill restaurant in the historic bottling company space."
-  },
-  {
-    "id": "the-glass-jug-beer-lab-downtown-durham",
-    "name": "The Glass Jug Beer Lab - Downtown Durham",
-    "category": "Drinks",
-    "lat": 36.0013062,
-    "lng": -78.9016322,
-    "narrative": "This family-run brewery next to Durham Central Park at 800 Taylor Street produces small-batch experimental beers including award-winning craft beer and gluten-free hard ginger beer. With their Beer Lab's scientific brewing approach, 10 rotating draft taps, unique batch-made cocktails featuring NC spirits, weekly run/cycling clubs, disc golf league, live music, trivia, and vinyl record nights, they create warm, inviting atmosphere for beer lovers and beyond."
-  },
-  {
-    "id": "rhythm-brews-bar-and-grill",
-    "name": "Rhythm & Brews Bar and Grill",
-    "category": "Drinks",
-    "lat": 35.9846382,
-    "lng": -78.8994704,
-    "narrative": "Durham's hottest spot for great drinks, delicious food, and unforgettable nights opened September 2024 at 908 Fayetteville Street, blending mouthwatering food from classic bar fare to innovative signature dishes with creative cocktails in a lively, music-inspired atmosphere. This Black-owned establishment offers signature cocktails, mocktails, local brews, and international favorites with friendly staff creating inviting ambiance for casual nights or special celebrations."
-  },
-  {
-    "id": "durty-bull-brewing-company",
-    "name": "Durty Bull Brewing Company",
-    "category": "Drinks",
-    "lat": 36.0011326,
-    "lng": -78.8982389,
-    "narrative": "Chosen by Beer Advocate as one of the Class of 2016's 34 Best New Breweries in the US, Durty Bull at 206 Broadway Street specializes in IPAs, lagers, and award-winning seltzers in a 6,000 square foot, 15-barrel production brewery. Half a mile from City Center near Central Park, this downtown taproom employs modern approaches on classic styles with comedy in the barrel room, live patio shows, and strong Durham community involvement."
-  },
-  {
-    "id": "atomic-clock-brewing-company",
-    "name": "Atomic Clock Brewing Company",
-    "category": "Drinks",
-    "lat": 36.0025519,
-    "lng": -78.9041536,
-    "narrative": "Brother-sister duo Brian and Colleen Quinn opened Atomic Clock in early 2024 at 501 Washington Street in Durham's historic fleet maintenance garage, representing their brewing philosophy—continuous pursuit of perfection through precision. With a 20-barrel brewhouse at 606 United Drive, this downtown taproom serves IPAs, lagers, barrel aged and sour beers, plus full-service kitchen, cocktails, and wine in a 6,000 square foot space with charming, modern approach to classic styles."
-  },
-  {
-    "id": "ramblers-beer-wine",
-    "name": "Ramblers Beer & Wine",
-    "category": "Drinks",
-    "lat": 35.9996361,
-    "lng": -78.906942,
-    "narrative": "This cozy neighborhood spot at 701 W Main Street serves craft beer, natural wine, and simple shareable snacks in a relaxed atmosphere perfect for conversation. With rotating taps featuring local and regional breweries, thoughtfully curated wine selections, and a welcoming vibe, Ramblers has become a beloved Durham gathering place for beer and wine enthusiasts seeking quality drinks without pretension."
-  },
-  {
-    "id": "clouds-brewing-durham-brewcade-kitchen",
-    "name": "Clouds Brewing - Durham Brewcade + Kitchen",
-    "category": "Drinks",
-    "lat": 36.0000389,
-    "lng": -78.9104806,
-    "narrative": "Opening October 2016 in Brightleaf Square, Clouds features 50 taps (30 house brews, 20 guests) including a 10-tap self-pour beer wall with RFID wristband sampling. This German-inspired brewpub with rustic warehouse vibe offers burgers, beer-brined brats, wings, tacos, vegan options, weekend brunch, plus pool tables, arcade games, TVs for Duke games, dog-friendly patio, and space for up to 150 guests—perfect for Durham's casual entertainment."
-  },
-  {
-    "id": "the-waiting-room",
-    "name": "The Waiting Room",
-    "category": "Drinks",
-    "lat": 35.9946808,
-    "lng": -78.9037368,
-    "narrative": "Tucked in the American Tobacco building basement at 300 Blackwell Street, this chic speakeasy lounge from the Nomad team opened as Durham's waiting room before DPAC shows. With innovative cocktails like the Old Bull featuring Durham Distillery's Conniption Gin, small plates, Raleigh Bakehouse desserts, cozy couches and window seats, The Waiting Room creates inclusive space for perfectly crafted drinks in an intimate, relaxing 21+ private club atmosphere."
-  },
-  {
-    "id": "bull-durham-beer-company",
-    "name": "Bull Durham Beer Company",
-    "category": "Drinks",
-    "lat": 35.9913493,
-    "lng": -78.9041355,
-    "narrative": "The only craft brewery in Minor League Baseball owned by a team, Bull Durham Beer Company operates inside Durham Bulls Athletic Park at 409 Blackwell Street and American Tobacco Campus. Led by Executive Brewmaster Sebastian Wolfrum, BDBCo brings fresh, local beer to Bulls fans at the ballpark, celebrating Durham's connection to baseball heritage, the iconic 'Bull Durham' film, and the city's craft brewing innovation."
-  },
-  {
-    "id": "bull-city-burger-and-brewery-2",
-    "name": "Bull City Burger and Brewery",
-    "category": "Drinks",
-    "lat": 35.9954939,
-    "lng": -78.8997764,
-    "narrative": "Since 2011, Durham's longest-running brewpub has championed local agriculture with 100% pasture-raised, grass-fed NC beef ground in-house daily, house-made buns, condiments, and ingredients sourced from local farmers within 70 miles. This farm-to-fork establishment on East Parrish Street embodies Durham's commitment to sustainable, local food while supporting North Carolina's agricultural community."
-  },
-  {
-    "id": "killer-queen-wine-bar",
-    "name": "Killer Queen Wine Bar",
-    "category": "Drinks",
-    "lat": 35.99481,
-    "lng": -78.8999,
-    "narrative": "Located at 117 E Main Street with hours Tuesday-Saturday, Killer Queen offers fantastic rotating selection of white, red, rose, orange, and sparkling wines with a focus on natural wines. This cute, cozy spot feels like walking into your best friend's living room with counter seating, small food menu with charcuterie and warm chocolate chip cookies, cozy patio with blankets and heat lamps, and free wine tastings every Wednesday 6-8pm."
-  },
-  {
-    "id": "coupe-stein-champagne-bar",
-    "name": "Coupe & Stein Champagne Bar",
-    "category": "Drinks",
-    "lat": 35.991068,
-    "lng": -78.8906016,
-    "narrative": "Durham's newest destination for refined relaxation opened at 800 Taylor Street in the historic warehouse district, featuring champagne, crafted cocktails, and exclusive selections in a beautifully curated space with a charming pink piano. With elegant decor, warm lighting, and welcoming atmosphere, Coupe & Stein creates perfect environment for intimate conversations and memorable celebrations in Durham's growing craft beverage scene."
-  },
-  {
-    "id": "primrose-bar-and-lounge",
-    "name": "Primrose Bar and Lounge",
-    "category": "Drinks",
-    "lat": 35.995129,
-    "lng": -78.9012738,
-    "narrative": "Opening in 2024 at 111 W Main Street, this whimsical lounge adorned with floral wallpaper and rose-covered facades serves innovative cocktails with playful, internet-inflected sensibilities like 'Becky with the Good Pear' and 'Sippin' on Some Sizzurp.' With movie nights Monday-Tuesday, live music, signature drinks, comfy seating, and location perfect for post-DPAC cocktails, Primrose brings great energy and unique botanical-inspired ambiance to downtown Durham."
-  },
-  {
-    "id": "west-end-social-2",
-    "name": "West End Social",
-    "category": "Drinks",
-    "lat": 35.998049,
-    "lng": -78.9063091,
-    "narrative": "Durham's Original Wine Bar since 1997 at 601 W Main Street offers over 40 wines by the glass, custom cocktails, two dozen beers, and upscale food from Chef Carrie Schleiffer in a lounge with upstairs mezzanine and outdoor patio. With local cheese plates, specialty entrees, and extensive board game selection, West End Social provides elegant atmosphere perfect for casual nights or dressed-up date nights between downtown and Brightleaf District."
-  },
-  {
-    "id": "conniption-bar-lounge-formerly-known-as-corpse-reviver-bar-lounge",
-    "name": "Conniption Bar & Lounge - Formerly known as Corpse Reviver Bar & Lounge",
-    "category": "Drinks",
-    "lat": 36.0046403,
-    "lng": -78.9029041
-  },
-  {
-    "id": "pour-taproom",
-    "name": "Pour Taproom",
-    "category": "Drinks",
-    "lat": 35.9966673,
-    "lng": -78.9012878,
-    "narrative": "Starting in Asheville in 2014 and expanding to downtown Durham at 202 Corcoran Street opposite the Bull at CCB Plaza, Pour Taproom offers 60+ self-serve taps where guests pour their own beer, cider, wine, and kombucha by the ounce using smart wristbands. With in-house catering from Lula & Sadie's, board games, cornhole, large patio overlooking Bull City, and space for 10-100 guests, Pour showcases local craft beverages with innovative self-serve technology."
-  },
-  {
-    "id": "american-tobacco-campus",
-    "name": "American Tobacco Campus",
-    "category": "Things to do",
-    "lat": 35.9933333,
-    "lng": -78.9041667,
-    "narrative": "Once headquarters of American Tobacco Company controlling 90% of the U.S. tobacco market, these 1874-1950s warehouses sat vacant after 1987 closure until Capitol Broadcasting Company's $200 million 2001 transformation. Now a million-square-foot campus with iconic Lucky Strike smokestack, Bull River water feature, creative offices (GlaxoSmithKline, Duke, Burt's Bees, American Underground tech hub), restaurants, and DPAC—drawing one million+ visitors yearly to this nationally recognized historic reuse success story."
-  },
-  {
-    "id": "durham-bulls-athletic-park",
-    "name": "Durham Bulls Athletic Park",
-    "category": "Things to do",
-    "lat": 35.991542,
-    "lng": -78.9049079,
-    "narrative": "Opening in 1995, this 10,000-seat ballpark designed by HOK Sport features the 32-foot Blue Monster wall and manual scoreboard reminiscent of Fenway's Green Monster. Home to Triple-A Durham Bulls (Tampa Bay Rays affiliate) who jumped from Class A to Triple-A in 1998 partly due to 'Bull Durham' film fame, the park has hosted three Triple-A National Championships (2009, 2017, 2022) and houses Bull Durham Beer Company—the only brewery owned by a Minor League team."
-  },
-  {
-    "id": "major-durham-bull-bronze-sculpture",
-    "name": "\"Major\" – Durham Bull Bronze Sculpture",
-    "category": "Things to do",
-    "lat": 35.9964874,
-    "lng": -78.9017088
-  },
-  {
-    "id": "museum-of-durham-history",
-    "name": "Museum of Durham History",
-    "category": "Things to do",
-    "lat": 35.9982755,
-    "lng": -78.9049802,
-    "narrative": "The Duke Homestead State Historic Site and Tobacco Museum preserves 5,500 square feet of exhibits on tobacco farming, manufacturing, and advertising at Washington Duke's 1852 home and 1869 tobacco factory. This National Historic Landmark tells how Duke's vision after the Civil War transformed North Carolina into the heart of a worldwide tobacco empire, with Duke family money founding today's Duke University, hospitals, and facilities that improved millions of Southerners' lives."
-  },
-  {
-    "id": "durham-central-park",
-    "name": "Durham Central Park",
-    "category": "Things to do",
-    "lat": 36.0006687,
-    "lng": -78.901347,
-    "narrative": "Located at 501 Foster Street, this downtown park hosts the Durham Farmers' Market—established 1998 and operating year-round since 2007 under the Pavilion. With 50+ vendors from within 70 miles selling produce they grew themselves, Double Bucks for SNAP clients, Senior Farmers Market program, plus Durham Craft Market and Art Market Durham happening simultaneously on weekends, the park embodies Durham's eclectic community vibe with music, skateboarders, and that great Durham energy."
-  },
-  {
-    "id": "boxcar-bar-arcade-2",
-    "name": "Boxcar Bar + Arcade",
-    "category": "Things to do",
-    "lat": 36.003381,
-    "lng": -78.9016694,
-    "narrative": "Located at 621 Foster Street overlooking historic Durham Athletic Park, Boxcar features 70+ classic and modern arcade games including Pac-Man, Street Fighter, Mortal Kombat, NBA Jam, plus skeeball, air hockey, and DDR. With a 7,000 square foot patio with fire pits, outdoor games, live music, local beers, seasonal cocktails, and fresh pizzas, this entertainment venue hosts Tuesday karaoke and Wednesday skeeball tournaments in downtown Durham."
-  },
-  {
-    "id": "aaktun-coffee-restaurant-and-bar-2",
-    "name": "Aaktun Coffee, Restaurant and Bar",
     "category": "Coffee",
     "lat": 35.9893315,
     "lng": -78.8957363,
-    "narrative": "From the Mezcalito hospitality group and two-time James Beard semifinalist Chef Oscar Diaz, this Tulum-inspired spot transforms from daytime coffee cafe to upscale evening destination. With Mexican-influenced cuisine featuring fresh ingredients and tropical cenote-inspired decor, Aaktun showcases Durham's diverse culinary scene while bringing global flavors to downtown's Innovation District."
+    "narrative": "From the team behind Mezcalito next door, this Tulum-inspired spot on Ramseur Street is a coffee shop by day and a tiki-style bar and restaurant by night. Mornings bring horchata lattes, matcha and espresso drinks in a room full of greenery and natural wood, while later the kitchen turns out ceviche, lomo saltado and pork belly alongside tropical cocktails. Good for a breakfast coffee meeting that could easily roll into dinner plans."
   },
   {
-    "id": "yonder-coffee",
-    "name": "Yonder Coffee",
+    "id": "yonder-coffee-at-the-daily",
+    "name": "Yonder Coffee at the Daily",
     "category": "Coffee",
     "lat": 35.9946091,
     "lng": -78.9005212,
-    "narrative": "Located at 108 E Main Street inside The Daily Beer Bar, Yonder Coffee is a true specialty coffee destination keeping varieties from many different global roasters on rotation. Offering coffee flights from 3 roasters with origin cards, a Global Roaster Subscription featuring 12 countries over 12 months, unique drinks like Espresso Tonic and Tiramisu Iced Coffee, plus eclectic atmosphere with spinning vinyl, Yonder provides exceptional specialty coffee experiences throughout the day."
+    "narrative": "Durham's globe-trotting coffee bar runs a Global Roaster Subscription that spotlights a roaster from a different country each month, plus guest coffees from shops like Brooklyn's Parlor and Charlotte's HEX. Order the Flight of Filter, three small pours with notes on each coffee's farm-to-cup journey, or a Ganache Shot of filter coffee and dark chocolate. It all happens inside The Daily Beer Bar, which keeps coffee, tea, sandwiches and craft beer flowing into the evening."
   },
   {
     "id": "cocoa-cinnamon",
@@ -692,7 +102,7 @@
     "category": "Coffee",
     "lat": 36.0039706,
     "lng": -78.9010749,
-    "narrative": "Founded by Areli Barrera Grodski and Leon Grodski Barrera in 2010 and growing in Durham since 2011, Cocoa Cinnamon operates three cafes with their Little Waves Coffee Roasters (opened 2017) earning international recognition. This Latina co-owned, women-forward business with team representing 10+ countries and 8 languages has been featured in Food Network's '51 Best Coffee Shops in America,' blending cultural heritage, sustainability, and local pride as a beloved Durham community hub."
+    "narrative": "The Geer Street outpost of Cocoa Cinnamon, the Latina-led, women-forward cafe family behind Little Waves Coffee Roasters, a name on The World's 100 Best Coffee Shops list for North America, is a beloved Old North Durham hangout. Expect carefully sourced single-origin coffee, rich drinking chocolates and inventive specialty lattes, plus churros, in a lively space with covered outdoor seating made for people-watching. It's the pilgrimage for anyone who takes their coffee seriously."
   },
   {
     "id": "the-oak-house-durham",
@@ -700,15 +110,15 @@
     "category": "Coffee",
     "lat": 35.9956143,
     "lng": -78.9014868,
-    "narrative": "Opening in 2019 on the ground floor of One City Center at 126 W Main Street, The Oak House serves Caballo Rojo coffee roasted on-site, craft beer, cider, fine wine, and hosts coffee roasting demonstrations, cuppings, tastings, and live music. With ample seating, outlets, and late-night hours, this craft coffee/wine bar concept welcomes everyone in Durham's thriving community as a cozy study spot and evening social gathering space."
+    "narrative": "On the ground floor of One City Center, The Oak House is an all-day coffee shop and wine bar where espresso, pour-overs and French press share the menu with wine and craft beer from open to close. Pastries come from Strong Arm Baking Co., matcha from Durham's Arteao and chai from Winston-Salem's Chad's Chai. Free Wi-Fi with no time limit makes it an easy base for laptop work, a casual meeting or a glass of wine after sessions."
   },
   {
-    "id": "press-coffee-crepes-cocktails-2",
+    "id": "press-coffee-crepes-cocktails",
     "name": "PRESS Coffee Crêpes Cocktails",
     "category": "Coffee",
-    "lat": 35.9925992,
-    "lng": -78.904263,
-    "narrative": "This European-inspired cafe in American Tobacco Campus serves Durham-roasted Counter Culture Coffee alongside made-to-order crepes and craft cocktails in an Italian espresso bar meets Provencal bistro setting. With an open kitchen, separate cocktail bar, and covered patio overlooking the historic tobacco warehouses, PRESS offers 'A Carolina Twist' on European cafe culture using scratch-made dishes and local ingredients."
+    "lat": 35.9925864,
+    "lng": -78.9042099,
+    "narrative": "Right on American Tobacco Campus, PRESS is a European-style coffeehouse that pours Durham-roasted Counter Culture coffee and slides from breakfast into lunch and cocktails as the day goes on. Savory crêpes like the Carolina (country ham, hoop cheese and mustard) and the hash brown waffles are the signatures, with sweet crêpes for dessert. Steps from the venue with a covered patio, it works for a pre-session coffee or a quick sit-down lunch."
   },
   {
     "id": "narrative-coffee-company",
@@ -716,7 +126,7 @@
     "category": "Coffee",
     "lat": 35.999837,
     "lng": -78.903272,
-    "narrative": "Born in Raleigh from a belief that coffee brings people together and creates shared stories, Narrative opened their first brick-and-mortar at 300 Morris Street in Durham Innovation District after building following throughout Triangle with their trailer and cart. Serving high quality specialty coffee, free wifi, and welcoming workspace at markets, festivals, and neighborhood gatherings, Narrative fosters connections and community through daily coffee rituals that create happiness and meaningful interactions."
+    "narrative": "Narrative started out as a coffee cart and trailer working Raleigh markets and festivals before putting down roots in Durham's Innovation District. Its specialty lattes are the draw, from the Butter Beer and Cookie Butter Oat to seasonal pours like Maple Bourbon and Pecan Praline, and pistachio milk is a fan-favorite upgrade. The cozy, quiet room is a welcoming place to catch up on email before heading to sessions."
   },
   {
     "id": "foster-street-coffee",
@@ -724,7 +134,7 @@
     "category": "Coffee",
     "lat": 36.0016425,
     "lng": -78.9012925,
-    "narrative": "Opened by Tracy Cooper (20+ years in corporate finance) at 530 Foster Street in Liberty Warehouse Building north of Central Park, this hometown coffee shop works with Valerio Coffee Roasters and local roasters serving eight-bean espresso blend. With pastries from Durham's Crumbs Bakery, Scratch Bakery, Ninth Street Bakery, Strong Arm Baking, and Micheal's English Muffins, plus MajaTei teas and organic smoothies, Foster Street brings global inspiration and local produce to downtown Durham."
+    "narrative": "This hometown cafe in the Liberty Warehouse building, next to the Durham Food Hall just north of Central Park, is a favorite with remote workers thanks to comfortable chairs, plenty of tables and a meeting room. Baristas earn steady praise for chai lattes and espresso drinks, and paninis, smoothies, yogurt parfaits and coffee cake cover a quick breakfast. It's dog-friendly too, with an upbeat, social feel."
   },
   {
     "id": "yonderlust-cafe",
@@ -732,14 +142,750 @@
     "category": "Coffee",
     "lat": 36.000436,
     "lng": -78.909064,
-    "narrative": "This local family-owned cafe and outdoor gear shop at 109 N. Gregson Street in downtown Durham serves Joe Van Gogh Coffee roasted in Durham. As a neighborhood gathering spot combining coffee service with outdoor adventure supplies, Yonderlust embodies Durham's community spirit while serving quality locally-roasted coffee to residents and visitors exploring the Bull City."
+    "narrative": "Part outdoor-gear shop and part cafe, this family-owned spot near Brightleaf has fueled Durham adventurers since 2022 with locally minded, organic-leaning food and a full coffee bar. Try a house special like the Campfire Latte with toasted marshmallow, cayenne and smoked salt, or the Maple Miso Cappuccino, alongside avocado toast or a panini on Ninth Street Bakery bread. Fresh juices and smoothies round out a menu built for a healthy start."
   },
   {
     "id": "nectar-cafe",
     "name": "Nectar Cafe",
     "category": "Coffee",
-    "lat": 36.0031782,
-    "lng": -78.9007726,
-    "narrative": "Located at 620 Foster Street in the Geerhouse lobby, this bright modern cafe offers Counter Culture Coffee, matcha lattes, lemonades, wine, beer, and pastries from Raleigh's Lucettegrace in a cathedral-like space with floor-to-ceiling windows. From the owners of Foster Street Coffee, Nectar transitions seamlessly from morning pastries to lunch destination with traditional fare plus vegan and gluten-free options, featuring a dog-friendly mint-green bistro patio perfect for remote workers."
+    "lat": 36.0031511,
+    "lng": -78.9007002,
+    "narrative": "Tucked into the Geerhouse apartments' lobby, with a patio facing the complex's leafy decks and bridges, Nectar is a bright, modern cafe pouring espresso drinks, tea, juices and lemonade. Pastries, breakfast sandwiches and macarons handle the morning, while wine by the glass, cold beer and Lucettegrace desserts take over later in the day. It's calm and dog-friendly, with lobby seating that suits a quiet hour of laptop work."
+  },
+  {
+    "id": "ninth-street-bakery",
+    "name": "Ninth Street Bakery",
+    "category": "Coffee",
+    "lat": 35.9966967,
+    "lng": -78.9029143,
+    "narrative": "A Durham institution since 1981, Ninth Street Bakery bakes organic breads and pastries at its downtown cafe and roasts its own coffee. Mornings mean croissants, scones and cinnamon buns; at lunch, rotating sandwiches on house bread, like curried chicken salad or roasted turkey, come out fast. Low-key, with outdoor tables, and a handy stop between the hotels and the venue."
+  },
+  {
+    "id": "fare-fellow",
+    "name": "Fare&Fellow",
+    "category": "Coffee",
+    "lat": 35.9963806,
+    "lng": -78.9083214,
+    "narrative": "Fare&Fellow brings its coffee-plus-kitchen concept to the landmark NC Mutual building on West Chapel Hill Street, pairing espresso, flat whites, cold brew and draft kombucha with chef-driven plates. Mornings run from breakfast burritos and sandwiches to smoothie bowls and avocado toast, and the turkey-and-brie panini gets frequent shout-outs. A good-looking, cozy room and a friendly team make it a relaxed choice for a breakfast meeting."
+  },
+  {
+    "id": "montwood-cafe",
+    "name": "Montwood Café",
+    "category": "Coffee",
+    "lat": 35.9968433,
+    "lng": -78.9021835,
+    "narrative": "Opened by a queer, interracial couple who fell for Durham after years of wandering, Montwood is a new neighborhood cafe on Market Street built around community and great coffee. Early reviewers single out well-pulled espresso and cappuccinos, cold brew and matcha, plus a warm welcome from the owners. It's a cozy, low-key spot for a quiet first cup before sessions start."
+  },
+  {
+    "id": "the-can-opener",
+    "name": "The Can Opener",
+    "category": "Coffee",
+    "lat": 35.9985175,
+    "lng": -78.9100663,
+    "narrative": "Part craft coffee bar and part food truck park, The Can Opener on South Gregson Street pours espresso drinks, tea and matcha from early morning, then its on-site trucks serve Korean barbecue from Bulkogi, Greek street food and more for lunch and dinner. Roomy indoor and outdoor seating, local craft beer and cocktails make it a laid-back laptop spot by day and an easy group hangout later."
+  },
+  {
+    "id": "juicekeys",
+    "name": "Juicekeys",
+    "category": "Coffee",
+    "lat": 35.9959335,
+    "lng": -78.9015257,
+    "narrative": "Run by a brother-and-sister team, this locally owned juice and smoothie bar pairs cold-pressed juices and smoothie bowls with a full organic coffee menu, from pour-overs and lattes to bulletproof coffee. Gluten-free toasts and sandwiches make it a smart pick for a lighter breakfast, and it sits across Corcoran Street from the 21c Museum Hotel, handy for anyone staying downtown."
+  },
+  {
+    "id": "press-coffee-crepes-cocktails-2",
+    "name": "PRESS Coffee Crêpes Cocktails",
+    "category": "Lunch",
+    "lat": 35.9925992,
+    "lng": -78.904263,
+    "narrative": "Right on American Tobacco Campus, PRESS is a European-style coffeehouse that pours Durham-roasted Counter Culture coffee and slides from breakfast into lunch and cocktails as the day goes on. Savory crêpes like the Carolina (country ham, hoop cheese and mustard) and the hash brown waffles are the signatures, with sweet crêpes for dessert. Steps from the venue with a covered patio, it works for a pre-session coffee or a quick sit-down lunch."
+  },
+  {
+    "id": "queenburger",
+    "name": "QueenBurger",
+    "category": "Lunch",
+    "lat": 35.9927674,
+    "lng": -78.9039817,
+    "narrative": "Smash burgers made from local grass-fed beef, stacked with house-made pickles and sauces, are the draw at this counter-service spot that began as a 2020 pandemic pop-up downtown. Beyond the classic there's a jerk burger, a patty melt, a veggie burger, chicken tenders and spicy fries, plus slushies and cocktails for the end of the day. It shares the ATC plaza with PRESS, handy when your group can't agree."
+  },
+  {
+    "id": "bull-city-burger-and-brewery",
+    "name": "Bull City Burger and Brewery",
+    "category": "Lunch",
+    "lat": 35.9954939,
+    "lng": -78.8997764,
+    "narrative": "Durham's homegrown brewpub has brewed its own beer on site since 2011 and grinds pasture-raised North Carolina beef in house for burgers on house-baked buns. Add duck-fat fries or pretzel-crusted pickle chips, and the Joan Jett veggie burger covers non-meat eaters. With about 90 seats, a year-round patio and a semi-private room, it handles a big conference group for lunch or an evening pint."
+  },
+  {
+    "id": "durham-food-hall",
+    "name": "Durham Food Hall",
+    "category": "Lunch",
+    "lat": 36.0013101,
+    "lng": -78.9013355,
+    "narrative": "When your group can't agree on lunch, this food hall across from Durham Central Park settles it with about ten local counters under one roof. The current lineup includes Locals Seafood, Ex-Voto (known for its crunchwraps), Mango Indian Grill, Sfizio Pizzeria, Patty Boy, Corner Yaki and Everything Bagels, with Milklab and Liturgy Beverage for drinks and a central bar. You can order online for pickup to make the most of the break."
+  },
+  {
+    "id": "anjappar-chettinad-indian-restaurant-durham",
+    "name": "Anjappar Chettinad Indian Restaurant, Durham",
+    "category": "Lunch",
+    "lat": 35.9942028,
+    "lng": -78.8987389,
+    "narrative": "The Durham outpost of the Chettinad chain founded in Chennai in 1964 serves the fiery, pepper-forward cooking of Tamil Nadu alongside North Indian favorites. Dosas are the specialty, and the Chettinad goat masala, Chicken 65, biryani and flaky Malabar parotta are all worth ordering. A strong pick for spice lovers and vegetarians, with plenty of paneer and vegetable dishes to share."
+  },
+  {
+    "id": "counting-house",
+    "name": "Counting House",
+    "category": "Lunch",
+    "lat": 35.9959681,
+    "lng": -78.9018032,
+    "narrative": "The restaurant inside 21c Museum Hotel fills a former bank, complete with the old vault, original terrazzo floors and tall arched windows, with contemporary art never far away. The weekday daytime menu runs from breakfast into lunch with Japanese milk bread, za'atar deviled eggs, oysters on the half shell and a burger, all leaning on Carolina ingredients. It's the most polished sit-down lunch nearby; book ahead for a group."
+  },
+  {
+    "id": "thaiangle-restaurant",
+    "name": "Thaiangle Restaurant",
+    "category": "Lunch",
+    "lat": 35.9957636,
+    "lng": -78.8999034,
+    "narrative": "Opened in 2024, this family-owned Thai restaurant on North Mangum Street cooks everything to order in a calm, polished dining room. Drunken noodles, pad see ew, khao soi and the honey-glazed crispy duck are the favorites, and the kitchen will adjust the heat to your taste. A dependable sit-down lunch when you want something brighter than a burger."
+  },
+  {
+    "id": "queeny-s",
+    "name": "Queeny's",
+    "category": "Lunch",
+    "lat": 35.9970318,
+    "lng": -78.9007613,
+    "narrative": "A nostalgic neighborhood bar and grill inspired by the spirit of a potluck, Queeny's pairs comfort food with a community-minded, everyone-welcome attitude. The chicken tenders and cheeseburgers have a loyal following, and the birria dip, French dip and sabich sandwich are worth a look. Counter service keeps lunch moving, and it's just as handy for a late bite after the evening events."
+  },
+  {
+    "id": "gym-tacos",
+    "name": "Gym Tacos",
+    "category": "Lunch",
+    "lat": 35.9959033,
+    "lng": -78.8995789,
+    "narrative": "A bright, casual taqueria on City Hall Plaza that presses its corn tortillas by hand. Go for the al pastor torta, suadero (brisket) tacos or a gringa, and finish with churros; the surf-and-turf burrito is a two-handed commitment. It's quick, inexpensive and an easy group order."
+  },
+  {
+    "id": "luna-rotisserie-and-empanadas",
+    "name": "Luna Rotisserie and Empanadas",
+    "category": "Lunch",
+    "lat": 35.9953339,
+    "lng": -78.9009837,
+    "narrative": "Luna blends South American cooking with the American South, using pasture-raised, antibiotic-free meats in its rotisserie chicken, empanadas, arepas and grain bowls. Arepas, coconut rice, yuca and sweet maduros come up again and again in reviews, and jackfruit options make it easy for vegetarians. The exposed-brick room on West Main is casual enough for a quick lunch, with a full bar if the day calls for it."
+  },
+  {
+    "id": "dashi-ramen-and-izakaya-cocktail-bar",
+    "name": "Dashi Ramen and Izakaya Cocktail Bar",
+    "category": "Lunch",
+    "lat": 35.9970933,
+    "lng": -78.8992279,
+    "narrative": "The ground floor of this two-level Japanese spot is a cozy ramen shop with an open kitchen, turning out tonkotsu, shio, shoyu, miso and tantanmen bowls, plus a vegan ramen. Upstairs, the izakaya opens later with small plates, sake, shochu and a big whisky list. For lunch, stick to the ramen counter downstairs; a steaming bowl is ideal on a chilly November day."
+  },
+  {
+    "id": "barsa-new-indian",
+    "name": "Barsa New Indian",
+    "category": "Lunch",
+    "lat": 35.9976495,
+    "lng": -78.8988562,
+    "narrative": "Barsa, whose name means rain in Hindi, puts a modern, refined spin on regional Indian cooking from Kerala to Kashmir. Standouts include Kerala-style lobster moilee, gunpowder lamb chops, slow-cooked goat rogan and plenty of vegetarian dishes such as paneer butter masala and pumpkin coconut curry. It's an upscale but relaxed lunch, good for a client meal or a small group that wants something special."
+  },
+  {
+    "id": "pokeworks",
+    "name": "Pokeworks",
+    "category": "Lunch",
+    "lat": 35.995535,
+    "lng": -78.901368,
+    "narrative": "This fast-casual poke bar builds bowls, burritos and salads to order, with spicy ahi, Hawaiian ahi, yuzu ponzu salmon, huli huli chicken and tofu among the proteins. It's a light, quick lunch with lots of gluten-free and vegan combinations, and reviewers regularly praise the friendly staff. Part of a national chain, it's a reliable pick when you want something fresh and fast."
+  },
+  {
+    "id": "pizzeria-toro",
+    "name": "Pizzeria Toro",
+    "category": "Lunch",
+    "lat": 35.9971175,
+    "lng": -78.9036011,
+    "narrative": "Wood-fired pies come out of the central oven at this busy, modern downtown pizzeria, with toppings that follow what local farms are bringing in. Start with the ricotta dumplings or the much-loved Tuscan kale salad, then split a sweet fennel sausage pizza. There's communal and bar seating but no reservations, so go early to beat the lunch crowd."
+  },
+  {
+    "id": "pie-pushers",
+    "name": "Pie Pushers",
+    "category": "Lunch",
+    "lat": 35.995255,
+    "lng": -78.901495,
+    "narrative": "What started as a food truck is now a downtown shop serving Durham-style thin-crust pizza by the slice or the whole pie. The wings are a sleeper hit, alongside garlic knots, Brussels sprouts and pies like the Pace Car and Barb's Margherita, with gluten-free and vegan options too. Slices make it one of the quicker, cheaper real lunches downtown."
+  },
+  {
+    "id": "parker-and-otis",
+    "name": "Parker and Otis",
+    "category": "Lunch",
+    "lat": 35.992789,
+    "lng": -78.9055208,
+    "narrative": "This cozy cafe and gourmet market sits on American Tobacco Campus, just steps from Bay 7. Order a BLT or shrimp BLT, curry chicken salad or a ham-and-Swiss panini with deviled eggs on the side, then browse the shelves of North Carolina foods, wine, candy and gifts on the way out. The closest lunch to the venue, and a good place to grab souvenirs for home."
+  },
+  {
+    "id": "lutra-cafe-and-bakery",
+    "name": "Lutra Cafe and Bakery",
+    "category": "Lunch",
+    "lat": 35.9943301,
+    "lng": -78.9040269,
+    "narrative": "Chris McLaurin's popular pop-up opened its first brick-and-mortar cafe in June 2026 in ATC's Noell Building, across from the historic rail car. It's famous for its buns, sweet and savory in flavors like pistachio-honey and pepperoni pizza, plus a crisp hundred-layer hash brown, with sandwiches, soups and salads at lunch. Counter service on weekdays keeps it quick, and there's a patio for mild days."
+  },
+  {
+    "id": "east-of-texas",
+    "name": "East of Texas",
+    "category": "Lunch",
+    "lat": 35.99329,
+    "lng": -78.90433,
+    "narrative": "The Winston-Salem Tex-Mex barbecue favorite opened its second location on American Tobacco Campus in late summer 2026. Expect sliced brisket, lime-glazed pulled pork, brisket and barbacoa tacos, smoked cauliflower tacos for vegetarians, and Texas Twinkies (bacon-wrapped, brisket-stuffed jalapeños), with fresh tortillas, queso and guacamole on the side. A big room and new patio make it a good bet for groups."
+  },
+  {
+    "id": "tobacco-road-sports-cafe",
+    "name": "Tobacco Road Sports Cafe",
+    "category": "Lunch",
+    "lat": 35.9925223,
+    "lng": -78.903499,
+    "narrative": "Founded in 2008 by the Amra brothers, this ATC landmark bills itself as a sports restaurant rather than a sports bar, with a scratch-made, Southern-leaning menu sourced locally where possible. The patio looks straight over the Durham Bulls Athletic Park, and favorites include buffalo chicken egg rolls, fried green tomatoes and the bison burger. It's roomy and group-friendly, an easy call when a dozen colleagues want to eat together."
+  },
+  {
+    "id": "toast",
+    "name": "Toast",
+    "category": "Lunch",
+    "lat": 35.9967317,
+    "lng": -78.9039702,
+    "narrative": "This Italian paninoteca at Five Points is a longtime downtown lunch favorite built around panini, crostini and homemade soups on crusty bread. The crostini combo is the classic order, with warm goat cheese, prosciutto and garlicky mushroom among the favorites, and daily specials follow what's fresh. Order at the counter and grab a seat inside or on the sidewalk."
+  },
+  {
+    "id": "m-kokko",
+    "name": "M Kokko",
+    "category": "Lunch",
+    "lat": 35.9973085,
+    "lng": -78.9012266,
+    "narrative": "From the local group behind M Sushi and M Tempura, this tiny counter on Holland Street is all about fried chicken and noodles. Order the chicken sandwich, Korean-style fried wings, Hainan chicken, pork buns, ramen or the vegan biang biang noodles. Seating is limited and there's often a line, so it's best for a small group or takeout."
+  },
+  {
+    "id": "ninth-street-bakery-2",
+    "name": "Ninth Street Bakery",
+    "category": "Lunch",
+    "lat": 35.9966967,
+    "lng": -78.9029143,
+    "narrative": "A Durham institution since 1981, Ninth Street Bakery bakes organic breads and pastries at its downtown cafe and roasts its own coffee. Mornings mean croissants, scones and cinnamon buns; at lunch, rotating sandwiches on house bread, like curried chicken salad or roasted turkey, come out fast. Low-key, with outdoor tables, and a handy stop between the hotels and the venue."
+  },
+  {
+    "id": "viceroy",
+    "name": "Viceroy",
+    "category": "Dinner",
+    "lat": 35.9965393,
+    "lng": -78.9036861,
+    "narrative": "Viceroy dresses like an old London tavern, with vintage decor and portraits from India's past, and cooks classic Indian dishes alongside British-Indian mashups like curried shepherd's pie. Regulars order the lamb lollipops, sausage rolls, chicken korma and seasonal curries with a pint of Guinness or a house cocktail, and vegans get plenty of choice. It sits a couple of doors from SO/IF Bar, so it's an easy dinner around Wednesday's welcome drinks."
+  },
+  {
+    "id": "seraphine",
+    "name": "Seraphine",
+    "category": "Dinner",
+    "lat": 35.9928259,
+    "lng": -78.9057665,
+    "narrative": "Durham restaurateurs Brad and Graham Weddington and Chef Christopher Garrett cook their family's Louisiana heritage at this MICHELIN Guide–recommended spot, in the same American Tobacco Campus building as Bay 7. Order broiled oysters, BBQ shrimp, gumbo, crawfish and shrimp and grits, then split beignets or key lime pie. The New Orleans-style patio and polished cocktails make it the natural sit-down group dinner without leaving campus."
+  },
+  {
+    "id": "mateo-bar-de-tapas",
+    "name": "Mateo Bar de Tapas",
+    "category": "Dinner",
+    "lat": 35.9968525,
+    "lng": -78.9047943,
+    "narrative": "Chef Matthew Kelly's Spanish-meets-Southern tapas bar has filled the old Book Exchange building since 2012, backed by a deep Spanish wine list and one of the country's largest sherry selections. Share pan con tomate, roasted bone marrow, pollo frito, croquetas and pulpo, or order paella for the table. It hosts this year's Welcome Party, so come back Thursday or Friday to see it at regular service."
+  },
+  {
+    "id": "alley-twenty-six",
+    "name": "Alley Twenty Six",
+    "category": "Dinner",
+    "lat": 35.996751,
+    "lng": -78.900525,
+    "narrative": "Shannon Healy's cocktail bar set Durham's craft-drinking standard when it opened in 2012, and it still builds seasonal cocktails on house-made syrups and tonic, which it also sells and teaches in its cocktail classes. The upscale bar food holds its own: the burger, deviled eggs, pimento cheese and beef tartare are crowd favorites. A kitchen that runs late makes it one of the few real dinner options after Wednesday's welcome party."
+  },
+  {
+    "id": "m-sushi",
+    "name": "M Sushi",
+    "category": "Dinner",
+    "lat": 35.9973242,
+    "lng": -78.9011981,
+    "narrative": "The restaurant that launched chef Mike Lee's M Restaurants group serves pristine fish in a dim, minimalist room with stone-gray walls and low black chairs. The Lite Omakase is the most-ordered move, and wagyu, smoked cod, seared salmon rolls and tuna crispy rice also draw raves. Seats are limited and there's usually a wait, so book ahead and keep the party small."
+  },
+  {
+    "id": "little-bull",
+    "name": "Little Bull",
+    "category": "Dinner",
+    "lat": 35.9970325,
+    "lng": -78.9015868,
+    "narrative": "Chef Oscar Diaz cooks what he calls Pocho food: sincere, nostalgic comfort cooking shaped by first-generation immigrant kids, drawing on his Mexican heritage, a Chicago upbringing and North Carolina produce. The MICHELIN Guide–recommended restaurant now fills a bigger two-story downtown space with room for parties. Share ceviche, arepas, octopus, barbacoa and gambas, and save room for the bread pudding."
+  },
+  {
+    "id": "bar-virgile",
+    "name": "Bar Virgile",
+    "category": "Dinner",
+    "lat": 35.9947192,
+    "lng": -78.9007933,
+    "narrative": "A downtown landmark for craft and classic cocktails, Bar Virgile backs one of the Triangle's biggest spirits collections with a menu of small plates and dinner dishes that changes with the seasons. Fried oysters, deviled eggs, steak frites, risotto and the burger are regulars' picks, eaten at the bar or in the leather banquettes. It's walk-in only and close to DPAC and the Carolina Theatre."
+  },
+  {
+    "id": "rue-cler",
+    "name": "Rue Cler",
+    "category": "Dinner",
+    "lat": 35.9970869,
+    "lng": -78.8997435,
+    "narrative": "Modeled on the neighborhood bistros of Paris, Rue Cler has served classic French cooking downtown since 2006, now under Executive Chef Gregory Rogers, who builds his menus around local farms and the seasons. Pick the rotating prix fixe or go à la carte with escargot, chicken pâté, coq au vin and duck confit, backed by a wine list with some rare bottles. It's a relaxed, grown-up group dinner on the way to the after party."
+  },
+  {
+    "id": "nanasteak",
+    "name": "NanaSteak",
+    "category": "Dinner",
+    "lat": 35.9935313,
+    "lng": -78.9027412,
+    "narrative": "Right on American Tobacco Campus beside DPAC and the Aloft, NanaSteak is a polished two-level steakhouse with hardwood floors, a bar and a patio. Prime rib is the signature, with steak tartare, beef-fat fries, collard greens and an apple crisp worth saving room for. Private dining and plenty of room for groups make it the easiest nice dinner near the venue."
+  },
+  {
+    "id": "m-tempura",
+    "name": "M Tempura",
+    "category": "Dinner",
+    "lat": 35.9961601,
+    "lng": -78.9005111,
+    "narrative": "A rare restaurant devoted to tempura, M Tempura from chef Mike Lee's M Restaurants group fries seafood and vegetables to order in a light, crackling batter. The multi-course omakase and kaiseki-style menus are the reason to go, with scallop and the house ginger ice cream as standouts, and bar seats put you right by the fryer. Book ahead for a slow, special dinner."
+  },
+  {
+    "id": "nerra",
+    "name": "Nerra",
+    "category": "Dinner",
+    "lat": 35.9903696,
+    "lng": -78.8964666,
+    "narrative": "Nerra is a seasonal, seafood-forward kitchen that sources from North Carolina fishers, farmers and foragers, served at a marble bar or out on the patio on Ramseur Street. Expect coastal catches like red snapper and salmon alongside ceviche, shrimp and grits, gumbo and a Cajun seafood pasta, with creative cocktails to match. Daily happy hour brings half-price appetizers at the bar."
+  },
+  {
+    "id": "flying-bull-restaurant-and-brewery",
+    "name": "Flying Bull Restaurant and Brewery",
+    "category": "Dinner",
+    "lat": 36.000063,
+    "lng": -78.9034592,
+    "narrative": "This veteran-owned brewery's Morris Street restaurant and brewhouse is now its home base, a big, easygoing room a few blocks from Foster Street. Pair a flight of house beers, Scottish ale included, with a smash burger, deviled eggs, Brussels sprouts or truffle fries, or switch to an espresso martini. Reservations and private event space make it an easy group dinner on the way to the after party."
+  },
+  {
+    "id": "m-nikkei",
+    "name": "M Nikkei",
+    "category": "Dinner",
+    "lat": 35.9970467,
+    "lng": -78.903763,
+    "narrative": "Chef Mike Lee has turned his former M Pocha space at Five Points into M Nikkei, a Japanese-Peruvian restaurant built around robatayaki charcoal grilling and sushi hand rolls. Nikkei cooking marries Japanese technique with Peruvian ingredients, so expect charcoal-grilled seafood, meats and vegetables plus hand rolls to share. It opens the week before the conference, making it the newest table in town for adventurous eaters."
+  },
+  {
+    "id": "mothers-sons-trattoria",
+    "name": "Mothers & Sons Trattoria",
+    "category": "Dinner",
+    "lat": 35.996868,
+    "lng": -78.9047132,
+    "narrative": "Chef-owner Josh DeCarolis built this regional Italian trattoria around handmade pasta and the family meals of his Italian American childhood. Squid ink pasta, cacio e pepe, arancini and porchetta are the dishes regulars rave about, on a menu that turns with the seasons. It takes reservations, works well for groups and sits right next door to Mateo."
+  },
+  {
+    "id": "cucciolo-osteria-durham",
+    "name": "Cucciolo Osteria Durham",
+    "category": "Dinner",
+    "lat": 35.9979014,
+    "lng": -78.9064199,
+    "narrative": "Cucciolo Osteria serves modern Italian cooking in a cozy, always-busy room on West Main Street, close to the train tracks. House-made pastas lead the menu, with the white ragù and truffle pasta drawing the most praise, alongside arancini, a daily fish and a bread pudding worth sharing. Reservations are close to essential, and it handles groups well."
+  },
+  {
+    "id": "zweli-s-ekhaya",
+    "name": "Zweli's Ekhaya",
+    "category": "Dinner",
+    "lat": 35.9922942,
+    "lng": -78.9050879,
+    "narrative": "This American Tobacco Campus spot from the Zweli's team serves Southern African cooking as shareable small plates. Try the bobotie, sausage rolls, steak kabobs and roasted cauliflower, and vegans will find real choices. It's a few minutes from the Thursday rail-car happy hour, so a group can roll straight from drinks into dinner."
+  },
+  {
+    "id": "taberna-tapas",
+    "name": "Taberna Tapas",
+    "category": "Dinner",
+    "lat": 35.9964204,
+    "lng": -78.9034589,
+    "narrative": "Taberna Tapas turns out a long menu of Spanish small plates and paellas made for passing around the table. Regulars go for the short rib, bacon-wrapped dates and Brussels sprouts, then finish with churros or chocolate mousse. It sits next door to SO/IF Bar on West Main, so it's a natural group stop before Wednesday's welcome party or for a Thursday dinner that runs past 9."
+  },
+  {
+    "id": "cheeni",
+    "name": "Cheeni",
+    "category": "Dinner",
+    "lat": 35.9967698,
+    "lng": -78.9012588,
+    "narrative": "Owner Preeti named Cheeni after her earlier street-style kiosk, and this downtown restaurant serves homestyle regional Indian food with its own bar, Bar Beej. The paneer dishes, lamb vindaloo, samosas, aloo chaat and fresh naan are the hits. It's a handy group dinner between campus and Foster Street before the BOOM Club after party."
+  },
+  {
+    "id": "nikos",
+    "name": "Nikos",
+    "category": "Dinner",
+    "lat": 36.0002225,
+    "lng": -78.9103777,
+    "narrative": "Restaurateur Giorgios Bakatsias honors his Greek family heritage at Nikos, a MICHELIN Guide–recommended restaurant in Brightleaf Square's old tobacco warehouses, built around philoxenia, the Greek tradition of welcoming strangers. Share hummus, spanakopita and zucchini cakes, and grab patio seats when the weather cooperates. Reservations and private event space make it a strong pick for a team dinner."
+  },
+  {
+    "id": "convivio-restaurant",
+    "name": "Convivio Restaurant",
+    "category": "Dinner",
+    "lat": 35.9957585,
+    "lng": -78.8994022,
+    "narrative": "Convivio is a downtown Italian restaurant and wine bar where the kitchen makes everything from scratch, leaning on seasonal ingredients and fresh truffle. Start with burrata and a charcuterie board, let the staff pair a wine with your pasta, and finish with an affogato. It takes reservations and seats groups, making it an easy sit-down dinner on the walk toward Foster Street."
+  },
+  {
+    "id": "goorsha",
+    "name": "Goorsha",
+    "category": "Dinner",
+    "lat": 36.0006213,
+    "lng": -78.9098046,
+    "narrative": "Named for gursha, the Ethiopian custom of feeding a friend a bite by hand, Goorsha near Brightleaf Square is built for sharing. Big platters of stews and vegetables arrive on injera for the whole table: get the doro wot, sambusa and collard greens, with wine, beer or cider alongside. The shared-platter format suits groups, and there's a patio for mild evenings."
+  },
+  {
+    "id": "delafia",
+    "name": "delafia",
+    "category": "Drinks",
+    "lat": 35.9832881,
+    "lng": -78.9026308,
+    "narrative": "Tucked into a white-brick corner building on South Roxboro Street, delafia is Durham's natural-wine hideout: small-producer, low-intervention bottles poured from a by-the-glass list that changes constantly, with a bottle shop on one side and an L-shaped bar on the other. Snack on olives, cheese and tinned fish, catch the occasional food pop-up, and drift out to the patio. It's the pick for anyone who wants something funky and unfamiliar in the glass."
+  },
+  {
+    "id": "weldon-mills-distillery-durham",
+    "name": "Weldon Mills Distillery Durham",
+    "category": "Drinks",
+    "lat": 35.9934615,
+    "lng": -78.8983669,
+    "narrative": "The downtown tasting room of Weldon Mills, a craft distillery from Weldon, North Carolina, is a low-key, speakeasy-style lounge on East Main Street pouring its own bourbons, whiskeys, gin, rum and agave spirits in flights and house cocktails. Book a bourbon tasting, pair it with a charcuterie board or basil deviled eggs, and sink into the comfy seating; live jazz shows up on some nights. Bottles are sold to go if you want a Bull City souvenir."
+  },
+  {
+    "id": "honeygirl-meadery-tasting-room",
+    "name": "Honeygirl Meadery & Tasting Room",
+    "category": "Drinks",
+    "lat": 35.9941544,
+    "lng": -78.9040098,
+    "narrative": "Durham's urban meadery now pours as Ment Beverage Co., a lower-level tasting room on American Tobacco Campus with two dozen taps. Honeygirl's honey wines run from dry to sparkling and barrel-aged, joined by house ciders, seltzers, nonalcoholic picks and what the makers bill as Durham's first sake. Order a mead flight, bring takeout from the ATC restaurants (outside food is welcome), and try something you can't get back home."
+  },
+  {
+    "id": "bull-city-ciderworks-durham",
+    "name": "Bull City Ciderworks Durham",
+    "category": "Drinks",
+    "lat": 35.9909566,
+    "lng": -78.8993013,
+    "narrative": "Bull City Ciderworks keeps a long, rotating board of hard ciders, from tart cherry to hopped and seasonal experiments, in a rustic, industrial-chic taproom with outdoor seating. Food trucks park outside most nights, while board games, a pool table and trivia keep groups entertained, and mocktails and THC seltzers cover anyone skipping alcohol. An easygoing, unfussy stop a few blocks east of ATC."
+  },
+  {
+    "id": "ponysaurus-brewing-co",
+    "name": "Ponysaurus Brewing Co.",
+    "category": "Drinks",
+    "lat": 35.9895842,
+    "lng": -78.8952496,
+    "narrative": "Born in an attic nanobrewery and brewing on Hood Street since 2015, Ponysaurus is one of Durham's homegrown favorites, with a sprawling, dog-friendly beer garden full of picnic tables. The taproom now runs its own pizzeria window, so pies, garlic knots and salads make it a casual dinner stop too. Reviewers single out the Scottish ale, and the brewery also makes High Horse, a cannabis-infused sparkling drink."
+  },
+  {
+    "id": "fullsteam",
+    "name": "Fullsteam",
+    "category": "Drinks",
+    "lat": 35.9937821,
+    "lng": -78.9045813,
+    "narrative": "Fullsteam, Durham's plow-to-pint brewery, is back downtown in the American Tobacco Campus Power Plant, right beside Bay 7. The new Public House pours Southern-sourced beers such as Carver Sweet Potato Lager, Southern Basil Saison and pawpaw sours, plus Wyndfall cider, wine and nonalcoholic drinks, with Southern bar food from the kitchen. A 100-seat theater and private Stoker Club room host events, so check what's on."
+  },
+  {
+    "id": "the-velvet-hippo-bar-lounge",
+    "name": "The Velvet Hippo Bar & Lounge",
+    "category": "Drinks",
+    "lat": 35.9964307,
+    "lng": -78.9004895,
+    "narrative": "Head up to the third floor of an Orange Street building to find this tropical-themed rooftop lounge, which bills itself as a neighborhood bar for everyone and pairs Cheers-style friendliness with getaway decor. Expect signature cocktails, local beers, thoughtful mocktails and a kitchen that runs late, with DJs on some nights. Leashed, well-behaved pups are welcome on the roof deck on weekend afternoons. A breezy, unpretentious place to regroup with a crew."
+  },
+  {
+    "id": "dram-and-draught",
+    "name": "Dram and Draught",
+    "category": "Drinks",
+    "lat": 35.9989879,
+    "lng": -78.9080672,
+    "narrative": "The 2016 original of what is now a small North Carolina bar group, Dram & Draught on West Main is a laid-back haven for brown-spirit fans, with a deep list of whiskeys plus agave, rum and brandy pours. Bartenders happily guide you to something new or shake a classic like the house-favorite Penicillin, and the draft list rotates. A grown-up, conversation-friendly bar for a nightcap near Brightleaf."
+  },
+  {
+    "id": "boxcar-bar-arcade",
+    "name": "Boxcar Bar + Arcade",
+    "category": "Drinks",
+    "lat": 36.003381,
+    "lng": -78.9016694,
+    "narrative": "Boxcar packs classic and modern arcade cabinets, pinball, skee-ball and air hockey into a big bar with rotating craft drafts, cocktails and house-made pizza. Its patio with fire pits overlooks the old Durham Athletic Park, where Bull Durham was filmed, and it sits just up Foster Street from BOOM Club, so it's an easy team outing or a warm-up before Thursday's after party."
+  },
+  {
+    "id": "kingfisher",
+    "name": "Kingfisher",
+    "category": "Drinks",
+    "lat": 35.9970432,
+    "lng": -78.9008011,
+    "narrative": "Next door to The Durham Hotel and down a flight of stairs, Kingfisher is an artful basement bar built around ground-to-glass cocktails that lean on North Carolina produce and foraged ingredients, with seasonal menus and striking presentation. Jazz nights pop up on the calendar, and a supper club series adds food-focused evenings. Ideal for a thoughtful, creative drink, and an easy hop for anyone staying at The Durham or 21c."
+  },
+  {
+    "id": "hi-wire-brewing-durham",
+    "name": "Hi-Wire Brewing Durham",
+    "category": "Drinks",
+    "lat": 35.9915365,
+    "lng": -78.8900261,
+    "narrative": "Asheville-born Hi-Wire runs a big, mural-wrapped taproom on the Golden Belt campus east of downtown, with a large covered patio and plenty of room for a crowd. Ping-pong tables, cornhole and pinball keep things lively, the taps run from crisp lagers to hazy IPAs, and neighboring Cugino Forno will deliver Neapolitan pizza to your table. N/A beer, mocktails and THC seltzers round out the menu."
+  },
+  {
+    "id": "west-end-social",
+    "name": "West End Social",
+    "category": "Drinks",
+    "lat": 35.998049,
+    "lng": -78.9063091,
+    "narrative": "Durham's longtime West Main Street wine bar has grown into West End Social, an upscale lounge with an elegant downstairs bar, cozy mezzanine seating and an outdoor patio, run alongside West End Billiards. The wine list is still a draw, backed by house cocktails, mocktails and nightly deals such as discounted select bottles on Wednesdays and $5 drafts on Thursdays. Arrive early for conversation before DJs take over later in the night."
+  },
+  {
+    "id": "dssolvr-durham",
+    "name": "DSSOLVR Durham",
+    "category": "Drinks",
+    "lat": 36.0018623,
+    "lng": -78.8997983,
+    "narrative": "Asheville's DSSOLVR brings its trippy, alien-art aesthetic to a Rigsbee Avenue taproom pouring everything from Mexican-style lagers and Italian pilsners to hazy IPAs, sours, ciders and hard seltzers, with gluten-free options in the mix. Board games and a dog-friendly crowd keep it casual, and daily specials include $8 cocktails on Thursdays. A fun, low-stakes meeting point in the Warehouse District."
+  },
+  {
+    "id": "la-mala-mexican-inspired-cocktails",
+    "name": "La Mala Mexican Inspired Cocktails",
+    "category": "Drinks",
+    "lat": 35.9956818,
+    "lng": -78.9016279,
+    "narrative": "La Mala shakes Mexican-inspired cocktails with fresh-squeezed fruit and good tequila, and backs them with street food made in house daily, like bright ceviche and loaded Mexican fries. The colorful, mural-covered room a short stroll from DPAC has real party energy, and the margaritas are the order. A crowd-pleasing group pick when you want a drink and a bite in one stop."
+  },
+  {
+    "id": "durham-beer-garden",
+    "name": "Durham Beer Garden",
+    "category": "Drinks",
+    "lat": 36.0020079,
+    "lng": -78.8948379,
+    "narrative": "This neighborhood bottle shop and beer garden on North Mangum Street keeps about 20 rotating taps flowing, with a full kitchen turning out burgers, fries and pub classics and roomy indoor and outdoor seating for groups. Dogs and families are welcome, and live music and community events fill the calendar. A relaxed place to refuel on the north side of downtown."
+  },
+  {
+    "id": "the-wine-feed",
+    "name": "The Wine Feed",
+    "category": "Drinks",
+    "lat": 35.9910474,
+    "lng": -78.8995761,
+    "narrative": "Part bottle shop, part wine bar and part restaurant, The Wine Feed on South Roxboro Street stocks its shelves with small, family-owned producers from around the world, and the staff love steering you toward something new. Pair a glass or bottle with the globally inspired dinner menu or a cheese and charcuterie board, or catch one of its wine dinners and classes. A polished, cozy change of pace from the brewery circuit."
+  },
+  {
+    "id": "eve",
+    "name": "Eve",
+    "category": "Drinks",
+    "lat": 35.9952399,
+    "lng": -78.8999299,
+    "narrative": "Opened in early 2026 by Uma Ramiah and Jessica Breland, Eve is a woman-owned, plant-draped lounge on East Parrish Street styled as a reclaimed Garden of Eden, with towering bookshelves, a rolling ladder and a resin bar studded with dried flowers and butterflies. The cocktails lean botanical: try the Serpentine, a smoky mezcal margarita, or the Night Orchard, a bitter Negroni riff. Zero-proof drinks, a back patio and a record-spinning DJ booth round it out."
+  },
+  {
+    "id": "the-pinhook",
+    "name": "The Pinhook",
+    "category": "Drinks",
+    "lat": 35.995254,
+    "lng": -78.901501,
+    "narrative": "A West Main Street fixture, The Pinhook is a scrappy, queer-friendly bar and live-music room that swings from touring indie bands to karaoke and dance nights, depending on the calendar. The drinks are no-frills, the crowd is welcoming, and the energy builds the later it gets. A very Durham way to stretch a night out downtown."
+  },
+  {
+    "id": "high-dive-durham",
+    "name": "High Dive Durham",
+    "category": "Drinks",
+    "lat": 35.9948848,
+    "lng": -78.9010196,
+    "narrative": "A dive bar with good manners, High Dive fills the lower level of the historic Kress building with pool, pinball, darts, foosball, Golden Tee and a vintage jukebox. It comes from the team behind Bar Virgile, so the drafts are cheap, the cocktails are thoughtful, there are a few zero-proof picks and the popcorn is free. Bring a group, claim the pool table and settle the canonical-tag debate over a game of eight-ball."
+  },
+  {
+    "id": "the-daily-beer-bar",
+    "name": "The Daily Beer Bar",
+    "category": "Drinks",
+    "lat": 35.9947478,
+    "lng": -78.9004488,
+    "narrative": "The Daily is an independently owned bar and café that changes gears all day: Yonder Coffee and local bakery pastries in the morning, sandwiches from the kitchen at lunch, then a rotating lineup of local craft beer and wine into the evening. It's cozy and unhurried, the kind of place for a quiet pint, a laptop catch-up or a proper conversation before the night gets loud."
+  },
+  {
+    "id": "the-glass-jug-beer-lab-downtown-durham",
+    "name": "The Glass Jug Beer Lab - Downtown Durham",
+    "category": "Drinks",
+    "lat": 36.0013327,
+    "lng": -78.9016062,
+    "narrative": "The downtown taproom of family-run Glass Jug pours the brewery's own small-batch beers alongside a solid wine list and draft cocktails, in a bright space beside Durham Central Park. It sits just down Foster Street from BOOM Club, which makes it the natural place to gather your crew for a pint before the Thursday after party."
+  },
+  {
+    "id": "rhythm-brews-bar-and-grill",
+    "name": "Rhythm & Brews Bar and Grill",
+    "category": "Drinks",
+    "lat": 35.9846018,
+    "lng": -78.8994718,
+    "narrative": "This lively Fayetteville Street bar and grill pairs a music-driven atmosphere with a menu that runs from bar classics to signature plates, and the crispy wings get plenty of love in reviews. Expect creative cocktails and mocktails, local and international beers, live music and a friendly crew behind the bar. It's a few blocks from delafia, a handy stop for anyone already heading south for Friday's farewell party."
+  },
+  {
+    "id": "atomic-clock-brewing-company",
+    "name": "Atomic Clock Brewing Company",
+    "category": "Drinks",
+    "lat": 36.0025519,
+    "lng": -78.9041536,
+    "narrative": "Siblings Brian and Colleen Quinn opened Atomic Clock in 2024 inside a historic city garage on Washington Street, turning it into a polished, roomy taproom. About ten house beers rotate across IPAs, lagers and sours, backed by a full kitchen with a rotating menu, plus cocktails and wine. It handles groups easily, and BOOM Club is a short stroll away for the Thursday after party."
+  },
+  {
+    "id": "ramblers-beer-wine",
+    "name": "Ramblers Beer & Wine",
+    "category": "Drinks",
+    "lat": 35.9996361,
+    "lng": -78.906942,
+    "narrative": "Ramblers is a chill, modern-rustic neighborhood bar with rotating craft drafts, a well-chosen wine list and a bottle shop for anything you want to take back to the hotel. It's relaxed and conversation-friendly, the right call when you want a great pint without shouting over a DJ."
+  },
+  {
+    "id": "clouds-brewing-durham-brewcade-kitchen",
+    "name": "Clouds Brewing - Durham Brewcade + Kitchen",
+    "category": "Drinks",
+    "lat": 36.0000348,
+    "lng": -78.9104668,
+    "narrative": "Clouds brings its German-inspired, American-made beers to a big brick-walled brewpub in Brightleaf Square, where self-serve taps let you pour a few ounces of everything. Arcade games, sports on TV and a full New American kitchen make it an easy fit for a hungry group that can't agree on one beer. The Raleigh-born brewery opened this Durham outpost in 2016."
+  },
+  {
+    "id": "the-waiting-room",
+    "name": "The Waiting Room",
+    "category": "Drinks",
+    "lat": 35.9946808,
+    "lng": -78.9037368,
+    "narrative": "Tucked into the American Tobacco building just steps from Bay 7, The Waiting Room is a cozy cocktail lounge that two friends built as a true community meeting place. Expect carefully crafted cocktails, small plates and desserts, plus couches made for long conversations. It operates as a private club, so it's strictly 21+, though no membership is needed."
+  },
+  {
+    "id": "bull-city-burger-and-brewery-2",
+    "name": "Bull City Burger and Brewery",
+    "category": "Drinks",
+    "lat": 35.9954939,
+    "lng": -78.8997764,
+    "narrative": "Durham's homegrown brewpub has brewed its own beer on site since 2011 and grinds pasture-raised North Carolina beef in house for burgers on house-baked buns. Add duck-fat fries or pretzel-crusted pickle chips, and the Joan Jett veggie burger covers non-meat eaters. With about 90 seats, a year-round patio and a semi-private room, it handles a big conference group for lunch or an evening pint."
+  },
+  {
+    "id": "primrose-bar-and-lounge",
+    "name": "Primrose Bar and Lounge",
+    "category": "Drinks",
+    "lat": 35.995129,
+    "lng": -78.9012738,
+    "narrative": "Primrose is a whimsical, flower-filled cocktail lounge on West Main with a playful menu of inventive drinks and Latin American bites through its partnership with Luna Rotisserie and Empanadas. Readers named it a 2026 Best of Durham winner in Durham Magazine's poll for best cocktail, best date night and best new business. It's a stylish, upbeat place to keep the night going."
+  },
+  {
+    "id": "conniption-bar-lounge",
+    "name": "Conniption Bar & Lounge",
+    "category": "Drinks",
+    "lat": 36.0046403,
+    "lng": -78.9029041,
+    "narrative": "Durham Distillery's own cocktail bar, formerly known as Corpse Reviver, is an elegant Art Deco-inspired lounge on the distillery's lower level, home turf of Conniption Gin. The subzero house martini comes straight from the freezer, and Thursdays bring choose-your-own martini flights, alongside house-made tonics, seasonal cocktails, spirit-free drinks and small bites. It's a polished stop on the way to BOOM Club."
+  },
+  {
+    "id": "pour-taproom",
+    "name": "Pour Taproom",
+    "category": "Drinks",
+    "lat": 35.9966673,
+    "lng": -78.9012878,
+    "narrative": "Pour hands you a wristband and turns you loose on a wall of self-serve taps, so you can sip beer, cider, wine and kombucha by the ounce instead of committing to a full pint. Born in Asheville, the Durham taproom sits on CCB Plaza near the Major bull statue and has room for groups of 10 to 100, which makes it an easy regroup point for a crowd."
+  },
+  {
+    "id": "bull-mccabe-s-irish-pub",
+    "name": "Bull McCabe's Irish Pub",
+    "category": "Drinks",
+    "lat": 35.9972605,
+    "lng": -78.9050297,
+    "narrative": "Bull McCabe's is a classic Five Points pub with about 20 drafts, a covered and heated patio, and a lawn full of picnic tables, games and Adirondack chairs. The TanDurm Kitchen, from the team behind Viceroy, pairs Irish pub staples like fish and chips with Indian and international street food. It's right around the corner from Mateo, a natural landing spot once the welcome party wraps."
+  },
+  {
+    "id": "arcana-bar-and-lounge",
+    "name": "Arcana Bar and Lounge",
+    "category": "Drinks",
+    "lat": 35.9964812,
+    "lng": -78.9037318,
+    "narrative": "Open since 2015, Arcana is an intimate, tarot-themed cocktail lounge with tarot and astrology readers on hand most nights and a busy calendar of community events. It proudly calls itself a lesbian bar and welcomes everyone, with its entrance tucked behind 331 W Main St, the same building as SO/IF Bar. It's a short hop from Mateo when you want a quieter, slightly magical nightcap."
+  },
+  {
+    "id": "106-main",
+    "name": "106 Main",
+    "category": "Drinks",
+    "lat": 35.9947366,
+    "lng": -78.90051,
+    "narrative": "106 Main is a cozy, unfussy neighborhood bar on East Main Street, and reviewers keep mentioning its vibe and its friendly bartenders. Local craft beer leads the draft list, backed by a deep liquor and whiskey shelf, cocktails including martinis, cider and wine. It's an easy place to wind down with a small group after the welcome party, right next door to The Daily."
+  },
+  {
+    "id": "american-tobacco-campus",
+    "name": "American Tobacco Campus",
+    "category": "Things to do",
+    "lat": 35.9933333,
+    "lng": -78.9041667,
+    "narrative": "Bay 7 sits inside this former American Tobacco Company factory, where Lucky Strikes were once made and where Capitol Broadcasting reopened the brick warehouses as offices, restaurants and stages in 2004. Look up at the Lucky Strike water tower and smokestack, follow the quarter-mile man-made river as it tumbles through the middle of campus, and find the Art Moderne Power Plant. Thursday's happy hour is poured from a vintage rail car right beside it."
+  },
+  {
+    "id": "durham-bulls-athletic-park",
+    "name": "Durham Bulls Athletic Park",
+    "category": "Things to do",
+    "lat": 35.991542,
+    "lng": -78.9049079,
+    "narrative": "There's no baseball in November, so treat the Bulls' home since 1995 as a quick landmark stop rather than a night out. The Triple-A Tampa Bay Rays affiliate plays beneath the 32-foot Blue Monster wall in left field, and the Ballpark Corner Store stays open in the offseason for caps, jerseys and Bull City souvenirs. The American Tobacco Trail starts just across Morehead Avenue, if you'd rather stretch your legs."
+  },
+  {
+    "id": "major-durham-bull-bronze-sculpture",
+    "name": "\"Major\" – Durham Bull Bronze Sculpture",
+    "category": "Things to do",
+    "lat": 35.9964874,
+    "lng": -78.9017088,
+    "narrative": "Unveiled in 2004, Major is Durham's ten-foot bronze bull and the obvious spot for a group photo, now holding court in CCB Plaza on Corcoran Street. Local Liberty Arts sculptors Michael and Leah Foushee Waller cast him, and he's named for banker and civic leader George Watts \"Major\" Hill. He stands at the head of Parrish Street, the historic \"Black Wall Street,\" right beside 21c Museum Hotel."
+  },
+  {
+    "id": "museum-of-durham-history",
+    "name": "Museum of Durham History",
+    "category": "Things to do",
+    "lat": 35.9982755,
+    "lng": -78.9049802,
+    "narrative": "The Museum of Durham History's free History Hub fills a former city bus station on West Main with the story of how a tobacco town became the Bull City. Its new exhibit, Playhouses and Picture Palaces, traces downtown's theaters from the 1880s to the 1970s, including the Carolina Theatre as it turns 100, and the Story Room plays back locals' recorded memories. It's small enough for a lunch-break detour."
+  },
+  {
+    "id": "durham-central-park",
+    "name": "Durham Central Park",
+    "category": "Things to do",
+    "lat": 36.0006687,
+    "lng": -78.901347,
+    "narrative": "Downtown's backyard on Foster Street mixes gardens, a skate park, a playground and the open-air pavilion that hosts the Durham Farmers' Market. The Wednesday market has wrapped for the season and Saturday's lands the day after the conference, but the park still makes a pleasant stroll, with the Liberty Arts sculpture foundry on its edge and free Durham FRINGE Festival performances during conference week. BOOM Club, Thursday's after-party venue, is just up the street."
+  },
+  {
+    "id": "boxcar-bar-arcade-2",
+    "name": "Boxcar Bar + Arcade",
+    "category": "Things to do",
+    "lat": 36.003381,
+    "lng": -78.9016694,
+    "narrative": "Boxcar packs classic and modern arcade cabinets, pinball, skee-ball and air hockey into a big bar with rotating craft drafts, cocktails and house-made pizza. Its patio with fire pits overlooks the old Durham Athletic Park, where Bull Durham was filmed, and it sits just up Foster Street from BOOM Club, so it's an easy team outing or a warm-up before Thursday's after party."
+  },
+  {
+    "id": "durham-performing-arts-center-dpac",
+    "name": "Durham Performing Arts Center (DPAC)",
+    "category": "Things to do",
+    "lat": 35.993248,
+    "lng": -78.9021923,
+    "narrative": "Opened in 2008 and owned by the City of Durham, the 2,700-seat Durham Performing Arts Center is the Triangle's big stage for Broadway tours and touring headliners, and it sits right next door to American Tobacco Campus. Conference week brings Waiting to Exhale in Concert on Thursday and country hitmakers Little Big Town on Friday, if you want to fit a show night into your trip."
+  },
+  {
+    "id": "the-carolina-theatre",
+    "name": "The Carolina Theatre",
+    "category": "Things to do",
+    "lat": 35.9976533,
+    "lng": -78.9027674,
+    "narrative": "Opened in 1926 as the Durham Auditorium, this grand downtown theater is marking its centennial with a packed season in its 1,016-seat Fletcher Hall and two cinemas, from retro film series to concerts and comedy. It's also presenting the first Durham FRINGE Festival across downtown during conference week, and Thursday brings One Night on Sugar Hill, a Sugar Hill Records tribute featuring dobro master Jerry Douglas."
+  },
+  {
+    "id": "american-tobacco-trail-downtown-trailhead",
+    "name": "American Tobacco Trail (downtown trailhead)",
+    "category": "Things to do",
+    "lat": 35.990513,
+    "lng": -78.9062474,
+    "narrative": "The northern end of this 22-mile rail-trail sits across Morehead Avenue from the Bulls' ballpark, so a pre-session run or a head-clearing walk starts almost at the venue. The Durham stretch is a paved, ten-foot-wide greenway on a former railroad line, gentle enough for an easy out-and-back, and it's popular with local runners and cyclists."
+  },
+  {
+    "id": "letters-community-bookshop",
+    "name": "Letters Community Bookshop",
+    "category": "Things to do",
+    "lat": 35.9954863,
+    "lng": -78.9010528,
+    "narrative": "Founded in 2013 and now run as a worker- and community-owned co-op, Letters Community Bookshop on West Main mixes new releases with fairly priced used books under a skylit glass ceiling. Reviewers single out the friendly staff and their picks, and it's a calm break from the conference buzz or a good place to grab a paperback for the flight home."
+  },
+  {
+    "id": "state-of-golf",
+    "name": "State of Golf",
+    "category": "Things to do",
+    "lat": 35.993246,
+    "lng": -78.9044638,
+    "narrative": "Founded in 2024 by Brandon and Virginia Baker, State of Golf brings three Full Swing simulators with 40-plus virtual courses to American Tobacco Campus, plus multi-sport games for the non-golfers in your group. A bar pours craft cocktails, wine and beer, so booking a bay makes an easy, low-key hangout once sessions wrap."
   }
 ]
