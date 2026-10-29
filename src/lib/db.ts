@@ -87,6 +87,35 @@ export async function updateSaved(db: D1Database, kind: SavedKind, userId: strin
   if (statements.length) await db.batch(statements);
 }
 
+/**
+ * Removes a deleted user's data: their saved talks and places and their
+ * matchmaking profile. Their past events stay for the totals, without the user ID.
+ */
+export async function deleteUserData(db: D1Database, userId: string): Promise<void> {
+  await db.batch([
+    db.prepare("DELETE FROM saved_sessions WHERE user_id = ?").bind(userId),
+    db.prepare("DELETE FROM saved_places WHERE user_id = ?").bind(userId),
+    db.prepare("DELETE FROM profiles WHERE user_id = ?").bind(userId),
+    db.prepare("UPDATE events SET user_id = NULL WHERE user_id = ?").bind(userId),
+  ]);
+}
+
+/** Per-user counts for the admin page: saved talks and places, and whether they're in matchmaking. */
+export async function getUserActivity(db: D1Database, userIds: string[]): Promise<Map<string, { talks: number; places: number; inMatchmaking: boolean }>> {
+  const activity = new Map(userIds.map((id) => [id, { talks: 0, places: 0, inMatchmaking: false }]));
+  if (!userIds.length) return activity;
+  const marks = userIds.map(() => "?").join(", ");
+  const [talks, places, profiles] = await db.batch<{ user_id: string; n: number }>([
+    db.prepare(`SELECT user_id, COUNT(*) AS n FROM saved_sessions WHERE user_id IN (${marks}) GROUP BY user_id`).bind(...userIds),
+    db.prepare(`SELECT user_id, COUNT(*) AS n FROM saved_places WHERE user_id IN (${marks}) GROUP BY user_id`).bind(...userIds),
+    db.prepare(`SELECT user_id, 1 AS n FROM profiles WHERE user_id IN (${marks})`).bind(...userIds),
+  ]);
+  for (const row of talks.results) activity.get(row.user_id)!.talks = row.n;
+  for (const row of places.results) activity.get(row.user_id)!.places = row.n;
+  for (const row of profiles.results) activity.get(row.user_id)!.inMatchmaking = true;
+  return activity;
+}
+
 export interface EventRecord {
   type: string;
   ts: number;

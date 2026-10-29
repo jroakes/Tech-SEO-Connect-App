@@ -1,0 +1,103 @@
+---
+// Admin: the users who've signed in, with actions to make them admins, block
+// them or delete them.
+import { env } from "cloudflare:workers";
+import Layout from "@/layouts/Layout.astro";
+import AdminHeader from "@/components/AdminHeader.astro";
+import AdminLocked from "@/components/AdminLocked.astro";
+import AdminUsers, { type AdminUserRow } from "@/components/AdminUsers";
+import { getUserId } from "@/lib/auth-server";
+import { clerk, currentAdmin, displayName, isAdmin, isOrganizer, primaryEmail } from "@/lib/clerk";
+import { getUserActivity } from "@/lib/db";
+
+export const prerender = false;
+
+const PER_PAGE = 25;
+const thisYear = new Date().getFullYear();
+const formatDate = (ms: number | null) =>
+  ms
+    ? new Date(ms).toLocaleDateString("en-US", {
+        timeZone: "America/New_York",
+        month: "short",
+        day: "numeric",
+        year: new Date(ms).getFullYear() === thisYear ? undefined : "numeric",
+      })
+    : "Never";
+
+const admin = import.meta.env.PUBLIC_CLERK_ENABLED ? await currentAdmin(Astro.locals) : null;
+const signedIn = !!getUserId(Astro.locals);
+Astro.response.headers.set("Cache-Control", "no-store");
+if (!admin) Astro.response.status = signedIn ? 403 : 401;
+
+const query = Astro.url.searchParams.get("q")?.trim() ?? "";
+const page = Math.max(1, Number.parseInt(Astro.url.searchParams.get("page") ?? "1") || 1);
+let rows: AdminUserRow[] = [];
+let total = 0;
+if (admin) {
+  const { data, totalCount } = await clerk().users.getUserList({
+    limit: PER_PAGE,
+    offset: (page - 1) * PER_PAGE,
+    orderBy: "-created_at",
+    ...(query ? { query } : {}),
+  });
+  const activity = await getUserActivity(env.DB, data.map((u) => u.id));
+  total = totalCount;
+  rows = data.map((u) => ({
+    id: u.id,
+    name: displayName(u),
+    email: primaryEmail(u),
+    imageUrl: u.imageUrl,
+    joined: formatDate(u.createdAt),
+    lastActive: formatDate(u.lastActiveAt ?? u.lastSignInAt),
+    banned: u.banned,
+    admin: isAdmin(u),
+    organizer: isOrganizer(u),
+    self: u.id === admin.id,
+    ...(activity.get(u.id) ?? { talks: 0, places: 0, inMatchmaking: false }),
+  }));
+}
+const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+const pageHref = (n: number) => `?${new URLSearchParams({ ...(query ? { q: query } : {}), ...(n > 1 ? { page: String(n) } : {}) })}`;
+---
+
+<Layout title="Admin: Users" noindex>
+  <main class="mx-auto max-w-screen-xl px-4 py-8">
+    {
+      !admin ? (
+        <AdminLocked signedIn={signedIn} />
+      ) : (
+        <>
+          <AdminHeader current="users" />
+          <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-sm text-muted-foreground">
+              {total.toLocaleString("en-US")} {total === 1 ? "user" : "users"}
+              {query && ` matching “${query}”`}
+            </p>
+            <form method="get" class="flex gap-2" role="search">
+              <input
+                name="q"
+                value={query}
+                placeholder="Search by name or email"
+                class="min-h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring sm:w-72"
+                aria-label="Search users"
+              />
+              <button class="min-h-10 shrink-0 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground hover:bg-muted">Search</button>
+            </form>
+          </div>
+
+          <AdminUsers client:load users={rows} />
+
+          {pages > 1 && (
+            <nav class="mt-4 flex items-center justify-between text-sm" aria-label="Pages">
+              {page > 1 ? <a href={pageHref(page - 1)} class="font-medium text-primary hover:underline">← Newer</a> : <span />}
+              <span class="text-muted-foreground">
+                Page {page} of {pages}
+              </span>
+              {page < pages ? <a href={pageHref(page + 1)} class="font-medium text-primary hover:underline">Older →</a> : <span />}
+            </nav>
+          )}
+        </>
+      )
+    }
+  </main>
+</Layout>

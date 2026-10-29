@@ -1,29 +1,24 @@
 ---
-// Organizers' analytics: what attendees view, save and get directions to, and
-// how they use the AI assistant connector. Only signed-in organizers (verified
-// emails in ORGANIZER_EMAILS) can see it.
+// Admin analytics: what attendees view, save and get directions to, and how
+// they use matchmaking and the AI assistant connector.
 import { env } from "cloudflare:workers";
 import Layout from "@/layouts/Layout.astro";
-import AuthButtons from "@/components/AuthButtons";
+import AdminHeader from "@/components/AdminHeader.astro";
+import AdminLocked from "@/components/AdminLocked.astro";
+import { getUserId } from "@/lib/auth-server";
+import { currentAdmin } from "@/lib/clerk";
 import { getInsights, RANGES, type Range } from "@/lib/insights";
 
 export const prerender = false;
 
-interface ClerkUser {
-  emailAddresses: { emailAddress: string; verification: { status: string } | null }[];
-}
-const clerkEnabled = import.meta.env.PUBLIC_CLERK_ENABLED;
-const currentUser = (Astro.locals as { currentUser?: () => Promise<ClerkUser | null> }).currentUser;
-const user = clerkEnabled && currentUser ? await currentUser() : null;
-const organizers = (env.ORGANIZER_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
-const allowed = !!user?.emailAddresses.some((e) => e.verification?.status === "verified" && organizers.includes(e.emailAddress.toLowerCase()));
-
+const admin = import.meta.env.PUBLIC_CLERK_ENABLED ? await currentAdmin(Astro.locals) : null;
+const signedIn = !!getUserId(Astro.locals);
 Astro.response.headers.set("Cache-Control", "no-store");
-if (!allowed) Astro.response.status = user ? 403 : 401;
+if (!admin) Astro.response.status = signedIn ? 403 : 401;
 
 const requested = Astro.url.searchParams.get("range");
 const range: Range = RANGES.some((r) => r.value === requested) ? (requested as Range) : "7d";
-const data = allowed ? await getInsights(env.DB, range) : null;
+const data = admin ? await getInsights(env.DB, range) : null;
 
 const n = (value: number) => value.toLocaleString("en-US");
 const toolNames: Record<string, string> = {
@@ -56,33 +51,17 @@ const tiles = data
 const maxOf = (values: number[]) => Math.max(1, ...values);
 ---
 
-<Layout title="Analytics" noindex>
+<Layout title="Admin: Analytics" noindex>
   <main class="mx-auto max-w-screen-xl px-4 py-8">
     {
-      !allowed ? (
-        <div class="mx-auto max-w-md rounded-md border border-border bg-card p-6 text-center" data-testid="panel-analytics-locked">
-          <h1 class="mb-2 text-2xl font-bold text-foreground">Analytics</h1>
-          {user ? (
-            <p class="text-sm text-muted-foreground">This page is for Tech SEO Connect organizers.</p>
-          ) : (
-            <>
-              <p class="mb-4 text-sm text-muted-foreground">Sign in with your organizer account to see the analytics.</p>
-              {clerkEnabled && (
-                <div class="flex justify-center">
-                  <AuthButtons client:only="react" />
-                </div>
-              )}
-            </>
-          )}
-        </div>
+      !admin ? (
+        <AdminLocked signedIn={signedIn} />
       ) : (
         data && (
           <>
-            <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h1 class="text-3xl font-bold text-foreground md:text-4xl" data-testid="text-page-title">Analytics</h1>
-                <p class="mt-1 text-sm text-muted-foreground">What attendees view, save and get directions to. Times are Eastern.</p>
-              </div>
+            <AdminHeader current="analytics" />
+            <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p class="text-sm text-muted-foreground">What attendees view, save and get directions to. Times are Eastern.</p>
               <nav class="inline-flex self-start rounded-md bg-muted p-1 sm:self-auto" aria-label="Time range">
                 {RANGES.map((r) => (
                   <a

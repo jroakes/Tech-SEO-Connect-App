@@ -8,6 +8,7 @@ import type { Place } from "@/lib/types";
 import { openDirections, trackMapButtonClick, trackPlaceSave, trackPlaceView } from "@/lib/analytics";
 import { useSaved } from "@/lib/saved";
 import { FavoriteButton } from "./FavoriteButton";
+import { PlacesHeader } from "./PlacesHeader";
 import { getCategoryColor } from "@/lib/categories";
 import {
   Dialog,
@@ -54,12 +55,9 @@ export default function LocationsView({ places: locations }: LocationsViewProps)
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-screen-xl px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4" data-testid="text-page-title">
-            Durham Locations
-          </h1>
-
+      <PlacesHeader current="list" />
+      <div className="mx-auto max-w-screen-xl px-4 py-6">
+        <div className="mb-6">
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input

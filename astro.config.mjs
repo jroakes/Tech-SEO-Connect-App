@@ -22,6 +22,7 @@ export default defineConfig({
   redirects: {
     "/": "/schedule",
     "/my-schedule": "/my-conference",
+    "/analytics": "/admin/analytics",
   },
   // map.html rather than map/index.html, so /map is served without a
   // redirect to /map/ (the service worker can't cache redirected pages).

@@ -12,6 +12,8 @@ export const CLIENT_EVENT_TYPES = [
   "place_unsave",
   "mcp_modal_open",
   "mcp_url_copy",
+  "match_join",
+  "match_search",
 ] as const;
 
 const propValue = z.union([z.string().max(300), z.number(), z.boolean()]);

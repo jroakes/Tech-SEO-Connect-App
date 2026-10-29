@@ -1,0 +1,28 @@
+---
+// The admin pages' title and tabs.
+interface Props {
+  current: "users" | "analytics";
+}
+const { current } = Astro.props;
+const tabs = [
+  { id: "users", label: "Users", href: "/admin" },
+  { id: "analytics", label: "Analytics", href: "/admin/analytics" },
+];
+---
+
+<div class="mb-6">
+  <h1 class="text-3xl font-bold text-foreground md:text-4xl" data-testid="text-page-title">Admin</h1>
+  <nav class="mt-4 flex gap-6 border-b border-border" aria-label="Admin">
+    {
+      tabs.map((tab) => (
+        <a
+          href={tab.href}
+          class={`-mb-px border-b-2 pb-2.5 text-sm font-medium transition-colors ${tab.id === current ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+          aria-current={tab.id === current ? "page" : undefined}
+        >
+          {tab.label}
+        </a>
+      ))
+    }
+  </nav>
+</div>

@@ -11,8 +11,15 @@ Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
 - **My Conference**: tap the heart on a talk, hotel, restaurant, bar or
   anything else to save it. Saves stay on the device; signed-in attendees (via
   [Clerk](https://clerk.com)) keep them in their account across devices.
-- **Map** and **Locations** of curated restaurants, bars, coffee, hotels and
-  things to do, with Google Maps and Apple Maps directions.
+- **Places**: curated restaurants, bars, coffee, hotels and things to do, as a
+  map (`/map`) or a list (`/locations`), with Google Maps and Apple Maps
+  directions.
+- **Meet** (`/meet`): signed-in attendees answer a few questions (what they're
+  working on, what they want to learn, what they can help with, and topics for
+  each). The app suggests people to meet and shows each topic as a bubble of
+  the people there for it; tap one or search to see who can help and who's
+  learning too. Answers are shown only to other attendees who join, and anyone
+  can edit or leave. No intro emails.
 - **Sponsors**.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
   other AI tools. They sign in through Clerk, then can ask about talks,
@@ -20,7 +27,9 @@ Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
   The **For AI bots** button in the header shows the URL and how to connect.
 - **Event logging**: page views, place views, directions clicks, saves and
   AI assistant use go to the `events` table in D1, alongside GA4.
-- **Analytics** at `/analytics`, for organizers only (see below).
+- **Admin** at `/admin`, for admins only (see below): the users list, where
+  admins can make another user an admin, block a user from signing in, or
+  delete a user, and the analytics at `/admin/analytics`.
 - Installable as a PWA, with the schedule available offline.
 
 ## How it fits together
@@ -31,17 +40,26 @@ src/worker.ts          Worker entry: /mcp -> MCP server (after the sign-in check
 src/pages/             Astro pages and API routes
   schedule.astro       Rendered per request from D1
   my-conference.astro  Rendered per request from D1 (/my-schedule redirects here)
-  analytics.astro      Organizers' analytics, rendered per request from D1
+  meet.astro           Matchmaking (rendered in the browser)
+  admin/index.astro    Admins' users list, from Clerk
+  admin/analytics.astro  Admins' analytics, rendered per request from D1
   map / locations /    Prerendered at build time (served free as static assets)
   sponsors .astro
   api/events.ts        POST batches of analytics events
   api/saved.ts         GET/POST a signed-in user's saved talks or places
+  api/profile.ts       GET/PUT/DELETE the signed-in user's matchmaking answers
+  api/matches.ts       GET everyone in matchmaking (only for those who joined)
+  api/me.ts            GET whether the signed-in user is an admin
+  api/admin/users.ts   POST admin actions on a user
 src/mcp/server.ts      MCP tools for a signed-in attendee (stateless)
 src/lib/mcp-auth.ts    MCP sign-in: OAuth discovery and Clerk token checks
 src/lib/insights.ts    Queries behind the analytics page
+src/lib/matching.ts    Who to meet and the topic groups (pure functions, tested)
+src/lib/clerk.ts       Clerk Backend API client and who's an admin
 src/lib/schedule-*.ts  Main-site schedule parser and the hourly sync
 src/components/        React islands (map, lists, schedule) and the header
-src/data/              Conference details, bundled fallback schedule, places, sponsors
+src/data/              Conference details, bundled fallback schedule, places,
+                       sponsors, matchmaking topics
 migrations/            D1 schema
 content/               Source files for places (KML export and narratives)
 ```
@@ -79,7 +97,7 @@ MapTiler key, local development uses OpenStreetMap tiles.
 | `npm run dev` | Astro dev server running in workerd, with local D1 |
 | `npm run build` | Generate Worker types and build to `dist/` |
 | `npm run preview` | Build, then serve the built Worker locally with Wrangler |
-| `npm test` | Unit tests (schedule parser) |
+| `npm test` | Unit tests (schedule parser, matching) |
 | `npm run check` | Type-check Astro and TypeScript files |
 | `npm run import:places` | Rebuild `src/data/places.json` from `content/` |
 | `npm run db:migrate:local` / `db:migrate:remote` | Apply D1 migrations |
@@ -97,8 +115,9 @@ after a build, then open `http://localhost:8787/__scheduled`.
    applications**, then the **Settings** tab, and under **Client onboarding**
    turn on **Publish CIMD support** (with **Client admission** set to **Any
    compatible CIMD client**) and **Publish DCR support**.
-5. List who can see `/analytics` in `ORGANIZER_EMAILS` in `wrangler.jsonc`
+5. List the organizers in `ORGANIZER_EMAILS` in `wrangler.jsonc`
    (comma-separated; the email must be verified in their Clerk account).
+   Organizers are always admins.
 6. **Cutover:** remove the old `app.techseoconnect.com` DNS record, then
    uncomment the `routes` entry in `wrangler.jsonc` and deploy again. Cloudflare
    creates the DNS record and certificate. The techseoconnect.com zone must be
@@ -120,19 +139,34 @@ Tools: `get_event_info`, `get_schedule`, `search_sessions`, `find_places`,
 `remove_from_my_conference` for the signed-in attendee. Tool calls are logged
 as `mcp_tool_call` events, and saves made through it as save events.
 
-## Analytics
+## Admin
 
-Organizers see the numbers at `/analytics`: visitors, page views, signed-in
-attendees, directions taps, saves and AI assistant use, page views over time,
-the places people go, the most-saved talks, and what people ask the AI
-assistant. Only signed-in users whose verified email is in `ORGANIZER_EMAILS`
-can open it.
+Admins are the organizers in `ORGANIZER_EMAILS`, plus anyone an admin makes an
+admin (stored in Clerk as `publicMetadata.role = "admin"`). Admins get an
+**Admin** link in their account menu.
+
+**Users** (`/admin`) lists everyone who has signed in, newest first, with
+search. For each user an admin can:
+
+- **Make admin** or **Remove admin**.
+- **Block**: bans them in Clerk, which signs them out and stops them signing
+  in. **Unblock** reverses it. Their saves stay.
+- **Delete**: deletes the Clerk user and their saved talks, saved places and
+  matchmaking answers. Their past events stay, without the user ID.
+
+Admins can't remove, block or delete organizers or themselves. Each action is
+logged as an `admin_action` event.
+
+**Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
+page views, signed-in attendees, directions taps, saves and AI assistant use,
+page views over time, the places people go, the most-saved talks, and what
+people ask the AI assistant.
 
 `events` rows hold `type`, `ts`, `anon_id` (per device), `user_id` (when
 signed in), `path` and JSON `props`. Event types: `page_view`, `place_view`,
 `map_button_click`, `session_save`, `session_unsave`, `place_save`,
-`place_unsave`, `mcp_modal_open`, `mcp_url_copy`, `mcp_tool_call`. For
-example:
+`place_unsave`, `mcp_modal_open`, `mcp_url_copy`, `mcp_tool_call`,
+`match_join`, `match_search`, `admin_action`. For example:
 
 ```bash
 npx wrangler d1 execute DB --remote --command \
@@ -145,9 +179,5 @@ events as they fire.
 
 ## Roadmap
 
-- **Matchmaking.** Attendees answer a short questionnaire (what are you
-  working on, what do you want to learn); the app matches people with shared
-  interests and shows them as groups, like a bubble that finds others with the
-  same want. No intro emails.
 - **Amp Code shared workspace** for the organizers to work on the app
   together, once the app is built.

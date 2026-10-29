@@ -1,0 +1,28 @@
+---
+// Shown on admin pages to anyone who isn't an admin.
+import AuthButtons from "./AuthButtons";
+
+interface Props {
+  signedIn: boolean;
+}
+const { signedIn } = Astro.props;
+const clerkEnabled = import.meta.env.PUBLIC_CLERK_ENABLED;
+---
+
+<div class="mx-auto max-w-md rounded-md border border-border bg-card p-6 text-center" data-testid="panel-admin-locked">
+  <h1 class="mb-2 text-2xl font-bold text-foreground">Admin</h1>
+  {
+    signedIn ? (
+      <p class="text-sm text-muted-foreground">This page is for Tech SEO Connect organizers.</p>
+    ) : (
+      <>
+        <p class="mb-4 text-sm text-muted-foreground">Sign in with your organizer account.</p>
+        {clerkEnabled && (
+          <div class="flex justify-center">
+            <AuthButtons client:only="react" />
+          </div>
+        )}
+      </>
+    )
+  }
+</div>

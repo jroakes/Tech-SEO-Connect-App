@@ -15,6 +15,7 @@ import { ExternalLink } from "lucide-react";
 import { openDirections, trackMapButtonClick, trackPlaceSave, trackPlaceView } from "@/lib/analytics";
 import { useSaved } from "@/lib/saved";
 import { FavoriteButton } from "./FavoriteButton";
+import { PlacesHeader } from "./PlacesHeader";
 import { getCategoryColor, getCategoryKind } from "@/lib/categories";
 import { event } from "@/data/event";
 import "leaflet/dist/leaflet.css";
@@ -115,30 +116,25 @@ export default function MapView({ places }: MapViewProps) {
 
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)] md:h-[calc(100vh-3.5rem)]">
-      <div className="p-4 border-b border-border bg-card">
-        <div className="max-w-screen-xl mx-auto">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-xl font-semibold text-foreground" data-testid="text-map-title">Durham Locations</h2>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-[240px] min-h-11" data-testid="select-category">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent className="z-[9999]">
-                <SelectItem value="all" data-testid="select-option-all">All Categories ({places.length})</SelectItem>
-                {categories.map(category => (
-                  <SelectItem 
-                    key={category} 
-                    value={category}
-                    data-testid={`select-option-${category.toLowerCase().replace(/\s+/g, '-')}`}
-                  >
-                    {category} ({places.filter(p => p.category === category).length})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
+      <PlacesHeader current="map">
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-[170px] min-h-11 sm:w-[240px]" data-testid="select-category">
+            <SelectValue placeholder="Select category" />
+          </SelectTrigger>
+          <SelectContent className="z-[9999]">
+            <SelectItem value="all" data-testid="select-option-all">All Categories ({places.length})</SelectItem>
+            {categories.map(category => (
+              <SelectItem 
+                key={category} 
+                value={category}
+                data-testid={`select-option-${category.toLowerCase().replace(/\s+/g, '-')}`}
+              >
+                {category} ({places.filter(p => p.category === category).length})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </PlacesHeader>
 
       <div className="flex-1 relative" data-testid="map-container">
         <MapContainer

@@ -1,5 +1,5 @@
 ---
-import { Award, Building2, Calendar, Heart, MapPin } from "lucide-react";
+import { Award, Calendar, Heart, MapPin, Users } from "lucide-react";
 import AuthButtons from "./AuthButtons";
 import AiBotsButton from "./AiBotsButton";
 import Logo from "./Logo.astro";
@@ -11,8 +11,9 @@ const path = Astro.url.pathname.replace(/\/$/, "") || "/";
 const navItems = [
   { path: "/schedule", label: "Schedule", icon: Calendar },
   { path: "/my-conference", label: "My Conference", icon: Heart },
-  { path: "/map", label: "Map", icon: MapPin },
-  { path: "/locations", label: "Locations", icon: Building2 },
+  { path: "/meet", label: "Meet", icon: Users },
+  // Map and List are tabs of one Places section.
+  { path: "/map", label: "Places", icon: MapPin, also: ["/locations"] },
   { path: "/sponsors", label: "Sponsors", icon: Award },
 ];
 ---
@@ -32,7 +33,7 @@ const navItems = [
         {
           navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = path === item.path;
+            const isActive = path === item.path || (item.also ?? []).includes(path);
             return (
               <a href={item.path} data-testid={`link-${item.path.slice(1)}`} aria-current={isActive ? "page" : undefined}>
                 <div
@@ -73,7 +74,7 @@ const navItems = [
       {
         navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = path === item.path;
+          const isActive = path === item.path || (item.also ?? []).includes(path);
           return (
             <a href={item.path} data-testid={`link-mobile-${item.path.slice(1)}`} aria-current={isActive ? "page" : undefined}>
               <div
