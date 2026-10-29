@@ -17,8 +17,9 @@ const { mark = false, class: className, markClass, wordClass, title = "Tech SEO 
   xmlns="http://www.w3.org/2000/svg"
   viewBox={mark ? "0 0 101 101" : "0 0 320.4 101"}
   class={className}
-  role="img"
-  aria-label={title}
+  role={title ? "img" : undefined}
+  aria-label={title || undefined}
+  aria-hidden={title ? undefined : "true"}
 >
   <g class={markClass} fill="currentColor">
       <circle cx="50.5" cy="96.19" r="4.81"/>

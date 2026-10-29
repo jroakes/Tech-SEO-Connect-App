@@ -1,30 +1,44 @@
-// Three.js scene for the splash screen: eight "attendees" fly in from the
-// distance through drifting particles, link up into the ring from the Tech SEO
-// Connect mark, then spread out and fade as the logo appears.
+// Three.js scene for the splash screen: eight 3D copies of the Tech SEO
+// Connect star mark fly in from the distance through drifting particles,
+// swirl into a ring while each one spins, then spread out and fade as the
+// logo appears.
 import {
   BufferAttribute,
   BufferGeometry,
+  ExtrudeGeometry,
   Group,
-  LineBasicMaterial,
-  LineSegments,
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
   Points,
   PointsMaterial,
   Scene,
-  SphereGeometry,
   Vector3,
   WebGLRenderer,
 } from "three";
+import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
+import markSvg from "@/assets/logo-mark.svg?raw";
 
-const PEOPLE = 8;
+const MARKS = 8;
 const RING_RADIUS = 2.6;
-const FLY_IN = 1.3; // seconds for each attendee to reach the ring
+const MARK_SIZE = 1.1; // width of each mark, in scene units
+const FLY_IN = 1.3; // seconds for each mark to reach the ring
 const DUST = 400;
 
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const easeOut = (x: number) => 1 - Math.pow(1 - clamp01(x), 3);
+
+function markGeometry() {
+  const shapes = new SVGLoader().parse(markSvg).paths.flatMap((path) => SVGLoader.createShapes(path));
+  const geometry = new ExtrudeGeometry(shapes, {
+    depth: 8,
+    bevelEnabled: false,
+  });
+  geometry.center();
+  const scale = MARK_SIZE / 101; // the mark's viewBox is 101 units wide
+  geometry.scale(scale, -scale, scale); // SVG y points down
+  return geometry;
+}
 
 // Starts the animation on the canvas and returns a function that stops it.
 export function startScene(canvas: HTMLCanvasElement): () => void {
@@ -41,7 +55,7 @@ export function startScene(canvas: HTMLCanvasElement): () => void {
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
     const halfWidth = Math.tan((camera.fov * Math.PI) / 360) * camera.position.z * camera.aspect;
-    fit = Math.min(1, halfWidth / (RING_RADIUS + 0.5));
+    fit = Math.min(1, halfWidth / (RING_RADIUS + MARK_SIZE));
   };
   resize();
   window.addEventListener("resize", resize);
@@ -59,29 +73,23 @@ export function startScene(canvas: HTMLCanvasElement): () => void {
   const dust = new Points(dustGeometry, dustMaterial);
   scene.add(dust);
 
-  // The attendees start scattered far away and end evenly spaced on the ring.
+  // The marks start scattered far away and end evenly spaced on the ring.
   const ring = new Group();
   scene.add(ring);
-  const sphere = new SphereGeometry(0.28, 24, 16);
-  const personMaterial = new MeshBasicMaterial({ color: 0xffffff, transparent: true });
-  const people = Array.from({ length: PEOPLE }, (_, i) => {
-    const angle = (i / PEOPLE) * Math.PI * 2 + Math.PI / 2;
+  const geometry = markGeometry();
+  // Flat white faces with pale mint edges, so each mark reads as a solid piece.
+  const faces = new MeshBasicMaterial({ color: 0xffffff, transparent: true });
+  const edges = new MeshBasicMaterial({ color: 0xb8ecd9, transparent: true });
+  const material = [faces, edges];
+  const marks = Array.from({ length: MARKS }, (_, i) => {
+    const angle = (i / MARKS) * Math.PI * 2 + Math.PI / 2;
     const end = new Vector3(Math.cos(angle) * RING_RADIUS, Math.sin(angle) * RING_RADIUS, 0);
     const start = new Vector3((Math.random() - 0.5) * 24, (Math.random() - 0.5) * 16, -25 - Math.random() * 15);
-    const mesh = new Mesh(sphere, personMaterial);
+    const mesh = new Mesh(geometry, material);
     mesh.position.copy(start);
     ring.add(mesh);
-    return { mesh, start, end, delay: Math.random() * 0.3 };
+    return { mesh, start, end, delay: Math.random() * 0.3, spin: (Math.random() < 0.5 ? -1 : 1) * (1.5 + Math.random()) };
   });
-
-  // Each attendee links to its neighbors and across the ring, like the mark.
-  const pairs: [number, number][] = [];
-  for (let i = 0; i < PEOPLE; i++) pairs.push([i, (i + 1) % PEOPLE], [i, (i + 3) % PEOPLE]);
-  const linePositions = new Float32Array(pairs.length * 6);
-  const lineGeometry = new BufferGeometry();
-  lineGeometry.setAttribute("position", new BufferAttribute(linePositions, 3));
-  const lineMaterial = new LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 });
-  ring.add(new LineSegments(lineGeometry, lineMaterial));
 
   const startTime = performance.now();
   let frame = 0;
@@ -89,18 +97,19 @@ export function startScene(canvas: HTMLCanvasElement): () => void {
     const t = (now - startTime) / 1000;
 
     dust.position.z = t * 8;
-    for (const p of people) p.mesh.position.lerpVectors(p.start, p.end, easeOut((t - p.delay) / FLY_IN));
+    for (const m of marks) {
+      const arrived = easeOut((t - m.delay) / FLY_IN);
+      m.mesh.position.lerpVectors(m.start, m.end, arrived);
+      // Tumble on the way in, then settle into a flat spin like a gear.
+      m.mesh.rotation.z = t * m.spin;
+      m.mesh.rotation.x = (1 - arrived) * 1.2;
+      m.mesh.rotation.y = (1 - arrived) * 0.8;
+    }
 
-    pairs.forEach(([a, b], i) => {
-      people[a].mesh.position.toArray(linePositions, i * 6);
-      people[b].mesh.position.toArray(linePositions, i * 6 + 3);
-    });
-    lineGeometry.attributes.position.needsUpdate = true;
-
-    // Link up once they arrive, then spread out and fade as the logo appears.
+    // Spread out and fade as the logo appears.
     const fade = 1 - clamp01((t - 2) / 0.7);
-    lineMaterial.opacity = clamp01((t - 1.1) / 0.4) * 0.55 * fade;
-    personMaterial.opacity = fade;
+    faces.opacity = fade;
+    edges.opacity = fade;
     dustMaterial.opacity = 0.7 * fade;
     ring.rotation.z = t * 0.5;
     ring.rotation.x = Math.sin(t * 1.5) * 0.25;
@@ -114,8 +123,6 @@ export function startScene(canvas: HTMLCanvasElement): () => void {
   return () => {
     cancelAnimationFrame(frame);
     window.removeEventListener("resize", resize);
-    for (const disposable of [dustGeometry, dustMaterial, sphere, personMaterial, lineGeometry, lineMaterial, renderer]) {
-      disposable.dispose();
-    }
+    for (const disposable of [dustGeometry, dustMaterial, geometry, faces, edges, renderer]) disposable.dispose();
   };
 }
