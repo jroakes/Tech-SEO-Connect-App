@@ -1,8 +1,7 @@
 ---
 import { Award, Building2, Calendar, Heart, MapPin } from "lucide-react";
-import logoIcon from "@/assets/logo-icon.jpg";
-import logoFull from "@/assets/logo-full.jpg";
 import AuthButtons from "./AuthButtons";
+import Logo from "./Logo.astro";
 import { event } from "@/data/event";
 
 const clerkEnabled = import.meta.env.PUBLIC_CLERK_ENABLED;
@@ -20,9 +19,8 @@ const navItems = [
 <header class="border-b border-border bg-background sticky top-0 z-50">
   <div class="mx-auto max-w-screen-xl px-4">
     <div class="flex h-14 items-center justify-between gap-2">
-      <a href="/schedule" data-testid="link-home">
-        <img src={logoIcon.src} alt={event.name} class="h-8 w-8 md:hidden" data-testid="img-logo-icon" />
-        <img src={logoFull.src} alt={event.name} class="hidden h-10 md:block" data-testid="img-logo-full" />
+      <a href="/schedule" class="shrink-0" data-testid="link-home">
+        <Logo title={event.name} class="h-9 w-auto md:h-10" markClass="text-primary" wordClass="text-foreground" />
       </a>
 
       <nav class="hidden md:flex items-center gap-1" data-testid="nav-desktop">

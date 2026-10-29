@@ -1,7 +1,7 @@
 ---
 import "@/styles/global.css";
 import Header from "@/components/Header.astro";
-import logoFull from "@/assets/logo-full.jpg";
+import Logo from "@/components/Logo.astro";
 import { event, pageDescription } from "@/data/event";
 
 interface Props {
@@ -23,7 +23,7 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#3C4639" />
+    <meta name="theme-color" content="#09B07B" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -52,9 +52,17 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
     </script>
   </head>
   <body>
-    <div id="splash" class="fixed inset-0 flex items-center justify-center bg-[#51AE7F] z-[9999] transition-opacity duration-300">
-      <div class="animate-splash-sequence">
-        <img src={logoFull.src} alt={event.name} class="w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 object-contain" />
+    <div
+      id="splash"
+      class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[#09B07B] transition-opacity duration-300"
+    >
+      <canvas id="splash-canvas" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
+      <div
+        id="splash-logo"
+        class="relative w-72 max-w-[80vw] text-white transition duration-700 ease-out"
+        style="opacity: 0; transform: scale(0.85)"
+      >
+        <Logo title={event.name} class="h-auto w-full" />
       </div>
     </div>
 
@@ -64,21 +72,6 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
     </div>
 
     <script is:inline>
-      (function () {
-        var splash = document.getElementById("splash");
-        if (!splash || document.documentElement.classList.contains("splash-seen")) return;
-        try {
-          sessionStorage.setItem("tsc_splash_seen", "1");
-        } catch (e) {}
-        setTimeout(function () {
-          splash.style.opacity = "0";
-          splash.style.pointerEvents = "none";
-          setTimeout(function () {
-            splash.remove();
-          }, 300);
-        }, 3100);
-      })();
-
       if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
         navigator.serviceWorker.register("/service-worker.js").catch(function (err) {
           console.log("ServiceWorker registration failed: ", err);
@@ -87,6 +80,8 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
     </script>
     <script>
       import { logEvent } from "@/lib/analytics";
+      import { runSplash } from "@/lib/splash";
+      runSplash();
       logEvent("page_view");
     </script>
   </body>
