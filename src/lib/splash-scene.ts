@@ -1,50 +1,54 @@
-// Three.js scene for the splash screen. The Tech SEO Connect mark is eight
-// people (a body and a head each) forming a wheel. They travel in from all
-// sides at their own pace, fit together into the wheel, the wheel spins, and
-// then it moves into the logo's spot as the wordmark slides in. Everything is
-// flat, like the logo.
+// Three.js scene for the splash screen. Travelers converge on Durham, NC by
+// plane, car, train and on foot (drawn by the SVG map layer underneath). As
+// each one pulls into their seat, their vehicle shrinks away as a person from
+// the logo's mark grows in its place. Once all eight are seated the wheel spins, the view pans so it
+// lands in the logo's spot, the map recedes, and the wordmark slides in.
+// Everything is flat, like the logo.
 import {
-  BufferAttribute,
-  BufferGeometry,
   DoubleSide,
   Group,
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
   Plane,
-  Points,
-  PointsMaterial,
   Scene,
   ShapeGeometry,
   type ShapePath,
-  Vector2,
   Vector3,
   WebGLRenderer,
 } from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 import markSvg from "@/assets/logo-mark.svg?raw";
+import { createMapLayer } from "./splash-map";
 
 const MARK_UNITS = 101; // the mark's viewBox is 101 x 101, centered on 50.5
 const WEDGE = Math.PI / 8; // half the angle each person takes up
 const PERSON_CENTER = 0.3; // distance from the wheel's center to a person's middle, in wheel widths
-const START_SIZE = 2.6; // wheel width while it forms, in scene units
+const KM_TO_PX = 1.45 / 1000; // map scale, per px of the screen's size (square root of its area)
 
-// Timeline, in seconds.
-const ARRIVE_BY = 0.45; // latest start for a traveler
-const TRAVEL = 1.05; // how long each person takes to arrive
-const SPIN_FROM = 1.35;
-const SPIN_FOR = 1.4;
-const SPIN_TURNS = 1; // whole turns, so the wheel stops lined up with the logo
-const MOVE_FROM = 2.2;
-const MOVE_FOR = 0.7;
-const DUST = 300;
+// Timeline, in seconds. Arrival times come from the trips in splash-map.ts;
+// the closing steps follow the last arrival.
+const ZOOM_FROM = 0.85; // the map eases in from slightly zoomed out
+const ZOOM_FOR = 2.4;
+const APPEAR = 0.38; // a person growing into their seat as their vehicle shrinks away
+const SPIN_AFTER = 0.25; // pause between the last arrival and the spin
+const SPIN_FOR = 1.3;
+const MOVE_AFTER = 0.45; // the pan into the logo's spot starts this far into the spin
+const MOVE_FOR = 0.8;
+const HOLD = 0.9; // how long the finished logo stays before the splash fades
 
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 const easeOut = (x: number) => 1 - Math.pow(1 - clamp01(x), 3);
+// Eases out with a slight settle past the end (about 4%).
+const easeOutSettle = (x: number) => {
+  const c = clamp01(x) - 1;
+  return 1 + 2.4 * c * c * c + 1.4 * c * c;
+};
 const easeInOut = (x: number) => {
   const c = clamp01(x);
   return c < 0.5 ? 4 * c * c * c : 1 - Math.pow(-2 * c + 2, 3) / 2;
 };
+const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 
 // Flat shape scaled so the whole mark is 1 unit wide, centered on the origin.
 function flatShape(path: ShapePath) {
@@ -54,21 +58,22 @@ function flatShape(path: ShapePath) {
   return geometry;
 }
 
-// Starts the animation on the canvas and returns a function that stops it.
-// `markRect` is where the mark sits in the logo on screen; the wheel ends there.
-export function startScene(canvas: HTMLCanvasElement, markRect: () => DOMRect): () => void {
+// Starts the animation on the canvas. `markRect` is where the mark sits in the
+// logo on screen; the wheel lands there. Returns when (in ms) the wordmark
+// should slide in and the splash end, and a function that stops the animation.
+export function startScene(canvas: HTMLCanvasElement, markRect: () => DOMRect) {
   const renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.localClippingEnabled = true;
   const scene = new Scene();
   const camera = new PerspectiveCamera(50, 1, 0.1, 100);
   camera.position.z = 10;
+  const mapLayer = createMapLayer(canvas);
 
-  // Where the wheel ends up (the logo's mark), how big it is while forming,
-  // and how far off-screen the travelers start.
-  const target = { x: 0, y: 0, size: 1 };
-  let startSize = START_SIZE;
-  let offscreen = 10;
+  // People gather in the middle of the screen, where there's room on every
+  // side; then the view pans so the wheel lands on the logo's mark.
+  const gather = { x: 0, y: 0, px: [0, 0] as [number, number] };
+  const target = { x: 0, y: 0, size: 1, px: [0, 0] as [number, number] };
   const resize = () => {
     const box = canvas.getBoundingClientRect();
     renderer.setSize(box.width, box.height, false);
@@ -77,27 +82,26 @@ export function startScene(canvas: HTMLCanvasElement, markRect: () => DOMRect): 
     const halfHeight = Math.tan((camera.fov * Math.PI) / 360) * camera.position.z;
     const halfWidth = halfHeight * camera.aspect;
     const mark = markRect();
-    target.x = ((mark.left + mark.width / 2 - box.left) / box.width) * 2 * halfWidth - halfWidth;
-    target.y = halfHeight - ((mark.top + mark.height / 2 - box.top) / box.height) * 2 * halfHeight;
+    const markX = mark.left + mark.width / 2 - box.left;
+    const markY = mark.top + mark.height / 2 - box.top;
+    target.x = (markX / box.width) * 2 * halfWidth - halfWidth;
+    target.y = halfHeight - (markY / box.height) * 2 * halfHeight;
     target.size = (mark.width / box.width) * 2 * halfWidth;
-    startSize = Math.min(START_SIZE, halfWidth * 1.2);
-    offscreen = Math.hypot(halfWidth, halfHeight) + 1;
+    target.px = [markX, markY];
+    gather.px = [box.width / 2, markY];
+    gather.x = 0;
+    gather.y = target.y;
+    mapLayer.setLayout({
+      width: box.width,
+      height: box.height,
+      durham: gather.px,
+      kmToPx: KM_TO_PX * Math.sqrt(box.width * box.height),
+      seatRadius: mark.width * PERSON_CENTER,
+      minZoom: ZOOM_FROM,
+    });
   };
   resize();
   window.addEventListener("resize", resize);
-
-  // Faint particles drifting toward the camera.
-  const dustPositions = new Float32Array(DUST * 3);
-  for (let i = 0; i < DUST; i++) {
-    dustPositions[i * 3] = (Math.random() - 0.5) * 30;
-    dustPositions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-    dustPositions[i * 3 + 2] = -Math.random() * 40;
-  }
-  const dustGeometry = new BufferGeometry();
-  dustGeometry.setAttribute("position", new BufferAttribute(dustPositions, 3));
-  const dustMaterial = new PointsMaterial({ color: 0xffffff, size: 0.05, transparent: true, opacity: 0.5 });
-  const dust = new Points(dustGeometry, dustMaterial);
-  scene.add(dust);
 
   // The body outline is one shape, so each person is the whole body clipped
   // to its own wedge, plus its head.
@@ -107,7 +111,7 @@ export function startScene(canvas: HTMLCanvasElement, markRect: () => DOMRect): 
   const headPaths = paths.filter((p) => nodeOf(p)?.nodeName === "circle");
   if (!bodyPath) throw new Error("Logo mark has no body path");
   const body = flatShape(bodyPath);
-  const disposables: { dispose(): void }[] = [dustGeometry, dustMaterial, body, renderer];
+  const disposables: { dispose(): void }[] = [body, renderer];
 
   const wheel = new Group();
   scene.add(wheel);
@@ -119,50 +123,95 @@ export function startScene(canvas: HTMLCanvasElement, markRect: () => DOMRect): 
       new Plane(new Vector3(Math.sin(angle + WEDGE), -Math.cos(angle + WEDGE), 0), 0),
     ];
     const clippingPlanes = wedge.map((p) => p.clone());
-    const material = new MeshBasicMaterial({ color: 0xffffff, side: DoubleSide, clippingPlanes });
+    const material = new MeshBasicMaterial({ color: 0xffffff, side: DoubleSide, clippingPlanes, transparent: true, opacity: 0 });
     const head = flatShape(headPath);
     disposables.push(material, head);
 
-    // The person turns around its own middle while traveling, so the meshes
-    // (drawn in wheel coordinates) sit offset inside a pivot at that middle.
-    const home = new Vector2(Math.cos(angle), Math.sin(angle)).multiplyScalar(PERSON_CENTER);
+    // A person scales from their own middle (their seat), so the meshes,
+    // drawn in wheel coordinates, sit offset inside a pivot there.
+    const seatX = Math.cos(angle) * PERSON_CENTER;
+    const seatY = Math.sin(angle) * PERSON_CENTER;
     const bodyMesh = new Mesh(body, material);
     const headMesh = new Mesh(head, material);
-    for (const mesh of [bodyMesh, headMesh]) mesh.position.set(-home.x, -home.y, 0);
+    for (const mesh of [bodyMesh, headMesh]) mesh.position.set(-seatX, -seatY, 0);
     const pivot = new Group();
+    pivot.position.set(seatX, seatY, 0);
     pivot.add(bodyMesh, headMesh);
     wheel.add(pivot);
-
-    // Each traveler starts somewhere off-screen and curves in toward its spot.
-    const from = Math.random() * Math.PI * 2;
-    const bend = (Math.random() - 0.5) * 1.2;
-    return { pivot, bodyMesh, wedge, clippingPlanes, home, from, bend, delay: Math.random() * ARRIVE_BY, turn: (Math.random() - 0.5) * 2 * Math.PI };
+    // On screen y points down, so a seat's screen angle is the negative.
+    return { pivot, bodyMesh, material, wedge, clippingPlanes, screenAngle: -angle, arrives: Infinity };
   });
 
-  const start = new Vector2();
-  const control = new Vector2();
+  // Seat each traveler on the side they arrive from. Pair travelers and seats
+  // in order around the circle, then turn the whole wheel so the seats face
+  // their travelers as closely as possible.
+  const approach = mapLayer.approachAngles();
+  const arrivals = mapLayer.arrivals();
+  const tripOrder = approach.map((_, i) => i).sort((a, b) => approach[a] - approach[b]);
+  const seatOrder = people.map((_, i) => i).sort((a, b) => people[a].screenAngle - people[b].screenAngle);
+  const pairsFor = (shift: number) => tripOrder.map((trip, i) => ({ trip, person: people[seatOrder[(i + shift) % seatOrder.length]] }));
+  const turnFor = (pairs: ReturnType<typeof pairsFor>) => {
+    // The average angle between each seat and its traveler (on screen).
+    const [s, c] = pairs.reduce(([s, c], { trip, person }) => {
+      const d = person.screenAngle - approach[trip];
+      return [s + Math.sin(d), c + Math.cos(d)];
+    }, [0, 0]);
+    return Math.atan2(s, c);
+  };
+  const costFor = (pairs: ReturnType<typeof pairsFor>, turn: number) =>
+    pairs.reduce((sum, { trip, person }) => sum + Math.abs(wrap(person.screenAngle - turn - approach[trip])), 0);
+  let best = { pairs: pairsFor(0), turn: 0, cost: Infinity };
+  for (let shift = 0; shift < seatOrder.length; shift++) {
+    const pairs = pairsFor(shift);
+    const turn = turnFor(pairs);
+    const cost = costFor(pairs, turn);
+    if (cost < best.cost) best = { pairs, turn, cost };
+  }
+  // Turning the wheel by `rho` (counterclockwise in Three.js) moves every seat
+  // by -rho on screen.
+  const rho = best.turn;
+  const seatAngles: number[] = [];
+  for (const { trip, person } of best.pairs) {
+    person.arrives = arrivals[trip];
+    seatAngles[trip] = person.screenAngle - rho;
+  }
+  mapLayer.setSeats(seatAngles);
+
+  // The spin is about one clockwise turn, ending where the mark looks exactly
+  // like the logo (it repeats every eighth of a turn).
+  const eighth = Math.PI / 4;
+  const spinTo = Math.round((rho - 2 * Math.PI) / eighth) * eighth;
+  const firstArrival = Math.min(...arrivals);
+  const lastArrival = Math.max(...arrivals);
+  const spinFrom = lastArrival + SPIN_AFTER;
+  const moveFrom = spinFrom + MOVE_AFTER;
+  const wordmarkAt = moveFrom + MOVE_FOR * 0.55;
+  const endAt = moveFrom + MOVE_FOR + HOLD;
+
   const startTime = performance.now();
   let frame = 0;
   const tick = (now: number) => {
     const t = (now - startTime) / 1000;
-    dust.position.z = t * 4;
 
-    // Forming in the middle of the screen, then moving into the logo's spot.
-    const move = easeInOut((t - MOVE_FROM) / MOVE_FOR);
-    wheel.position.set(target.x * move, target.y * move, 0);
-    wheel.scale.setScalar(startSize + (target.size - startSize) * move);
-    wheel.rotation.z = -SPIN_TURNS * 2 * Math.PI * easeInOut((t - SPIN_FROM) / SPIN_FOR);
+    const move = easeInOut((t - moveFrom) / MOVE_FOR);
+    const durham: [number, number] = [gather.px[0] + (target.px[0] - gather.px[0]) * move, gather.px[1] + (target.px[1] - gather.px[1]) * move];
+    mapLayer.update(t, ZOOM_FROM + (1 - ZOOM_FROM) * easeOut(t / ZOOM_FOR), durham, {
+      map: clamp01(t / 0.5) * (1 - 0.75 * easeInOut((t - moveFrom) / (MOVE_FOR + 0.3))),
+      trips: 1,
+      marker: clamp01((t - 0.2) / 0.3) * (1 - clamp01((t - firstArrival + 0.5) / 0.3)),
+    });
 
+    wheel.position.set(gather.x + (target.x - gather.x) * move, gather.y + (target.y - gather.y) * move, 0);
+    wheel.scale.setScalar(target.size);
+    wheel.rotation.z = rho + (spinTo - rho) * easeInOut((t - spinFrom) / SPIN_FOR);
+
+    // Each person grows from the spot where their vehicle pulls up, settling
+    // into their seat as the vehicle shrinks away beneath them.
     for (const p of people) {
-      const k = easeInOut((t - p.delay) / TRAVEL);
-      // Quadratic curve from off-screen to home, bent to one side.
-      start.set(Math.cos(p.from), Math.sin(p.from)).multiplyScalar(offscreen / startSize);
-      control.copy(start).lerp(p.home, 0.5).add(new Vector2(-start.y, start.x).multiplyScalar(p.bend));
-      const a = (1 - k) * (1 - k);
-      const b = 2 * (1 - k) * k;
-      p.pivot.position.set(a * start.x + b * control.x + k * k * p.home.x, a * start.y + b * control.y + k * k * p.home.y, 0);
-      // Arrive turned every which way, then straighten up into place.
-      p.pivot.rotation.z = p.turn * (1 - easeOut((t - p.delay) / (TRAVEL + 0.15)));
+      const k = (t - p.arrives + 0.06) / APPEAR;
+      p.pivot.visible = k > 0;
+      p.material.opacity = clamp01(k * 4);
+      p.pivot.scale.setScalar(Math.max(0.001, easeOutSettle(k)));
     }
 
     // Clipping planes are in world space, so move each wedge with its person.
@@ -174,9 +223,14 @@ export function startScene(canvas: HTMLCanvasElement, markRect: () => DOMRect): 
   };
   frame = requestAnimationFrame(tick);
 
-  return () => {
-    cancelAnimationFrame(frame);
-    window.removeEventListener("resize", resize);
-    for (const d of disposables) d.dispose();
+  return {
+    wordmarkAt: wordmarkAt * 1000,
+    endAt: endAt * 1000,
+    stop: () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", resize);
+      mapLayer.remove();
+      for (const d of disposables) d.dispose();
+    },
   };
 }

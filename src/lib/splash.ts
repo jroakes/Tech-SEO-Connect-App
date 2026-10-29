@@ -3,8 +3,6 @@
 // when the splash plays. Without WebGL, or with reduced motion, the logo
 // simply fades in.
 
-const WORDMARK_AT = 2450; // ms after the animation starts, as the wheel moves into place
-const END_AT = 3900;
 const LOAD_TIMEOUT = 1500; // give up on the animation if Three.js is slower than this
 
 export function runSplash() {
@@ -68,14 +66,15 @@ export function runSplash() {
         wordmark.ownerSVGElement?.style.setProperty("overflow", "visible");
       }
       showLogo();
-      stopAnimation = startScene(canvas, markRect);
+      const scene = startScene(canvas, markRect);
+      stopAnimation = scene.stop;
       setTimeout(() => {
         if (!wordmark) return;
-        wordmark.style.transition = "opacity 600ms ease-out, transform 600ms ease-out";
+        wordmark.style.transition = "opacity 700ms ease-out, transform 700ms cubic-bezier(0.22, 1, 0.36, 1)";
         wordmark.style.opacity = "1";
         wordmark.style.transform = "none";
-      }, WORDMARK_AT);
-      setTimeout(finish, END_AT);
+      }, scene.wordmarkAt);
+      setTimeout(finish, scene.endAt);
     })
     .catch(() => {
       clearTimeout(fallback);
