@@ -29,7 +29,9 @@ export default function AuthButtons() {
         </SignInButton>
       </Show>
       <Show when="signed-in">
+        {/* Clerk reads the menu items only when the button mounts, so remount it once we know. */}
         <UserButton
+          key={admin ? "admin" : "attendee"}
           customMenuItems={
             admin
               ? [
