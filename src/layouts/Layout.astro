@@ -48,10 +48,14 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
       gtag("config", "G-QRWD85BG5Z");
     </script>
     <script is:inline>
-      // The splash plays once per browser session.
+      // The splash plays once per browser session. Until its animation is
+      // running, "splash-loading" holds back images it would compete with.
       try {
         if (sessionStorage.getItem("tsc_splash_seen")) document.documentElement.classList.add("splash-seen");
-      } catch (e) {}
+        else document.documentElement.classList.add("splash-loading");
+      } catch (e) {
+        document.documentElement.classList.add("splash-loading");
+      }
     </script>
   </head>
   <body>

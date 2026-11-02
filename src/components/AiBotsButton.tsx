@@ -42,7 +42,7 @@ function WavingRobot({ wave }: { wave: React.MutableRefObject<(() => void) | nul
     };
   }, [wave]);
 
-  return <span ref={robot} className="robot block h-11 w-11 shrink-0" style={{ backgroundImage: `url(${robotSprite.src})` }} aria-hidden="true" />;
+  return <span ref={robot} className="robot block h-10 w-10 shrink-0" style={{ backgroundImage: `url(${robotSprite.src})` }} aria-hidden="true" />;
 }
 
 /** "For AI bots": the MCP server's URL and how to add it to Claude or another assistant. */
@@ -68,16 +68,16 @@ export default function AiBotsButton() {
   return (
     <Dialog onOpenChange={(open) => open && logEvent("mcp_modal_open")}>
       <DialogTrigger asChild>
+        {/* A labelled pill, so it reads as its own button next to the account picture. */}
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
-          className="h-12 gap-0.5 px-0.5 text-muted-foreground hover:text-foreground sm:pr-2.5"
+          className="h-11 gap-0.5 rounded-full pl-0.5 pr-3 text-xs font-medium text-foreground sm:text-sm"
           onMouseEnter={() => wave.current?.()}
           data-testid="button-ai-bots"
         >
           <WavingRobot wave={wave} />
-          <span className="hidden sm:inline">For AI bots</span>
-          <span className="sr-only sm:hidden">For AI bots</span>
+          For AI bots
         </Button>
       </DialogTrigger>
 

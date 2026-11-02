@@ -5,9 +5,12 @@
 
 const LOAD_TIMEOUT = 1500; // give up on the animation if Three.js is slower than this
 
+// Lets the images the splash held back load (see Layout.astro).
+const doneLoading = () => document.documentElement.classList.remove("splash-loading");
+
 export function runSplash() {
   const splash = document.getElementById("splash");
-  if (!splash || document.documentElement.classList.contains("splash-seen")) return;
+  if (!splash || document.documentElement.classList.contains("splash-seen")) return doneLoading();
   try {
     sessionStorage.setItem("tsc_splash_seen", "1");
   } catch {}
@@ -30,6 +33,7 @@ export function runSplash() {
   const finish = () => {
     if (finished) return;
     finished = true;
+    doneLoading();
     splash.style.opacity = "0";
     splash.style.pointerEvents = "none";
     setTimeout(() => {
@@ -39,6 +43,7 @@ export function runSplash() {
   };
   const logoOnly = () => {
     fellBack = true;
+    doneLoading();
     showLogo();
     setTimeout(finish, 1200);
   };
@@ -68,6 +73,7 @@ export function runSplash() {
       showLogo();
       const scene = startScene(canvas, markRect);
       stopAnimation = scene.stop;
+      doneLoading();
       setTimeout(() => {
         if (!wordmark) return;
         wordmark.style.transition = "opacity 700ms ease-out, transform 700ms cubic-bezier(0.22, 1, 0.36, 1)";

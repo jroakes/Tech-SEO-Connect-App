@@ -22,7 +22,7 @@ export default function AuthButtons() {
   // A fixed-size slot, the size of the fallback in Header.astro, so the header
   // doesn't shift as the page starts up and Clerk loads.
   return (
-    <div className="flex h-9 w-[4.75rem] items-center justify-end">
+    <div className="flex h-9 w-[4.25rem] items-center justify-end">
       <Show when="signed-out">
         <SignInButton mode="modal">
           <Button variant="outline" size="sm" className="min-h-9" data-testid="button-sign-in">
