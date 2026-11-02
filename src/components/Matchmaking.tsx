@@ -7,14 +7,14 @@ import { Avatar, PersonRow } from "./meet/PersonRow";
 import { TopicCircles, TopicCirclesKey } from "./meet/TopicCircles";
 import { useAuthState } from "@/lib/auth-client";
 import { logEvent } from "@/lib/analytics";
-import { peopleIn, topicCounts, type Profile } from "@/lib/matching";
-import { TOPICS, topicLabel } from "@/data/topics";
+import { peopleIn, type Profile, type TopicCount } from "@/lib/matching";
+import { topicLabel } from "@/data/topics";
 
 type State =
   | { status: "loading" }
   | { status: "signed-out" }
   | { status: "form"; profile: Profile | null; suggestedName: string }
-  | { status: "ready"; me: Profile; others: Profile[] };
+  | { status: "ready"; me: Profile; others: Profile[]; counts: TopicCount[] };
 
 /** Meet: pick your topics, then browse every topic and the people in it. */
 export default function Matchmaking() {
@@ -24,8 +24,8 @@ export default function Matchmaking() {
   const loadMatches = async () => {
     const res = await fetch("/api/matches");
     if (res.ok) {
-      const data = (await res.json()) as { me: Profile; others: Profile[] };
-      setState({ status: "ready", me: data.me, others: data.others });
+      const data = (await res.json()) as { me: Profile; others: Profile[]; counts: TopicCount[] };
+      setState({ status: "ready", ...data });
     }
   };
 
@@ -96,6 +96,7 @@ export default function Matchmaking() {
         <Matches
           me={state.me}
           others={state.others}
+          counts={state.counts}
           onEdit={() => setState({ status: "form", profile: state.me, suggestedName: state.me.name })}
           onLeave={leave}
         />
@@ -104,29 +105,39 @@ export default function Matchmaking() {
   );
 }
 
-// The open topic lives in the URL (/meet#bigquery), so Back returns to the circles.
-const topicFromHash = () => {
+// The open topic lives in the URL (/meet#bigquery), so Back returns to the
+// circles. Only your own topics open.
+const topicFromHash = (mine: string[]) => {
   const id = decodeURIComponent(location.hash.slice(1));
-  return TOPICS.some((t) => t.id === id) ? id : null;
+  return mine.includes(id) ? id : null;
 };
 
-function Matches({ me, others, onEdit, onLeave }: { me: Profile; others: Profile[]; onEdit: () => void; onLeave: () => void }) {
+interface MatchesProps {
+  me: Profile;
+  others: Profile[];
+  counts: TopicCount[];
+  onEdit: () => void;
+  onLeave: () => void;
+}
+
+function Matches({ me, others, counts, onEdit, onLeave }: MatchesProps) {
   const everyone = useMemo(() => [me, ...others], [me, others]);
-  const counts = useMemo(() => topicCounts(everyone), [everyone]);
-  const [topic, setTopic] = useState(topicFromHash);
+  const [topic, setTopic] = useState(() => topicFromHash(me.topics));
   const openedHere = useRef(false);
 
   useEffect(() => {
+    // A link to someone else's topic just shows the circles.
+    if (location.hash && !topicFromHash(me.topics)) history.replaceState(null, "", location.pathname);
     const onHashChange = () => {
-      setTopic(topicFromHash());
+      setTopic(topicFromHash(me.topics));
       window.scrollTo({ top: 0 });
     };
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
-  }, []);
+  }, [me.topics]);
 
   const open = (id: string) => {
-    logEvent("match_topic_open", { topic: id, people: counts.find((c) => c.topic === id)?.count ?? 0, mine: me.topics.includes(id) });
+    logEvent("match_topic_open", { topic: id, people: counts.find((c) => c.topic === id)?.count ?? 0 });
     openedHere.current = true;
     location.hash = id;
   };
@@ -148,20 +159,15 @@ function Matches({ me, others, onEdit, onLeave }: { me: Profile; others: Profile
           {topicLabel(topic)}
         </h2>
         <p className="mb-5 mt-1 text-sm text-muted-foreground">
-          {people.length} {people.length === 1 ? "person" : "people"}
-          {me.topics.includes(topic) ? ", including you" : ""}. Tap someone with a LinkedIn to message them and meet up.
+          {people.length > 1
+            ? `${people.length} people, including you. Tap someone with a LinkedIn to message them and meet up.`
+            : "Just you so far. Check back as more attendees join."}
         </p>
-        {people.length ? (
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {people.map((p) => (
-              <PersonRow key={p.userId} person={p} topic={topic} isMe={p.userId === me.userId} />
-            ))}
-          </div>
-        ) : (
-          <p className="rounded-md border border-dashed border-border px-4 py-6 text-center text-sm text-muted-foreground">
-            Nobody has picked this yet. Check back as more attendees join.
-          </p>
-        )}
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {people.map((p) => (
+            <PersonRow key={p.userId} person={p} topic={topic} isMe={p.userId === me.userId} />
+          ))}
+        </div>
       </section>
     );
   }

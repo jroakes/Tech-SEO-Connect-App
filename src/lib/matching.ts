@@ -23,6 +23,11 @@ export function topicCounts(people: Profile[]): TopicCount[] {
   return TOPICS.map(({ id, label }) => ({ topic: id, label, count: people.filter((p) => p.topics.includes(id)).length }));
 }
 
+/** The people `me` can see: everyone else who shares at least one of their topics. */
+export function sharingATopic(me: Profile, people: Profile[]): Profile[] {
+  return people.filter((p) => p.userId !== me.userId && p.topics.some((t) => me.topics.includes(t)));
+}
+
 /** Everyone who picked a topic, by name. */
 export function peopleIn(topic: string, people: Profile[]): Profile[] {
   return people.filter((p) => p.topics.includes(topic)).sort((a, b) => a.name.localeCompare(b.name));

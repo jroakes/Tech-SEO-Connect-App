@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { TOPICS } from "../data/topics";
-import { linkedinUrl, peopleIn, topicCounts, type Profile } from "./matching";
+import { linkedinUrl, peopleIn, sharingATopic, topicCounts, type Profile } from "./matching";
 
 const person = (userId: string, topics: string[], extra: Partial<Profile> = {}): Profile => ({ userId, name: userId, topics, ...extra });
 
@@ -12,6 +12,13 @@ describe("topicCounts", () => {
     expect(counts.map((c) => c.topic)).toEqual(TOPICS.map((t) => t.id));
     expect(counts.find((c) => c.topic === "bigquery")).toEqual({ topic: "bigquery", label: "BigQuery", count: 2 });
     expect(counts.find((c) => c.topic === "careers")?.count).toBe(0);
+  });
+});
+
+describe("sharingATopic", () => {
+  it("keeps only other people who share one of my topics", () => {
+    const me = person("me", ["bigquery", "python"]);
+    expect(sharingATopic(me, [...people, me]).map((p) => p.userId)).toEqual(["zoe", "amy"]);
   });
 });
 

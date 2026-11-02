@@ -17,10 +17,11 @@ Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
 - **Meet** (`/meet`): signed-in attendees give their name and title, pick up to
   three topics they're interested in and, optionally, add their LinkedIn. Every
   topic shows as a circle sized by how many people picked it, with their own
-  topics in dark green. Tapping a circle lists everyone in it (`/meet#bigquery`),
-  and tapping someone opens their LinkedIn to message them and meet up. Answers
-  are shown only to other attendees who join, and anyone can edit or leave. No
-  intro emails.
+  topics in dark green. Only their own topics open: tapping one lists everyone
+  in it (`/meet#bigquery`), and tapping someone opens their LinkedIn to message
+  them and meet up. Other topics show only a count, and the API sends people
+  only for topics the attendee shares. Answers are shown only to other
+  attendees who join, and anyone can edit or leave. No intro emails.
 - **Sponsors**.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
   other AI tools. They sign in through Clerk, then can ask about talks,
