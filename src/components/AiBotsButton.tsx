@@ -4,51 +4,45 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { logEvent } from "@/lib/analytics";
 import { event } from "@/data/event";
+import robotSprite from "@/assets/robot-wave.webp";
 
 const EXAMPLES = ["Which talks cover log files?", "Where can I get coffee near the venue?", "What's on my schedule Thursday?"];
-const WAVE_EVERY = 15000; // ms between waves, after the first one on page load
+const WAVE_EVERY = 15000; // ms between waves
 
 /**
- * The robot on the button: waves when the page loads, now and then after
- * that, and when hovered. Shows the plain bot icon until Three.js loads, or
- * if it can't run. With reduced motion it holds still, mid-wave.
+ * The robot on the button. Its wave was rendered from a small Three.js model
+ * into a strip of frames (src/assets/robot-wave.webp; the model is in this
+ * file's git history), so pages show it instantly without loading WebGL.
+ * It waves hello once per visit, then now and then, and when hovered. With
+ * reduced motion it holds still, mid-wave (see .robot in global.css).
  */
 function WavingRobot({ wave }: { wave: React.MutableRefObject<(() => void) | null> }) {
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const [ready, setReady] = useState(false);
+  const robot = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    let cancelled = false;
-    let stop = () => {};
-    let timer = 0;
-    import("@/lib/robot-scene")
-      .then(({ startRobot }) => {
-        if (cancelled || !canvas.current) return;
-        const robot = startRobot(canvas.current);
-        stop = robot.stop;
-        setReady(true);
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return robot.holdWave();
-        wave.current = robot.wave;
-        const again = () => {
-          robot.wave();
-          timer = window.setTimeout(again, WAVE_EVERY);
-        };
-        timer = window.setTimeout(again, 700);
-      })
-      .catch(() => {});
+    const el = robot.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const play = () => el.classList.add("robot-waving");
+    const done = () => el.classList.remove("robot-waving");
+    el.addEventListener("animationend", done);
+    wave.current = play;
+    let hello = 0;
+    try {
+      if (!sessionStorage.getItem("tsc_robot_waved")) {
+        sessionStorage.setItem("tsc_robot_waved", "1");
+        hello = window.setTimeout(play, 700);
+      }
+    } catch {}
+    const timer = window.setInterval(play, WAVE_EVERY);
     return () => {
-      cancelled = true;
-      clearTimeout(timer);
-      stop();
+      clearTimeout(hello);
+      clearInterval(timer);
+      el.removeEventListener("animationend", done);
+      wave.current = null;
     };
-  }, []);
+  }, [wave]);
 
-  return (
-    <span className="relative block h-11 w-11 shrink-0">
-      {!ready && <Bot className="absolute inset-0 m-auto h-6 w-6" />}
-      <canvas ref={canvas} className={`h-full w-full transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`} aria-hidden="true" />
-    </span>
-  );
+  return <span ref={robot} className="robot block h-11 w-11 shrink-0" style={{ backgroundImage: `url(${robotSprite.src})` }} aria-hidden="true" />;
 }
 
 /** "For AI bots": the MCP server's URL and how to add it to Claude or another assistant. */

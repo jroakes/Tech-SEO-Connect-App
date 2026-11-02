@@ -234,6 +234,26 @@
  * Even without handling focused or not, this is six possible combinations that
  * need to be distinguished from eachother visually.
  */
+/* The header robot: 55 frames of 44px side by side; the first is the robot at rest. */
+.robot {
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+.robot-waving {
+  animation: robot-wave 1.8s steps(54) both;
+}
+@keyframes robot-wave {
+  to {
+    background-position: -2376px 0; /* 54 frames along */
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .robot {
+    background-position: -880px 0; /* frame 20: arm up */
+  }
+}
+
 @layer utilities {
 
   /* Hide ugly search cancel button in Chrome until we can style it properly */
