@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Bot, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -6,12 +6,57 @@ import { logEvent } from "@/lib/analytics";
 import { event } from "@/data/event";
 
 const EXAMPLES = ["Which talks cover log files?", "Where can I get coffee near the venue?", "What's on my schedule Thursday?"];
+const WAVE_EVERY = 15000; // ms between waves, after the first one on page load
+
+/**
+ * The robot on the button: waves when the page loads, now and then after
+ * that, and when hovered. Shows the plain bot icon until Three.js loads, or
+ * if it can't run. With reduced motion it holds still, mid-wave.
+ */
+function WavingRobot({ wave }: { wave: React.MutableRefObject<(() => void) | null> }) {
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    let stop = () => {};
+    let timer = 0;
+    import("@/lib/robot-scene")
+      .then(({ startRobot }) => {
+        if (cancelled || !canvas.current) return;
+        const robot = startRobot(canvas.current);
+        stop = robot.stop;
+        setReady(true);
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return robot.holdWave();
+        wave.current = robot.wave;
+        const again = () => {
+          robot.wave();
+          timer = window.setTimeout(again, WAVE_EVERY);
+        };
+        timer = window.setTimeout(again, 700);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      stop();
+    };
+  }, []);
+
+  return (
+    <span className="relative block h-11 w-11 shrink-0">
+      {!ready && <Bot className="absolute inset-0 m-auto h-6 w-6" />}
+      <canvas ref={canvas} className={`h-full w-full transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`} aria-hidden="true" />
+    </span>
+  );
+}
 
 /** "For AI bots": the MCP server's URL and how to add it to Claude or another assistant. */
 export default function AiBotsButton() {
   // The URL of this deployment's MCP server (the review site before launch).
   const [mcpUrl, setMcpUrl] = useState(`${event.appUrl}/mcp`);
   const [copied, setCopied] = useState(false);
+  const wave = useRef<(() => void) | null>(null);
   useEffect(() => setMcpUrl(`${location.origin}/mcp`), []);
 
   const copy = async () => {
@@ -29,8 +74,14 @@ export default function AiBotsButton() {
   return (
     <Dialog onOpenChange={(open) => open && logEvent("mcp_modal_open")}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="min-h-9 gap-1.5 px-2.5 text-muted-foreground hover:text-foreground" data-testid="button-ai-bots">
-          <Bot className="h-4 w-4" />
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-12 gap-0.5 px-0.5 text-muted-foreground hover:text-foreground sm:pr-2.5"
+          onMouseEnter={() => wave.current?.()}
+          data-testid="button-ai-bots"
+        >
+          <WavingRobot wave={wave} />
           <span className="hidden sm:inline">For AI bots</span>
           <span className="sr-only sm:hidden">For AI bots</span>
         </Button>

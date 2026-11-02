@@ -26,7 +26,7 @@ Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
   other AI tools. They sign in through Clerk, then can ask about talks,
   speakers, sponsors and places, and see or change their My Conference list.
-  The **For AI bots** button in the header shows the URL and how to connect.
+  The **For AI bots** button in the header (a small Three.js robot that waves) shows the URL and how to connect.
 - **Event logging**: page views, place views, directions clicks, saves and
   AI assistant use go to the `events` table in D1, alongside GA4.
 - **Admin** at `/admin`, for admins only (see below): the users list, where
