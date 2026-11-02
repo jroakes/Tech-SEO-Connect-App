@@ -1,24 +1,24 @@
 import { describe, expect, it } from "vitest";
-import { linkedinUrl, peopleByTopic, type Profile } from "./matching";
+import { TOPICS } from "../data/topics";
+import { linkedinUrl, peopleIn, topicCounts, type Profile } from "./matching";
 
 const person = (userId: string, topics: string[], extra: Partial<Profile> = {}): Profile => ({ userId, name: userId, topics, ...extra });
 
-describe("peopleByTopic", () => {
-  const me = person("me", ["log-files", "bigquery"]);
+const people = [person("zoe", ["bigquery", "local"]), person("amy", ["bigquery"]), person("sam", ["log-files"])];
 
-  it("lists each of my topics, in the usual order, with everyone else who picked it by name", () => {
-    const others = [person("zoe", ["bigquery", "local"]), person("amy", ["bigquery"]), person("sam", ["log-files"]), me];
-    expect(peopleByTopic(me, others).map((g) => [g.topic, g.people.map((p) => p.userId)])).toEqual([
-      ["bigquery", ["amy", "zoe"]],
-      ["log-files", ["sam"]],
-    ]);
+describe("topicCounts", () => {
+  it("counts every topic, in the usual order, including ones nobody picked", () => {
+    const counts = topicCounts(people);
+    expect(counts.map((c) => c.topic)).toEqual(TOPICS.map((t) => t.id));
+    expect(counts.find((c) => c.topic === "bigquery")).toEqual({ topic: "bigquery", label: "BigQuery", count: 2 });
+    expect(counts.find((c) => c.topic === "careers")?.count).toBe(0);
   });
+});
 
-  it("keeps a topic nobody else picked, with no people", () => {
-    expect(peopleByTopic(me, [person("x", ["local"])])).toEqual([
-      { topic: "bigquery", label: "BigQuery", people: [] },
-      { topic: "log-files", label: "Log files", people: [] },
-    ]);
+describe("peopleIn", () => {
+  it("lists everyone who picked a topic, by name", () => {
+    expect(peopleIn("bigquery", people).map((p) => p.userId)).toEqual(["amy", "zoe"]);
+    expect(peopleIn("careers", people)).toEqual([]);
   });
 });
 

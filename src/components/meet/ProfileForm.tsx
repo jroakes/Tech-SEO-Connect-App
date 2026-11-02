@@ -104,7 +104,7 @@ export function ProfileForm({ initial, suggestedName, onSaved, onCancel }: Profi
       </section>
 
       <section className={section}>
-        <Field label="Your LinkedIn" hint="Optional. People can message you there to meet up.">
+        <Field label="Your LinkedIn (optional)" hint="Where people can connect with you to meet up.">
           <input
             maxLength={200}
             value={answers.linkedin}

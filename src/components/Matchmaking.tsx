@@ -1,12 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
-import { Loader2, Users } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, Loader2, Users } from "lucide-react";
 import { SignInButton } from "@clerk/astro/react";
 import { Button } from "@/components/ui/button";
 import { ProfileForm } from "./meet/ProfileForm";
-import { Avatar, PersonCard } from "./meet/PersonCard";
+import { Avatar, PersonRow } from "./meet/PersonRow";
+import { TopicCircles, TopicCirclesKey } from "./meet/TopicCircles";
 import { useAuthState } from "@/lib/auth-client";
 import { logEvent } from "@/lib/analytics";
-import { peopleByTopic, type Profile } from "@/lib/matching";
+import { peopleIn, topicCounts, type Profile } from "@/lib/matching";
+import { TOPICS, topicLabel } from "@/data/topics";
 
 type State =
   | { status: "loading" }
@@ -14,7 +16,7 @@ type State =
   | { status: "form"; profile: Profile | null; suggestedName: string }
   | { status: "ready"; me: Profile; others: Profile[] };
 
-/** Meet: pick your topics, then see who else picked each one. */
+/** Meet: pick your topics, then browse every topic and the people in it. */
 export default function Matchmaking() {
   const auth = useAuthState();
   const [state, setState] = useState<State>({ status: "loading" });
@@ -102,11 +104,70 @@ export default function Matchmaking() {
   );
 }
 
+// The open topic lives in the URL (/meet#bigquery), so Back returns to the circles.
+const topicFromHash = () => {
+  const id = decodeURIComponent(location.hash.slice(1));
+  return TOPICS.some((t) => t.id === id) ? id : null;
+};
+
 function Matches({ me, others, onEdit, onLeave }: { me: Profile; others: Profile[]; onEdit: () => void; onLeave: () => void }) {
-  const groups = useMemo(() => peopleByTopic(me, others), [me, others]);
+  const everyone = useMemo(() => [me, ...others], [me, others]);
+  const counts = useMemo(() => topicCounts(everyone), [everyone]);
+  const [topic, setTopic] = useState(topicFromHash);
+  const openedHere = useRef(false);
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setTopic(topicFromHash());
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  const open = (id: string) => {
+    logEvent("match_topic_open", { topic: id, people: counts.find((c) => c.topic === id)?.count ?? 0, mine: me.topics.includes(id) });
+    openedHere.current = true;
+    location.hash = id;
+  };
+  const back = () => {
+    if (openedHere.current) return history.back();
+    history.replaceState(null, "", location.pathname);
+    setTopic(null);
+  };
+
+  if (topic) {
+    const people = peopleIn(topic, everyone);
+    return (
+      <section aria-labelledby="group-title" data-testid="panel-group">
+        <button type="button" onClick={back} className="mb-4 inline-flex min-h-9 items-center gap-1.5 text-sm font-medium text-primary hover:underline" data-testid="button-all-topics">
+          <ArrowLeft className="h-4 w-4" />
+          All topics
+        </button>
+        <h2 id="group-title" className="text-2xl font-bold text-foreground">
+          {topicLabel(topic)}
+        </h2>
+        <p className="mb-5 mt-1 text-sm text-muted-foreground">
+          {people.length} {people.length === 1 ? "person" : "people"}
+          {me.topics.includes(topic) ? ", including you" : ""}. Tap someone with a LinkedIn to message them and meet up.
+        </p>
+        {people.length ? (
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {people.map((p) => (
+              <PersonRow key={p.userId} person={p} topic={topic} isMe={p.userId === me.userId} />
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-md border border-dashed border-border px-4 py-6 text-center text-sm text-muted-foreground">
+            Nobody has picked this yet. Check back as more attendees join.
+          </p>
+        )}
+      </section>
+    );
+  }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <section className="flex flex-col gap-4 rounded-md border border-border bg-card p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div className="flex min-w-0 items-center gap-3">
           <Avatar profile={me} />
@@ -126,27 +187,10 @@ function Matches({ me, others, onEdit, onLeave }: { me: Profile; others: Profile
         </div>
       </section>
 
-      {groups.map((g) => (
-        <section key={g.topic} aria-labelledby={`topic-${g.topic}`} data-testid={`section-topic-${g.topic}`}>
-          <h2 id={`topic-${g.topic}`} className="mb-3 flex items-baseline gap-2 text-lg font-semibold text-foreground">
-            {g.label}
-            <span className="text-sm font-normal text-muted-foreground">
-              {g.people.length} {g.people.length === 1 ? "person" : "people"}
-            </span>
-          </h2>
-          {g.people.length ? (
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {g.people.map((p) => (
-                <PersonCard key={p.userId} person={p} topic={g.topic} />
-              ))}
-            </div>
-          ) : (
-            <p className="rounded-md border border-dashed border-border px-4 py-6 text-center text-sm text-muted-foreground">
-              Nobody else yet. Check back as more attendees join.
-            </p>
-          )}
-        </section>
-      ))}
+      <section aria-label="Topics" className="space-y-4">
+        <TopicCircles topics={counts} mine={me.topics} onOpen={open} />
+        <TopicCirclesKey />
+      </section>
     </div>
   );
 }

@@ -13,6 +13,7 @@ export const CLIENT_EVENT_TYPES = [
   "mcp_modal_open",
   "mcp_url_copy",
   "match_join",
+  "match_topic_open",
   "match_linkedin_click",
 ] as const;
 

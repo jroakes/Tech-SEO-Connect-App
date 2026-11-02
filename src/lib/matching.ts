@@ -11,20 +11,21 @@ export interface Profile {
   linkedin?: string | null;
 }
 
-/** One of your topics and the other attendees interested in it. */
-export interface TopicPeople {
+/** A topic and how many people picked it. */
+export interface TopicCount {
   topic: string;
   label: string;
-  people: Profile[];
+  count: number;
 }
 
-/** For each topic `me` picked, in the usual topic order, everyone else who picked it, by name. */
-export function peopleByTopic(me: Profile, others: Profile[]): TopicPeople[] {
-  return TOPICS.filter(({ id }) => me.topics.includes(id)).map(({ id, label }) => ({
-    topic: id,
-    label,
-    people: others.filter((p) => p.userId !== me.userId && p.topics.includes(id)).sort((a, b) => a.name.localeCompare(b.name)),
-  }));
+/** Every topic, in the usual topic order, with how many people picked it (zero included). */
+export function topicCounts(people: Profile[]): TopicCount[] {
+  return TOPICS.map(({ id, label }) => ({ topic: id, label, count: people.filter((p) => p.topics.includes(id)).length }));
+}
+
+/** Everyone who picked a topic, by name. */
+export function peopleIn(topic: string, people: Profile[]): Profile[] {
+  return people.filter((p) => p.topics.includes(topic)).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 /**

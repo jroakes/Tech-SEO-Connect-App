@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Ban, Loader2, ShieldCheck, ShieldOff, Trash2, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Avatar } from "./meet/PersonCard";
+import { Avatar } from "./meet/PersonRow";
 
 export interface AdminUserRow {
   id: string;

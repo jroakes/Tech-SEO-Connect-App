@@ -15,10 +15,12 @@ Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
   map (`/map`) or a list (`/locations`), with Google Maps and Apple Maps
   directions.
 - **Meet** (`/meet`): signed-in attendees give their name and title, pick up to
-  three topics they're interested in and, optionally, add their LinkedIn. For each of
-  their topics they see everyone else who picked it; tapping someone opens
-  their LinkedIn to message them and meet up. Answers are shown only to other
-  attendees who join, and anyone can edit or leave. No intro emails.
+  three topics they're interested in and, optionally, add their LinkedIn. Every
+  topic shows as a circle sized by how many people picked it, with their own
+  topics in dark green. Tapping a circle lists everyone in it (`/meet#bigquery`),
+  and tapping someone opens their LinkedIn to message them and meet up. Answers
+  are shown only to other attendees who join, and anyone can edit or leave. No
+  intro emails.
 - **Sponsors**.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
   other AI tools. They sign in through Clerk, then can ask about talks,
@@ -53,7 +55,8 @@ src/pages/             Astro pages and API routes
 src/mcp/server.ts      MCP tools for a signed-in attendee (stateless)
 src/lib/mcp-auth.ts    MCP sign-in: OAuth discovery and Clerk token checks
 src/lib/insights.ts    Queries behind the analytics page
-src/lib/matching.ts    People by topic and LinkedIn links (pure functions, tested)
+src/lib/matching.ts    Topic counts, people by topic and LinkedIn links (pure, tested)
+src/lib/topic-layout.ts  Where the Meet topic circles go (d3-force)
 src/lib/clerk.ts       Clerk Backend API client and who's an admin
 src/lib/schedule-*.ts  Main-site schedule parser and the hourly sync
 src/components/        React islands (map, lists, schedule) and the header
@@ -165,7 +168,7 @@ people ask the AI assistant.
 signed in), `path` and JSON `props`. Event types: `page_view`, `place_view`,
 `map_button_click`, `session_save`, `session_unsave`, `place_save`,
 `place_unsave`, `mcp_modal_open`, `mcp_url_copy`, `mcp_tool_call`,
-`match_join`, `match_linkedin_click`, `admin_action`. For example:
+`match_join`, `match_topic_open`, `match_linkedin_click`, `admin_action`. For example:
 
 ```bash
 npx wrangler d1 execute DB --remote --command \
