@@ -14,8 +14,8 @@ Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
 - **Places**: curated restaurants, bars, coffee, hotels and things to do, as a
   map (`/map`) or a list (`/locations`), with Google Maps and Apple Maps
   directions.
-- **Meet** (`/meet`): signed-in attendees give their name and title, pick the
-  topics they're interested in and, optionally, add their LinkedIn. For each of
+- **Meet** (`/meet`): signed-in attendees give their name and title, pick up to
+  three topics they're interested in and, optionally, add their LinkedIn. For each of
   their topics they see everyone else who picked it; tapping someone opens
   their LinkedIn to message them and meet up. Answers are shown only to other
   attendees who join, and anyone can edit or leave. No intro emails.

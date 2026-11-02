@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TOPICS } from "@/data/topics";
+import { MAX_TOPICS, TOPICS } from "@/data/topics";
 import type { Profile } from "@/lib/matching";
 
 type Answers = { name: string; title: string; topics: string[]; linkedin: string };
@@ -37,12 +37,17 @@ export function ProfileForm({ initial, suggestedName, onSaved, onCancel }: Profi
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const set = <K extends keyof Answers>(key: K, value: Answers[K]) => setAnswers((a) => ({ ...a, [key]: value }));
-  const toggle = (id: string) => set("topics", answers.topics.includes(id) ? answers.topics.filter((t) => t !== id) : [...answers.topics, id]);
+  const toggle = (id: string) =>
+    set("topics", answers.topics.includes(id) ? answers.topics.filter((t) => t !== id) : answers.topics.length < MAX_TOPICS ? [...answers.topics, id] : answers.topics);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!answers.topics.length) {
       setError("Pick at least one topic so we can find your people.");
+      return;
+    }
+    if (answers.topics.length > MAX_TOPICS) {
+      setError(`Pick up to ${MAX_TOPICS} topics.`);
       return;
     }
     setSaving(true);
@@ -74,19 +79,21 @@ export function ProfileForm({ initial, suggestedName, onSaved, onCancel }: Profi
         <h2 id="topics-label" className="text-sm font-medium text-foreground">
           Topics you're interested in
         </h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">Pick as many as you like. You'll see who else picked each one.</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">Pick up to {MAX_TOPICS}. You'll see who else picked each one.</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {TOPICS.map((t) => {
             const on = answers.topics.includes(t.id);
+            const full = !on && answers.topics.length >= MAX_TOPICS;
             return (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => toggle(t.id)}
                 aria-pressed={on}
+                disabled={full}
                 className={`min-h-9 rounded-full border px-3.5 text-sm transition-colors ${
                   on ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground hover:border-primary/60"
-                }`}
+                } ${full ? "cursor-not-allowed opacity-40" : ""}`}
                 data-testid={`topic-${t.id}`}
               >
                 {t.label}

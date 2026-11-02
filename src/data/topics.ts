@@ -21,6 +21,9 @@ export const TOPICS = [
   { id: "careers", label: "Careers & hiring" },
 ] as const;
 
+/** How many topics an attendee can pick. */
+export const MAX_TOPICS = 3;
+
 export type TopicId = (typeof TOPICS)[number]["id"];
 export const TOPIC_IDS = TOPICS.map((t) => t.id) as [TopicId, ...TopicId[]];
 export const topicLabel = (id: string) => TOPICS.find((t) => t.id === id)?.label ?? id;

@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
 import { z } from "zod";
-import { TOPIC_IDS } from "@/data/topics";
+import { MAX_TOPICS, TOPIC_IDS } from "@/data/topics";
 import { getUserId, json } from "@/lib/auth-server";
 import { currentUser, displayName } from "@/lib/clerk";
 import { linkedinUrl } from "@/lib/matching";
@@ -39,6 +39,7 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   if (!parsed.success) return json({ error: "Please check your answers.", issues: parsed.error.issues }, 400);
   const { name, title, topics, linkedin } = parsed.data;
   if (!topics.length) return json({ error: "Pick at least one topic so we can find your people." }, 400);
+  if (new Set(topics).size > MAX_TOPICS) return json({ error: `Pick up to ${MAX_TOPICS} topics.` }, 400);
   const link = linkedin ? linkedinUrl(linkedin) : null;
   if (linkedin && !link) return json({ error: "That doesn't look like a LinkedIn profile. Try linkedin.com/in/yourname." }, 400);
 
