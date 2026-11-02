@@ -1,82 +1,40 @@
 import { describe, expect, it } from "vitest";
-import { describeReason, rankMatches, reasonsToMeet, search, topicGroups, type Profile } from "./matching";
+import { linkedinUrl, peopleByTopic, type Profile } from "./matching";
 
-const person = (userId: string, learnTopics: string[], helpTopics: string[], extra: Partial<Profile> = {}): Profile => ({
-  userId,
-  name: userId,
-  learnTopics,
-  helpTopics,
-  ...extra,
-});
+const person = (userId: string, topics: string[], extra: Partial<Profile> = {}): Profile => ({ userId, name: userId, topics, ...extra });
 
-const me = person("me", ["bigquery", "log-files"], ["python"]);
-const helper = person("helper", [], ["bigquery"]);
-const learner = person("learner", ["python"], []);
-const peer = person("peer", ["log-files"], []);
-const stranger = person("stranger", ["local"], ["agency"]);
+describe("peopleByTopic", () => {
+  const me = person("me", ["log-files", "bigquery"]);
 
-describe("reasonsToMeet", () => {
-  it("finds every overlap, strongest first", () => {
-    expect(reasonsToMeet(me, person("x", ["log-files", "python"], ["bigquery"]))).toEqual([
-      { kind: "can_help", topic: "bigquery" },
-      { kind: "wants_your_help", topic: "python" },
-      { kind: "also_learning", topic: "log-files" },
+  it("lists each of my topics, in the usual order, with everyone else who picked it by name", () => {
+    const others = [person("zoe", ["bigquery", "local"]), person("amy", ["bigquery"]), person("sam", ["log-files"]), me];
+    expect(peopleByTopic(me, others).map((g) => [g.topic, g.people.map((p) => p.userId)])).toEqual([
+      ["bigquery", ["amy", "zoe"]],
+      ["log-files", ["sam"]],
     ]);
   });
 
-  it("counts someone who can help as a helper, not a fellow learner", () => {
-    expect(reasonsToMeet(me, person("x", ["bigquery"], ["bigquery"]))).toEqual([{ kind: "can_help", topic: "bigquery" }]);
+  it("keeps a topic nobody else picked, with no people", () => {
+    expect(peopleByTopic(me, [person("x", ["local"])])).toEqual([
+      { topic: "bigquery", label: "BigQuery", people: [] },
+      { topic: "log-files", label: "Log files", people: [] },
+    ]);
   });
 });
 
-describe("rankMatches", () => {
-  it("ranks helpers above people who want your help, above fellow learners", () => {
-    const ranked = rankMatches(me, [peer, stranger, learner, helper, me]);
-    expect(ranked.map((m) => m.person.userId)).toEqual(["helper", "learner", "peer"]);
+describe("linkedinUrl", () => {
+  it("accepts a full link, one without https, or a handle", () => {
+    expect(linkedinUrl("https://www.linkedin.com/in/jroakes/")).toBe("https://www.linkedin.com/in/jroakes");
+    expect(linkedinUrl("linkedin.com/in/jroakes?utm_source=share")).toBe("https://www.linkedin.com/in/jroakes");
+    expect(linkedinUrl(" jroakes ")).toBe("https://www.linkedin.com/in/jroakes");
+    expect(linkedinUrl("@patrick-stox")).toBe("https://www.linkedin.com/in/patrick-stox");
   });
 
-  it("leaves out people with nothing in common, and yourself", () => {
-    const ranked = rankMatches(me, [stranger, me]);
-    expect(ranked).toEqual([]);
-  });
-
-  it("respects the limit", () => {
-    expect(rankMatches(me, [helper, learner, peer], 2)).toHaveLength(2);
-  });
-});
-
-describe("topicGroups", () => {
-  it("groups people by topic, biggest first, without counting anyone twice", () => {
-    const groups = topicGroups([helper, peer, person("both", ["bigquery"], ["bigquery"]), person("x", ["bigquery"], [])]);
-    expect(groups[0]).toMatchObject({ topic: "bigquery", size: 3 });
-    expect(groups[0].helpers.map((p) => p.userId)).toEqual(["helper", "both"]);
-    expect(groups[0].learners.map((p) => p.userId)).toEqual(["x"]);
-    expect(groups.map((g) => g.topic)).toEqual(["bigquery", "log-files"]);
-  });
-});
-
-describe("search", () => {
-  const people = [helper, peer, person("writer", [], [], { workingOn: "Moving our sitemaps to the edge with Cloudflare Workers" })];
-
-  it("finds a topic by name and the people in it", () => {
-    expect(search("BigQuery", people)).toEqual({ topic: "bigquery", people: [helper] });
-    expect(search("log file analysis", people).topic).toBe("log-files");
-  });
-
-  it("finds people who mention the words in their answers", () => {
-    const result = search("cloudflare workers", people);
-    expect(result.people.map((p) => p.userId)).toEqual(["writer"]);
-  });
-
-  it("finds nothing for an empty query", () => {
-    expect(search("  ", people)).toEqual({ topic: null, people: [] });
-  });
-});
-
-describe("describeReason", () => {
-  it("reads naturally", () => {
-    expect(describeReason({ kind: "can_help", topic: "bigquery" })).toBe("Can help you with BigQuery");
-    expect(describeReason({ kind: "wants_your_help", topic: "python" })).toBe("Wants help with Python & automation");
-    expect(describeReason({ kind: "also_learning", topic: "log-files" })).toBe("Also learning Log files");
+  it("turns down anything that isn't a LinkedIn profile", () => {
+    expect(linkedinUrl("https://example.com/in/jroakes")).toBeNull();
+    expect(linkedinUrl("linkedin.com.example.com/in/x")).toBeNull();
+    expect(linkedinUrl("javascript:alert(1)")).toBeNull();
+    expect(linkedinUrl("https://linkedin.com/")).toBeNull();
+    expect(linkedinUrl("find me at lunch")).toBeNull();
   });
 });

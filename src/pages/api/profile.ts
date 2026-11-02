@@ -4,35 +4,30 @@ import { z } from "zod";
 import { TOPIC_IDS } from "@/data/topics";
 import { getUserId, json } from "@/lib/auth-server";
 import { currentUser, displayName } from "@/lib/clerk";
+import { linkedinUrl } from "@/lib/matching";
 import { deleteProfile, getProfile, saveProfile } from "@/lib/profiles";
 
 export const prerender = false;
 
-const text = (max: number) => z.string().trim().max(max).optional();
-const topics = z.array(z.enum(TOPIC_IDS)).max(6);
 const profileSchema = z.object({
   name: z.string().trim().min(1).max(80),
-  role: text(120),
-  workingOn: text(400),
-  wantToLearn: text(400),
-  canHelp: text(400),
-  learnTopics: topics,
-  helpTopics: topics,
-  contact: text(160),
+  title: z.string().trim().max(120).optional(),
+  topics: z.array(z.enum(TOPIC_IDS)).max(TOPIC_IDS.length),
+  linkedin: z.string().trim().max(200).optional(),
 });
 
-/** The signed-in attendee's matchmaking profile (or null), plus their name from their account. */
+/** The signed-in attendee's Meet profile (or null), plus their name from their account. */
 export const GET: APIRoute = async ({ locals }) => {
   const userId = getUserId(locals);
-  if (!userId) return json({ error: "Sign in to use matchmaking." }, 401);
+  if (!userId) return json({ error: "Sign in to meet people." }, 401);
   const [profile, user] = await Promise.all([getProfile(env.DB, userId), currentUser(locals)]);
   return json({ profile, suggestedName: user ? displayName(user) : "" });
 };
 
-/** Joins matchmaking or updates the attendee's answers. */
+/** Joins the Meet page or updates the attendee's answers. */
 export const PUT: APIRoute = async ({ request, locals }) => {
   const userId = getUserId(locals);
-  if (!userId) return json({ error: "Sign in to use matchmaking." }, 401);
+  if (!userId) return json({ error: "Sign in to meet people." }, 401);
 
   let body: unknown;
   try {
@@ -42,20 +37,21 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   }
   const parsed = profileSchema.safeParse(body);
   if (!parsed.success) return json({ error: "Please check your answers.", issues: parsed.error.issues }, 400);
-  if (!parsed.data.learnTopics.length && !parsed.data.helpTopics.length) {
-    return json({ error: "Pick at least one topic so we can find your people." }, 400);
-  }
+  const { name, title, topics, linkedin } = parsed.data;
+  if (!topics.length) return json({ error: "Pick at least one topic so we can find your people." }, 400);
+  const link = linkedin ? linkedinUrl(linkedin) : null;
+  if (linkedin && !link) return json({ error: "That doesn't look like a LinkedIn profile. Try linkedin.com/in/yourname." }, 400);
 
   const user = await currentUser(locals);
-  const profile = { userId, imageUrl: user?.imageUrl ?? null, ...parsed.data };
+  const profile = { userId, name, title, topics: [...new Set(topics)], linkedin: link, imageUrl: user?.imageUrl ?? null };
   await saveProfile(env.DB, profile);
   return json({ profile });
 };
 
-/** Leaves matchmaking: the attendee's answers are deleted and no longer shown. */
+/** Leaves the Meet page: the attendee's answers are deleted and no longer shown. */
 export const DELETE: APIRoute = async ({ locals }) => {
   const userId = getUserId(locals);
-  if (!userId) return json({ error: "Sign in to use matchmaking." }, 401);
+  if (!userId) return json({ error: "Sign in to meet people." }, 401);
   await deleteProfile(env.DB, userId);
   return new Response(null, { status: 204 });
 };

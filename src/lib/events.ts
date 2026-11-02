@@ -13,7 +13,7 @@ export const CLIENT_EVENT_TYPES = [
   "mcp_modal_open",
   "mcp_url_copy",
   "match_join",
-  "match_search",
+  "match_linkedin_click",
 ] as const;
 
 const propValue = z.union([z.string().max(300), z.number(), z.boolean()]);

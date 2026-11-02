@@ -40,7 +40,7 @@ const CONFIRM: Record<Exclude<Action, "unblock">, { title: string; body: (name: 
   delete: {
     title: "Delete this user?",
     body: (name) =>
-      `${name}'s account, saved talks and places, and matchmaking answers will be deleted. This can't be undone. They could still sign up again with the same email.`,
+      `${name}'s account, saved talks and places, and Meet answers will be deleted. This can't be undone. They could still sign up again with the same email.`,
     button: "Delete user",
     destructive: true,
   },
@@ -128,7 +128,7 @@ export default function AdminUsers({ users: initial }: { users: AdminUserRow[] }
                   </div>
                   <div>
                     <dt className="text-xs text-muted-foreground">Saved</dt>
-                    <dd className="text-foreground" title={u.inMatchmaking ? "In matchmaking" : undefined}>
+                    <dd className="text-foreground" title={u.inMatchmaking ? "On the Meet page" : undefined}>
                       {u.talks + u.places}
                       {u.inMatchmaking && <span className="ml-1.5 text-xs text-primary">· Meet</span>}
                     </dd>

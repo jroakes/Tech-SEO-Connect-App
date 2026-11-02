@@ -14,12 +14,11 @@ Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
 - **Places**: curated restaurants, bars, coffee, hotels and things to do, as a
   map (`/map`) or a list (`/locations`), with Google Maps and Apple Maps
   directions.
-- **Meet** (`/meet`): signed-in attendees answer a few questions (what they're
-  working on, what they want to learn, what they can help with, and topics for
-  each). The app suggests people to meet and shows each topic as a bubble of
-  the people there for it; tap one or search to see who can help and who's
-  learning too. Answers are shown only to other attendees who join, and anyone
-  can edit or leave. No intro emails.
+- **Meet** (`/meet`): signed-in attendees give their name and title, pick the
+  topics they're interested in and, optionally, add their LinkedIn. For each of
+  their topics they see everyone else who picked it; tapping someone opens
+  their LinkedIn to message them and meet up. Answers are shown only to other
+  attendees who join, and anyone can edit or leave. No intro emails.
 - **Sponsors**.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
   other AI tools. They sign in through Clerk, then can ask about talks,
@@ -40,26 +39,26 @@ src/worker.ts          Worker entry: /mcp -> MCP server (after the sign-in check
 src/pages/             Astro pages and API routes
   schedule.astro       Rendered per request from D1
   my-conference.astro  Rendered per request from D1 (/my-schedule redirects here)
-  meet.astro           Matchmaking (rendered in the browser)
+  meet.astro           Meet people (rendered in the browser)
   admin/index.astro    Admins' users list, from Clerk
   admin/analytics.astro  Admins' analytics, rendered per request from D1
   map / locations /    Prerendered at build time (served free as static assets)
   sponsors .astro
   api/events.ts        POST batches of analytics events
   api/saved.ts         GET/POST a signed-in user's saved talks or places
-  api/profile.ts       GET/PUT/DELETE the signed-in user's matchmaking answers
-  api/matches.ts       GET everyone in matchmaking (only for those who joined)
+  api/profile.ts       GET/PUT/DELETE the signed-in user's Meet answers
+  api/matches.ts       GET everyone on Meet (only for those who joined)
   api/me.ts            GET whether the signed-in user is an admin
   api/admin/users.ts   POST admin actions on a user
 src/mcp/server.ts      MCP tools for a signed-in attendee (stateless)
 src/lib/mcp-auth.ts    MCP sign-in: OAuth discovery and Clerk token checks
 src/lib/insights.ts    Queries behind the analytics page
-src/lib/matching.ts    Who to meet and the topic groups (pure functions, tested)
+src/lib/matching.ts    People by topic and LinkedIn links (pure functions, tested)
 src/lib/clerk.ts       Clerk Backend API client and who's an admin
 src/lib/schedule-*.ts  Main-site schedule parser and the hourly sync
 src/components/        React islands (map, lists, schedule) and the header
 src/data/              Conference details, bundled fallback schedule, places,
-                       sponsors, matchmaking topics
+                       sponsors, Meet topics
 migrations/            D1 schema
 content/               Source files for places (KML export and narratives)
 ```
@@ -152,7 +151,7 @@ search. For each user an admin can:
 - **Block**: bans them in Clerk, which signs them out and stops them signing
   in. **Unblock** reverses it. Their saves stay.
 - **Delete**: deletes the Clerk user and their saved talks, saved places and
-  matchmaking answers. Their past events stay, without the user ID.
+  Meet answers. Their past events stay, without the user ID.
 
 Admins can't remove, block or delete organizers or themselves. Each action is
 logged as an `admin_action` event.
@@ -166,7 +165,7 @@ people ask the AI assistant.
 signed in), `path` and JSON `props`. Event types: `page_view`, `place_view`,
 `map_button_click`, `session_save`, `session_unsave`, `place_save`,
 `place_unsave`, `mcp_modal_open`, `mcp_url_copy`, `mcp_tool_call`,
-`match_join`, `match_search`, `admin_action`. For example:
+`match_join`, `match_linkedin_click`, `admin_action`. For example:
 
 ```bash
 npx wrangler d1 execute DB --remote --command \

@@ -1,5 +1,5 @@
-// Topics attendees pick in matchmaking, as things they want to learn or can
-// help with. IDs are stored in profiles, so keep them stable.
+// Topics attendees pick on the Meet page as things they're interested in.
+// IDs are stored in profiles, so keep them stable.
 export const TOPICS = [
   { id: "ai-search", label: "AI search & LLMs" },
   { id: "bigquery", label: "BigQuery" },

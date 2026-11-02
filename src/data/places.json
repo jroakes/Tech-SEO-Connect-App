@@ -369,6 +369,14 @@
     "narrative": "A Durham institution since 1981, Ninth Street Bakery bakes organic breads and pastries at its downtown cafe and roasts its own coffee. Mornings mean croissants, scones and cinnamon buns; at lunch, rotating sandwiches on house bread, like curried chicken salad or roasted turkey, come out fast. Low-key, with outdoor tables, and a handy stop between the hotels and the venue."
   },
   {
+    "id": "alimentari-at-mothers-sons",
+    "name": "Alimentari at Mothers & Sons",
+    "category": "Lunch",
+    "lat": 35.9968828,
+    "lng": -78.9043686,
+    "narrative": "Alimentari is the casual sister to Mothers & Sons Trattoria, right next door on West Chapel Hill Street: an Italian deli, market and coffee bar in the old Lucky's Delicatessen space. Order Italian sandwiches on bread baked in-house every day, a salad or fresh pasta, then browse the case of Italian meats and grab a bottle of wine to go. Lunch runs 11 AM to 3 PM on weekdays, a short walk from Bay 7 during the long lunch break."
+  },
+  {
     "id": "viceroy",
     "name": "Viceroy",
     "category": "Dinner",

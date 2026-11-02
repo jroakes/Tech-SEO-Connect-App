@@ -1,5 +1,6 @@
-import { MessageCircle } from "lucide-react";
-import { describeReason, type Profile, type Reason } from "@/lib/matching";
+import { ExternalLink } from "lucide-react";
+import { logEvent } from "@/lib/analytics";
+import type { Profile } from "@/lib/matching";
 
 export function Avatar({ profile, size = 40 }: { profile: Pick<Profile, "name" | "imageUrl">; size?: number }) {
   const initials = profile.name
@@ -22,47 +23,39 @@ export function Avatar({ profile, size = 40 }: { profile: Pick<Profile, "name" |
   );
 }
 
-/** An attendee in matchmaking: who they are, why to meet, and how to find them. */
-export function PersonCard({ person, reasons = [] }: { person: Profile; reasons?: Reason[] }) {
-  return (
-    <div className="flex h-full flex-col gap-3 rounded-md border border-border bg-card p-4" data-testid={`card-person-${person.userId}`}>
-      <div className="flex items-center gap-3">
-        <Avatar profile={person} />
-        <div className="min-w-0">
-          <div className="truncate font-semibold text-foreground">{person.name}</div>
-          {person.role && <div className="truncate text-sm text-muted-foreground">{person.role}</div>}
-        </div>
+/** An attendee under one of your topics. Tapping someone with a LinkedIn opens it, to message them. */
+export function PersonCard({ person, topic }: { person: Profile; topic: string }) {
+  const body = (
+    <>
+      <Avatar profile={person} />
+      <div className="min-w-0 flex-1">
+        <div className="truncate font-semibold text-foreground">{person.name}</div>
+        {person.title && <div className="truncate text-sm text-muted-foreground">{person.title}</div>}
+        {person.linkedin && (
+          <div className="mt-1 flex items-center gap-1 text-sm font-medium text-primary">
+            Message on LinkedIn
+            <ExternalLink className="h-3.5 w-3.5" />
+          </div>
+        )}
       </div>
-
-      {reasons.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {reasons.slice(0, 3).map((r) => (
-            <span key={`${r.kind}-${r.topic}`} className="rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-              {describeReason(r)}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {person.workingOn && (
-        <p className="line-clamp-3 text-sm leading-relaxed text-foreground">
-          <span className="text-muted-foreground">Working on </span>
-          {person.workingOn}
-        </p>
-      )}
-      {person.canHelp && (
-        <p className="line-clamp-2 text-sm leading-relaxed text-foreground">
-          <span className="text-muted-foreground">Can help with </span>
-          {person.canHelp}
-        </p>
-      )}
-
-      {person.contact && (
-        <div className="mt-auto flex items-start gap-2 border-t border-border pt-3 text-sm text-foreground">
-          <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-          <span className="break-words">{person.contact}</span>
-        </div>
-      )}
+    </>
+  );
+  const className = "flex items-center gap-3 rounded-md border border-border bg-card p-4";
+  return person.linkedin ? (
+    <a
+      href={person.linkedin}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => logEvent("match_linkedin_click", { topic })}
+      className={`${className} transition-colors hover:border-primary/60`}
+      aria-label={`${person.name} on LinkedIn`}
+      data-testid={`card-person-${person.userId}`}
+    >
+      {body}
+    </a>
+  ) : (
+    <div className={className} data-testid={`card-person-${person.userId}`}>
+      {body}
     </div>
   );
 }
