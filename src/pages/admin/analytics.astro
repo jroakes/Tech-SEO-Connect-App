@@ -1,6 +1,7 @@
 ---
 // Admin analytics: what attendees view, save and get directions to, and how
-// they use matchmaking and the AI assistant connector.
+// they use Meet and the AI assistant connector. Every event can be downloaded
+// from /api/admin/events.
 import { env } from "cloudflare:workers";
 import Layout from "@/layouts/Layout.astro";
 import AdminHeader from "@/components/AdminHeader.astro";
@@ -49,6 +50,21 @@ const tiles = data
     ]
   : [];
 const maxOf = (values: number[]) => Math.max(1, ...values);
+
+const meet = data?.meet;
+const meetStats = meet
+  ? [
+      { label: "On Meet now", value: meet.people, note: `${n(meet.withLinkedin)} with LinkedIn` },
+      { label: "Joined", value: meet.joins },
+      { label: "Changed answers", value: meet.updates },
+      { label: "Left", value: meet.leaves },
+      { label: "Topics opened", value: meet.topicOpens },
+      { label: "LinkedIn taps", value: meet.linkedinTaps },
+    ]
+  : [];
+// Two side-by-side tables on wide screens.
+const meetTopics = meet?.topics ?? [];
+const meetHalves = [meetTopics.slice(0, Math.ceil(meetTopics.length / 2)), meetTopics.slice(Math.ceil(meetTopics.length / 2))].filter((h) => h.length);
 ---
 
 <Layout title="Admin: Analytics" noindex>
@@ -62,6 +78,13 @@ const maxOf = (values: number[]) => Math.max(1, ...values);
             <AdminHeader current="analytics" />
             <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p class="text-sm text-muted-foreground">What attendees view, save and get directions to. Times are Eastern.</p>
+              <div class="flex flex-wrap items-center gap-3">
+              <span class="text-sm text-muted-foreground">
+                Download every event:{" "}
+                <a href="/api/admin/events?format=csv" class="font-medium text-primary hover:underline" data-testid="link-events-csv">CSV</a>
+                {" · "}
+                <a href="/api/admin/events?format=json" class="font-medium text-primary hover:underline" data-testid="link-events-json">JSON</a>
+              </span>
               <nav class="inline-flex self-start rounded-md bg-muted p-1 sm:self-auto" aria-label="Time range">
                 {RANGES.map((r) => (
                   <a
@@ -73,6 +96,7 @@ const maxOf = (values: number[]) => Math.max(1, ...values);
                   </a>
                 ))}
               </nav>
+              </div>
             </div>
 
             <section class="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6" aria-label="Totals">
@@ -135,6 +159,50 @@ const maxOf = (values: number[]) => Math.max(1, ...values);
                   </tbody>
                 </table>
               </details>
+            </section>
+
+            <section class="mb-6 rounded-md border border-border bg-card p-4" aria-labelledby="meet-title" data-testid="section-meet">
+              <div class="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h2 id="meet-title" class="text-base font-semibold text-foreground">Meet</h2>
+                <p class="text-xs text-muted-foreground">On Meet and People are as of now; everything else is for the selected range.</p>
+              </div>
+              <div class="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+                {meetStats.map((s) => (
+                  <div class="rounded-md bg-muted/60 p-3">
+                    <div class="text-xs font-medium text-muted-foreground">{s.label}</div>
+                    <div class="mt-0.5 text-xl font-bold tabular-nums text-foreground">{n(s.value)}</div>
+                    {s.note && <div class="text-xs text-muted-foreground">{s.note}</div>}
+                  </div>
+                ))}
+              </div>
+              {meetHalves.length ? (
+                <div class="grid gap-x-8 lg:grid-cols-2">
+                  {meetHalves.map((half, i) => (
+                    <table class="w-full text-left text-sm">
+                      <thead class={i > 0 ? "max-lg:hidden" : ""}>
+                        <tr class="text-xs text-muted-foreground">
+                          <th class="pb-2 font-medium">Topic</th>
+                          <th class="pb-2 pl-3 text-right font-medium">People</th>
+                          <th class="pb-2 pl-3 text-right font-medium">Opens</th>
+                          <th class="pb-2 pl-3 text-right font-medium">LinkedIn</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {half.map((t) => (
+                          <tr class="border-t border-border">
+                            <td class="py-2 pr-2 text-foreground">{t.label}</td>
+                            <td class="py-2 pl-3 text-right font-semibold tabular-nums text-foreground">{n(t.people)}</td>
+                            <td class="py-2 pl-3 text-right tabular-nums text-foreground">{n(t.opens)}</td>
+                            <td class="py-2 pl-3 text-right tabular-nums text-muted-foreground">{n(t.taps)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ))}
+                </div>
+              ) : (
+                <p class="py-6 text-center text-sm text-muted-foreground">Nobody has joined Meet yet.</p>
+              )}
             </section>
 
             <div class="grid items-start gap-6 lg:grid-cols-2">

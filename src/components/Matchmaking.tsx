@@ -83,8 +83,7 @@ export default function Matchmaking() {
         <ProfileForm
           initial={state.profile}
           suggestedName={state.suggestedName}
-          onSaved={async (profile) => {
-            if (!state.profile) logEvent("match_join", { topics: profile.topics.length, linkedin: !!profile.linkedin });
+          onSaved={async () => {
             await loadMatches();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}

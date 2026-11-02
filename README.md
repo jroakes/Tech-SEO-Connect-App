@@ -53,6 +53,7 @@ src/pages/             Astro pages and API routes
   api/matches.ts       GET everyone on Meet (only for those who joined)
   api/me.ts            GET whether the signed-in user is an admin
   api/admin/users.ts   POST admin actions on a user
+  api/admin/events.ts  GET every event as CSV or JSON (admins only)
 src/mcp/server.ts      MCP tools for a signed-in attendee (stateless)
 src/lib/mcp-auth.ts    MCP sign-in: OAuth discovery and Clerk token checks
 src/lib/insights.ts    Queries behind the analytics page
@@ -162,14 +163,19 @@ logged as an `admin_action` event.
 
 **Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
 page views, signed-in attendees, directions taps, saves and AI assistant use,
-page views over time, the places people go, the most-saved talks, and what
-people ask the AI assistant.
+page views over time, Meet (who's on it, joins, changed answers, leaves,
+topic opens and LinkedIn taps, by topic), the places people go, the
+most-saved talks, and what people ask the AI assistant. **Download every
+event** links there give the whole `events` table as CSV or JSON
+(`/api/admin/events?format=csv|json`, admins only) for another tool.
 
 `events` rows hold `type`, `ts`, `anon_id` (per device), `user_id` (when
 signed in), `path` and JSON `props`. Event types: `page_view`, `place_view`,
 `map_button_click`, `session_save`, `session_unsave`, `place_save`,
 `place_unsave`, `mcp_modal_open`, `mcp_url_copy`, `mcp_tool_call`,
-`match_join`, `match_topic_open`, `match_linkedin_click`, `admin_action`. For example:
+`match_join`, `match_update`, `match_leave` (logged by the server when someone
+joins Meet, changes their answers or leaves), `match_topic_open`,
+`match_linkedin_click`, `admin_action`. For example:
 
 ```bash
 npx wrangler d1 execute DB --remote --command \

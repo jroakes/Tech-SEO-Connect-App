@@ -1,5 +1,6 @@
-// Queries for the organizers' analytics page (src/pages/analytics.astro),
-// over the events table and the saved talks and places.
+// Queries for the organizers' analytics page (src/pages/admin/analytics.astro),
+// over the events table, the saved talks and places, and Meet profiles.
+import { TOPICS } from "../data/topics";
 
 export type Range = "24h" | "7d" | "all";
 
@@ -28,6 +29,19 @@ export interface Insights {
   aiSearches: { query: string; count: number }[];
   directionsByApp: { google: number; apple: number };
   connector: { opened: number; copied: number };
+  meet: {
+    /** Who's on Meet right now, whatever the range. */
+    people: number;
+    withLinkedin: number;
+    /** Actions in the range. */
+    joins: number;
+    updates: number;
+    leaves: number;
+    topicOpens: number;
+    linkedinTaps: number;
+    /** Topics anyone picked or opened: picked now, and opens and LinkedIn taps in the range. */
+    topics: { topic: string; label: string; people: number; opens: number; taps: number }[];
+  };
 }
 
 const TIME_ZONE = "America/New_York";
@@ -111,6 +125,27 @@ export async function getInsights(db: D1Database, range: Range, now = new Date()
     ),
   ]);
 
+  const [meetPeople, picked, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps] = await Promise.all([
+    one<{ people: number; withLinkedin: number }>("SELECT COUNT(*) AS people, COALESCE(SUM(linkedin IS NOT NULL), 0) AS withLinkedin FROM profiles"),
+    all<{ topic: string; n: number }>("SELECT value AS topic, COUNT(*) AS n FROM profiles, json_each(profiles.topics) GROUP BY value"),
+    all<{ topic: string; opens: number; taps: number }>(
+      `SELECT json_extract(props, '$.topic') AS topic, SUM(type = 'match_topic_open') AS opens, SUM(type = 'match_linkedin_click') AS taps
+       FROM events WHERE type IN ('match_topic_open', 'match_linkedin_click') AND ts >= ? GROUP BY topic`,
+      since,
+    ),
+    ofType("match_join"),
+    ofType("match_update"),
+    ofType("match_leave"),
+    ofType("match_topic_open"),
+    ofType("match_linkedin_click"),
+  ]);
+  const meetTopics = TOPICS.map(({ id, label }) => {
+    const activity = meetActivity.find((a) => a.topic === id);
+    return { topic: id, label, people: picked.find((p) => p.topic === id)?.n ?? 0, opens: activity?.opens ?? 0, taps: activity?.taps ?? 0 };
+  })
+    .filter((t) => t.people || t.opens || t.taps)
+    .sort((a, b) => b.people - a.people || b.opens - a.opens || a.label.localeCompare(b.label));
+
   return {
     totals: { visitors, pageViews, signedIn, directions, talkSaves, placeSaves, aiRequests },
     activity: fillBuckets(activityRows, range, unit, now, offset),
@@ -125,6 +160,16 @@ export async function getInsights(db: D1Database, range: Range, now = new Date()
       apple: apps.find((a) => a.app === "apple_maps")?.n ?? 0,
     },
     connector: { opened, copied },
+    meet: {
+      people: meetPeople?.people ?? 0,
+      withLinkedin: meetPeople?.withLinkedin ?? 0,
+      joins,
+      updates,
+      leaves,
+      topicOpens,
+      linkedinTaps,
+      topics: meetTopics,
+    },
   };
 }
 

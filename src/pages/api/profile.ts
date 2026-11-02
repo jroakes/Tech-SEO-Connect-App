@@ -4,6 +4,7 @@ import { z } from "zod";
 import { MAX_TOPICS, TOPIC_IDS } from "@/data/topics";
 import { getUserId, json } from "@/lib/auth-server";
 import { currentUser, displayName } from "@/lib/clerk";
+import { insertEvents } from "@/lib/db";
 import { linkedinUrl } from "@/lib/matching";
 import { deleteProfile, getProfile, saveProfile } from "@/lib/profiles";
 
@@ -15,6 +16,11 @@ const profileSchema = z.object({
   topics: z.array(z.enum(TOPIC_IDS)).max(TOPIC_IDS.length),
   linkedin: z.string().trim().max(200).optional(),
 });
+
+// Joining, changing answers and leaving are logged here rather than in the
+// browser, so none are missed. A failed log never fails the request.
+const logMeet = (type: string, userId: string, props?: Record<string, unknown>) =>
+  insertEvents(env.DB, [{ type, ts: Date.now(), userId, path: "/meet", props }]).catch((err) => console.error(`Couldn't log ${type}`, err));
 
 /** The signed-in attendee's Meet profile (or null), plus their name from their account. */
 export const GET: APIRoute = async ({ locals }) => {
@@ -43,9 +49,10 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   const link = linkedin ? linkedinUrl(linkedin) : null;
   if (linkedin && !link) return json({ error: "That doesn't look like a LinkedIn profile. Try linkedin.com/in/yourname." }, 400);
 
-  const user = await currentUser(locals);
+  const [user, existing] = await Promise.all([currentUser(locals), getProfile(env.DB, userId)]);
   const profile = { userId, name, title, topics: [...new Set(topics)], linkedin: link, imageUrl: user?.imageUrl ?? null };
   await saveProfile(env.DB, profile);
+  await logMeet(existing ? "match_update" : "match_join", userId, { topics: profile.topics.join(","), topic_count: profile.topics.length, linkedin: !!link });
   return json({ profile });
 };
 
@@ -54,5 +61,6 @@ export const DELETE: APIRoute = async ({ locals }) => {
   const userId = getUserId(locals);
   if (!userId) return json({ error: "Sign in to meet people." }, 401);
   await deleteProfile(env.DB, userId);
+  await logMeet("match_leave", userId);
   return new Response(null, { status: 204 });
 };
