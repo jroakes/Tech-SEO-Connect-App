@@ -5,7 +5,10 @@ import { z } from "zod";
 import placesData from "@/data/places.json";
 import { sponsors } from "@/data/sponsors";
 import { event } from "@/data/event";
+import { TOPICS, topicLabel } from "@/data/topics";
 import { getSavedIds, getSchedule, insertEvents, updateSaved } from "@/lib/db";
+import { peopleIn, sharingATopic, topicCounts, type Profile } from "@/lib/matching";
+import { listProfiles } from "@/lib/profiles";
 import { formatDuration, getScheduleDays } from "@/lib/sessions";
 import type { Place, Session } from "@/lib/types";
 
@@ -43,6 +46,18 @@ function placeSummary(p: Place) {
   };
 }
 
+// What Meet shows of someone: no account IDs or photos.
+function personSummary(p: Profile, sharedTopics: string[]) {
+  return {
+    name: p.name,
+    ...(p.title ? { title: p.title } : {}),
+    ...(p.linkedin ? { linkedin: p.linkedin } : {}),
+    sharedTopics: sharedTopics.map(topicLabel),
+  };
+}
+
+const NOT_ON_MEET = `This attendee hasn't joined Meet yet. They can pick up to three topics at ${event.appUrl}/meet, and then see who else picked them.`;
+
 async function logToolCall(userId: string, tool: string, props: Record<string, unknown> = {}) {
   try {
     await insertEvents(env.DB, [{ type: "mcp_tool_call", ts: Date.now(), userId, path: "/mcp", props: { tool, ...props } }]);
@@ -58,7 +73,7 @@ function createServer(userId: string) {
   const server = new McpServer(
     { name: "tech-seo-connect", version: "1.0.0" },
     {
-      instructions: `Information about the ${event.name} conference in ${event.city}, ${event.dateRange}: the schedule of talks and speakers, recommended restaurants, bars, coffee, hotels and things to do near the venue, and the sponsors. Use get_event_info for dates and venue, get_schedule or search_sessions for talks, find_places for local recommendations and list_sponsors for sponsors. The attendee is signed in: get_my_conference shows the talks and places they've saved (also in the app at ${event.appUrl}), and save_to_my_conference and remove_from_my_conference change it.`,
+      instructions: `Information about the ${event.name} conference in ${event.city}, ${event.dateRange}: the schedule of talks and speakers, recommended restaurants, bars, coffee, hotels and things to do near the venue, and the sponsors. Use get_event_info for dates and venue, get_schedule or search_sessions for talks, find_places for local recommendations and list_sponsors for sponsors. The attendee is signed in: get_my_conference shows the talks and places they've saved (also in the app at ${event.appUrl}), and save_to_my_conference and remove_from_my_conference change it. Meet (${event.appUrl}/meet) matches attendees by the topics they're interested in: get_meet_topics shows how many people picked each topic, and find_people_to_meet lists the people who share this attendee's topics, with LinkedIn to message them and meet up. Meet works only once the attendee has joined it in the app.`,
     },
   );
 
@@ -188,6 +203,62 @@ function createServer(userId: string) {
         talks: sessions.filter((s) => talkIds.includes(s.id)).map(sessionSummary),
         places: places.filter((p) => saved.has(p.id)).map(placeSummary),
       });
+    },
+  );
+
+  server.registerTool(
+    "get_meet_topics",
+    {
+      title: "Meet topics",
+      description:
+        "Meet matches attendees by the topics they're interested in. Every topic with how many people picked it, which ones this attendee picked, and their own Meet answers. Only for attendees who've joined Meet in the app.",
+      annotations: READ_ONLY,
+    },
+    async () => {
+      await log("get_meet_topics");
+      const profiles = await listProfiles(env.DB);
+      const me = profiles.find((p) => p.userId === userId);
+      if (!me) return text(NOT_ON_MEET);
+      return text({
+        myAnswers: { name: me.name, ...(me.title ? { title: me.title } : {}), topics: me.topics.map(topicLabel), ...(me.linkedin ? { linkedin: me.linkedin } : {}) },
+        topics: topicCounts(profiles).map((t) => ({ topic: t.label, people: t.count, ...(me.topics.includes(t.topic) ? { mine: true } : {}) })),
+        app: `${event.appUrl}/meet`,
+      });
+    },
+  );
+
+  server.registerTool(
+    "find_people_to_meet",
+    {
+      title: "People to meet",
+      description:
+        "People on Meet who share this attendee's topics, by topic, with their title and LinkedIn so the attendee can message them and meet up at the conference. As in the app, only for attendees who've joined Meet, and only people in topics they picked themselves.",
+      inputSchema: z.object({
+        topic: z.string().max(80).optional().describe("Just one of the attendee's topics, by name (get_meet_topics lists them)"),
+      }),
+      annotations: READ_ONLY,
+    },
+    async ({ topic }) => {
+      await log("find_people_to_meet", topic ? { topic } : {});
+      const profiles = await listProfiles(env.DB);
+      const me = profiles.find((p) => p.userId === userId);
+      if (!me) return text(NOT_ON_MEET);
+      let topics = me.topics;
+      if (topic) {
+        const wanted = topic.trim().toLowerCase();
+        const found = TOPICS.find((t) => t.id === wanted || t.label.toLowerCase() === wanted);
+        if (!found || !me.topics.includes(found.id)) {
+          return text(`Meet shows people only in the attendee's own topics: ${me.topics.map(topicLabel).join(", ") || "none yet"}.`);
+        }
+        topics = [found.id];
+      }
+      const others = sharingATopic(me, profiles);
+      return text(
+        topics.map((t) => ({
+          topic: topicLabel(t),
+          people: peopleIn(t, others).map((p) => personSummary(p, p.topics.filter((x) => me.topics.includes(x)))),
+        })),
+      );
     },
   );
 

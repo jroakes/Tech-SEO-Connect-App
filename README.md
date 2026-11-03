@@ -27,7 +27,8 @@ check-in).
 - **Sponsors**.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
   other AI tools. They sign in through Clerk, then can ask about talks,
-  speakers, sponsors and places, and see or change their My Conference list.
+  speakers, sponsors and places, see or change their My Conference list, and,
+  once they've joined Meet, see the topics and the people who share theirs.
   The **For AI bots** button in the header (a small robot that waves, pre-rendered from a Three.js model into `src/assets/robot-wave.webp`) shows the URL and how to connect.
 - **Event logging**: page views, place views, directions clicks, saves and
   AI assistant use go to the `events` table in D1, alongside GA4.
@@ -182,9 +183,13 @@ names Clerk as the authorization server; the client signs in through Clerk
 and sends the OAuth access token on every request.
 
 Tools: `get_event_info`, `get_schedule`, `search_sessions`, `find_places`,
-`list_sponsors`, plus `get_my_conference`, `save_to_my_conference` and
-`remove_from_my_conference` for the signed-in attendee. Tool calls are logged
-as `mcp_tool_call` events, and saves made through it as save events.
+`list_sponsors`, plus, for the signed-in attendee, `get_my_conference` (their
+saved talks and places), `save_to_my_conference`, `remove_from_my_conference`,
+and for Meet `get_meet_topics` (every topic, how many picked it, and theirs)
+and `find_people_to_meet` (the people who share their topics, with LinkedIn).
+The Meet tools follow the app's rules: only for attendees who've joined Meet,
+and only people in topics they picked. Tool calls are logged as
+`mcp_tool_call` events, and saves made through it as save events.
 
 ## Admin
 

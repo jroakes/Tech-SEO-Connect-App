@@ -89,7 +89,8 @@ export default function AiBotsButton() {
           <DialogTitle className="text-xl">Bring {event.name} into your AI assistant</DialogTitle>
           <DialogDescription className="leading-relaxed">
             Connect Claude, ChatGPT or any assistant that supports MCP. Ask about talks, speakers, sponsors and places to eat, drink and stay.
-            Sign in when it asks, and it can see and update your My Conference list.
+            Sign in when it asks, and it can see and update your My Conference list and, once you've joined Meet, find people who share your
+            topics.
           </DialogDescription>
         </DialogHeader>
 
