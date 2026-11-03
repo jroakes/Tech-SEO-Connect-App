@@ -1,1 +1,0 @@
-- [Database source verification](database-source-verification.md) — workspace connection names do not establish which database serves production.

@@ -5,7 +5,7 @@ import AdminHeader from "@/components/AdminHeader.astro";
 import AdminLocked from "@/components/AdminLocked.astro";
 import CheckIn from "@/components/CheckIn";
 import { getUserId } from "@/lib/auth-server";
-import { guestList, isDemo } from "@/lib/check-in";
+import { isDemo, listFreshness } from "@/lib/check-in";
 import { currentAdmin } from "@/lib/clerk";
 
 export const prerender = false;
@@ -16,7 +16,7 @@ Astro.response.headers.set("Cache-Control", "no-store");
 if (!admin) Astro.response.status = signedIn ? 403 : 401;
 
 // When the guest list last came from Luma, for the page to show.
-const list = admin ? await guestList().catch((err) => (console.error("Couldn't load the Luma guest list", err), null)) : null;
+const freshness = admin ? await listFreshness().catch((err) => (console.error("Couldn't load the Luma guest list", err), null)) : null;
 ---
 
 <Layout title="Admin: Check-in" noindex>
@@ -27,7 +27,7 @@ const list = admin ? await guestList().catch((err) => (console.error("Couldn't l
       ) : (
         <>
           <AdminHeader current="check-in" />
-          <CheckIn client:load demo={isDemo()} freshness={list && { syncedAt: list.syncedAt, guestCount: list.guests.length }} />
+          <CheckIn client:load demo={isDemo()} freshness={freshness} />
         </>
       )
     }

@@ -20,7 +20,7 @@ export interface Guest {
 export function words(text: string | null | undefined): string[] {
   return (text ?? "")
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/['’]/g, "")
     .split(/[^a-z0-9]+/)
@@ -99,8 +99,8 @@ export function matchScore(query: string, guest: Guest): { score: number; shares
   return { score, sharesAName: typed.length > 1 && Math.max(...scores) >= 0.95 };
 }
 
-export const MIN_SCORE = 0.78; // below this, a guest isn't worth showing the AI
-export const MAX_CANDIDATES = 12;
+const MIN_SCORE = 0.78; // below this, a guest isn't worth showing the AI
+const MAX_CANDIDATES = 25; // enough for everyone with a common name
 
 /** The guests worth judging, closest first. */
 export function candidates(query: string, guests: Guest[]): { guest: Guest; score: number }[] {
@@ -114,9 +114,8 @@ export function candidates(query: string, guests: Guest[]): { guest: Guest; scor
 
 /**
  * The one guest whose email or full name is exactly what was typed, or null
- * when nobody or more than one person is. No need to ask the AI then. Some
- * people registered twice and were declined once, so a name that's on one
- * approved registration still counts.
+ * when nobody or more than one registration is (someone who registered twice
+ * gets the list, with any declined one flagged). No need to ask the AI then.
  */
 export function exactMatch(query: string, guests: Guest[]): Guest | null {
   let hits: Guest[];
@@ -127,7 +126,6 @@ export function exactMatch(query: string, guests: Guest[]): Guest | null {
     const typed = words(query).join(" ");
     hits = typed ? guests.filter((g) => words(g.name).join(" ") === typed || words(`${g.firstName ?? ""} ${g.lastName ?? ""}`).join(" ") === typed) : [];
   }
-  if (hits.length > 1) hits = hits.filter((g) => g.status === "approved");
   return hits.length === 1 ? hits[0] : null;
 }
 

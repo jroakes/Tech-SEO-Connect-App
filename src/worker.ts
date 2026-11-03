@@ -20,7 +20,8 @@ export default {
   },
 
   async scheduled(controller, env, ctx) {
+    // The crons in wrangler.jsonc.
     if (controller.cron === "0 * * * *") ctx.waitUntil(syncSchedule(env));
-    else ctx.waitUntil(refreshGuestList());
+    if (controller.cron === "*/10 * 1-7 11 *") ctx.waitUntil(refreshGuestList());
   },
 } satisfies ExportedHandler<Env>;

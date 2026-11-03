@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { z } from "zod";
 import { getUserId, json } from "@/lib/auth-server";
 import { recentAdmin } from "@/lib/clerk";
-import { addWalkIn, checkIn, CheckInError, isDemo, search, undoCheckIn } from "@/lib/check-in";
+import { addWalkIn, checkIn, CheckInError, search, undoCheckIn } from "@/lib/check-in";
 
 export const prerender = false;
 
@@ -31,11 +31,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const req = parsed.data;
 
   try {
-    const demo = isDemo();
-    if (req.action === "search") return json({ demo, ...(await search(req.query, req.single ?? true)) });
-    if (req.action === "check_in") return json({ demo, guest: await checkIn(req.guestId, admin.id) });
-    if (req.action === "undo") return json({ demo, guest: await undoCheckIn(req.guestId) });
-    return json({ demo, ...(await addWalkIn(req.name, req.email.toLowerCase(), admin.id, req.newPerson ?? false)) });
+    if (req.action === "search") return json(await search(req.query, req.single ?? true));
+    if (req.action === "check_in") return json({ guest: await checkIn(req.guestId, admin.id) });
+    if (req.action === "undo") return json({ guest: await undoCheckIn(req.guestId) });
+    return json(await addWalkIn(req.name, req.email.toLowerCase(), admin.id, req.newPerson ?? false));
   } catch (err) {
     if (err instanceof CheckInError) return json({ error: err.message }, 400);
     console.error(`Check-in ${req.action} failed`, err);

@@ -41,8 +41,8 @@ describe("exactMatch", () => {
     expect(exactMatch("Amy Chen", guests)).toBeNull();
   });
 
-  it("ignores a declined second registration", () => {
-    expect(exactMatch("kate lopez", guests)?.id).toBe("kate");
+  it("isn't sure when someone registered twice, even if declined once", () => {
+    expect(exactMatch("kate lopez", guests)).toBeNull();
   });
 
   it("needs the whole name", () => {

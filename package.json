@@ -13,6 +13,7 @@
     "cf-typegen": "wrangler types",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "secrets": "grep -E '^(CLERK_SECRET_KEY|OPENROUTER_API_KEY|LUMA_API_KEY)=' .env | wrangler secret bulk",
     "import:places": "node scripts/import-places.mjs",
     "test": "vitest run"
   },

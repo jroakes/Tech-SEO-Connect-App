@@ -11,18 +11,19 @@ const STATUS: Record<string, string> = {
   invited: "Invited, not registered",
 };
 
-const time = (at: string) =>
+// "Thu 9:02 AM", at the conference.
+const time = (at: string | number) =>
   new Date(at).toLocaleString("en-US", { timeZone: "America/New_York", weekday: "short", hour: "numeric", minute: "2-digit" });
-
-const LISTED = 5; // guests listed before "Show all"
 
 // "just now", "4 min ago", or a time once it's been an hour.
 const ago = (at: number, now: number) => {
   const min = Math.floor((now - at) / 60_000);
   if (min < 1) return "just now";
   if (min < 60) return `${min} min ago`;
-  return `at ${new Date(at).toLocaleString("en-US", { timeZone: "America/New_York", weekday: "short", hour: "numeric", minute: "2-digit" })}`;
+  return `at ${time(at)}`;
 };
+
+const LISTED = 5; // guests listed before "Show all"
 
 const inputClass =
   "min-h-12 w-full rounded-md border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
@@ -41,8 +42,8 @@ async function post<T>(body: object): Promise<T> {
  * One guest: who they are, anything to watch for, and checking them in or
  * taking it back. `justCheckedIn` asks "Wrong person?" instead of "Undo".
  */
-function GuestRow(props: { guest: GuestResult; justCheckedIn?: boolean; busy: boolean; onCheckIn: () => void; onUndo: () => void }) {
-  const { guest, justCheckedIn, busy, onCheckIn, onUndo } = props;
+function GuestRow(props: { guest: GuestResult; justCheckedIn?: boolean; busy: boolean; disabled: boolean; onCheckIn: () => void; onUndo: () => void }) {
+  const { guest, justCheckedIn, busy, disabled, onCheckIn, onUndo } = props;
   const notes = [STATUS[guest.status], guest.livestreamOnly && "Livestream ticket only"].filter(Boolean) as string[];
   return (
     <li
@@ -65,14 +66,14 @@ function GuestRow(props: { guest: GuestResult; justCheckedIn?: boolean; busy: bo
               {!guest.checkedInHere && " in Luma"}
             </span>
             {guest.checkedInHere && (
-              <Button variant="outline" size="sm" className="min-h-10 gap-1.5" onClick={onUndo} data-testid={`button-undo-${guest.id}`}>
+              <Button variant="outline" size="sm" className="min-h-10 gap-1.5" disabled={disabled} onClick={onUndo} data-testid={`button-undo-${guest.id}`}>
                 <Undo2 className="h-3.5 w-3.5" />
                 {justCheckedIn ? "Wrong person?" : "Undo check-in"}
               </Button>
             )}
           </>
         ) : (
-          <Button className="min-h-10 gap-1.5 px-5" onClick={onCheckIn} data-testid={`button-check-in-${guest.id}`}>
+          <Button className="min-h-10 gap-1.5 px-5" disabled={disabled} onClick={onCheckIn} data-testid={`button-check-in-${guest.id}`}>
             <Check className="h-4 w-4" />
             Check in
           </Button>
@@ -110,10 +111,10 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
   const [notice, setNotice] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
 
-  // Ready for the next person.
-  const next = (guest: GuestResult) => {
+  // Ready for the next person, unless they've already started typing it.
+  const next = (guest: GuestResult, typed: string) => {
     setLastCheckIn(guest.id);
-    setQuery("");
+    setQuery((q) => (q.trim() === typed ? "" : q));
     input.current?.focus();
   };
 
@@ -138,7 +139,8 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
   const find = async (e: React.FormEvent) => {
     e.preventDefault();
     const typed = query.trim();
-    if (!typed) return;
+    // One thing at a time, so answers can't arrive out of order.
+    if (!typed || busy) return;
     // Clear the last results at once, so they're never mistaken for these.
     setShown(null);
     setShowAll(false);
@@ -154,6 +156,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
   };
 
   const checkIn = async (guest: GuestResult) => {
+    const typed = query.trim();
     const data = await run(guest.id, () => post<{ guest: GuestResult }>({ action: "check_in", guestId: guest.id }));
     if (!data) return;
     if (walkIn?.similar?.some((g) => g.id === guest.id)) {
@@ -161,7 +164,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
       setWalkIn(null);
       setShown({ query: data.guest.name, match: data.guest, options: [] });
     } else replace(data.guest);
-    next(data.guest);
+    next(data.guest, typed);
   };
 
   const undo = async (guest: GuestResult) => {
@@ -171,13 +174,14 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
     // Just checked in as the search's one match: show who else it could have
     // been, with the search back in the box to correct.
     if (guest.id === lastCheckIn && shown?.match?.id === guest.id) {
-      const query = shown.query;
-      setQuery(query);
-      input.current?.focus();
+      const typed = shown.query;
+      setShown(null);
       setShowAll(false);
-      const result = await run("search", () => post<SearchResult>({ action: "search", query, single: false }));
-      if (result) setShown({ match: result.match, options: result.options, query });
-      if (result && !result.options.length) setWalkIn(walkInFrom(query));
+      setQuery(typed);
+      input.current?.focus();
+      const result = await run("search", () => post<SearchResult>({ action: "search", query: typed, single: false }));
+      if (result) setShown({ match: result.match, options: result.options, query: typed });
+      if (result && !result.options.length) setWalkIn(walkInFrom(typed));
       return;
     }
     if (data.guest) replace(data.guest);
@@ -188,6 +192,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
     e?.preventDefault();
     if (!walkIn) return;
     const { name, email } = walkIn;
+    const typed = query.trim();
     const data = await run("walk_in", () => post<WalkInResult>({ action: "walk_in", name, email, newPerson }));
     if (!data) return;
     setFreshness({ syncedAt: data.syncedAt, guestCount: data.guestCount });
@@ -195,7 +200,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
     setWalkIn(null);
     setShown({ query: data.guest.name, match: data.guest, options: [] });
     setNotice(data.registered ? `${data.guest.email} is already registered, so that's who this is.` : null);
-    if (!data.registered) next(data.guest);
+    if (!data.registered) next(data.guest, typed);
   };
 
   const row = (guest: GuestResult) => (
@@ -204,6 +209,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
       guest={guest}
       justCheckedIn={guest.id === lastCheckIn}
       busy={busy === guest.id}
+      disabled={busy !== null}
       onCheckIn={() => checkIn(guest)}
       onUndo={() => undo(guest)}
     />
@@ -235,7 +241,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
           className={inputClass}
           data-testid="input-check-in-search"
         />
-        <Button type="submit" className="min-h-12 shrink-0 gap-1.5 px-5" disabled={busy === "search" || !query.trim()} data-testid="button-check-in-search">
+        <Button type="submit" className="min-h-12 shrink-0 gap-1.5 px-5" disabled={busy !== null || !query.trim()} data-testid="button-check-in-search">
           {busy === "search" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
           Find
         </Button>
@@ -298,7 +304,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
             </div>
             <ul className="divide-y divide-border overflow-hidden rounded-md border border-border">{walkIn.similar.map(row)}</ul>
             <div className="flex flex-wrap gap-2">
-              <Button variant="outline" className="min-h-11 gap-1.5" disabled={busy === "walk_in"} onClick={() => addWalkIn(null, true)} data-testid="button-add-walk-in-anyway">
+              <Button variant="outline" className="min-h-11 gap-1.5" disabled={busy !== null} onClick={() => addWalkIn(null, true)} data-testid="button-add-walk-in-anyway">
                 {busy === "walk_in" ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
                 No, add {walkIn.name} as a walk-in
               </Button>
@@ -340,7 +346,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
                 data-testid="input-walk-in-email"
               />
               <div className="flex gap-2">
-                <Button type="submit" className="min-h-11 gap-1.5" disabled={busy === "walk_in"} data-testid="button-add-walk-in">
+                <Button type="submit" className="min-h-11 gap-1.5" disabled={busy !== null} data-testid="button-add-walk-in">
                   {busy === "walk_in" ? <Loader2 className="h-4 w-4 animate-spin" /> : <UserPlus className="h-4 w-4" />}
                   {busy === "walk_in" ? "Checking Luma…" : "Add and check in"}
                 </Button>

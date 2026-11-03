@@ -9,6 +9,7 @@ import { z } from "zod";
 import { candidates, exactMatch, livestreamOnly, sharesName, type Guest } from "./guest-match";
 
 const LUMA = "https://public-api.luma.com";
+const LUMA_NEWEST_TIMEOUT_MS = 2000;
 // The AI that judges matches: Claude Sonnet 5.5 through OpenRouter, right on all
 // our tests with real guest names, in a steady 1.1-1.4 seconds. If OpenRouter
 // is busy (new accounts have a low rate limit) or slow, Llama 3.3 70B on Workers
@@ -17,7 +18,8 @@ const AI_MODEL = "anthropic/claude-sonnet-5.5";
 const AI_TIMEOUT_MS = 3000;
 const BACKUP_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 const BACKUP_TIMEOUT_MS = 5000;
-const STALE_MS = 10 * 60_000; // a backup for the cron: refresh in the background once the list is this old
+const AI_MAX_TOKENS = 800; // room to score every candidate
+const STALE_MS = 15 * 60_000; // a backup for the 10-minute cron: refresh in the background if it's missed
 const SIMILAR_NAME = 0.9; // a walk-in's name this close to a guest's might be the same person
 const SIMILAR_SHOWN = 5;
 const MIN_AI_SCORE = 40; // below this, the AI doesn't think it's them
@@ -85,7 +87,7 @@ function toGuest(g: LumaGuest): Guest {
   };
 }
 
-async function luma<T>(path: string, init?: RequestInit): Promise<T> {
+async function luma<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${LUMA}${path}`, { ...init, headers: { "x-luma-api-key": env.LUMA_API_KEY, "Content-Type": "application/json" } });
   if (!res.ok) throw new Error(`Luma ${path.split("?")[0]} answered ${res.status}: ${(await res.text()).slice(0, 200)}`);
   return res.json() as Promise<T>;
@@ -104,16 +106,21 @@ async function fetchAllGuests(): Promise<Guest[]> {
   return guests;
 }
 
+/** Luma's 50 newest registrations (one request, about 0.15 seconds), or null if Luma doesn't answer quickly. */
+async function fetchNewestGuests(): Promise<Guest[] | null> {
+  const params = new URLSearchParams({ event_id: env.LUMA_EVENT_ID, pagination_limit: "50", sort_column: "registered_at", sort_direction: "desc nulls last" });
+  try {
+    const page = await luma<{ entries: LumaGuest[] }>(`/v1/events/guests/list?${params}`, { signal: AbortSignal.timeout(LUMA_NEWEST_TIMEOUT_MS) });
+    return page.entries.map(toGuest);
+  } catch (err) {
+    console.error("Couldn't check Luma's newest registrations; using the saved list", err);
+    return null;
+  }
+}
+
 interface GuestList {
   guests: Guest[];
   syncedAt: number;
-}
-
-/** Luma's 50 newest registrations: one quick request (about 0.15 seconds). */
-async function fetchNewestGuests(): Promise<Guest[]> {
-  const params = new URLSearchParams({ event_id: env.LUMA_EVENT_ID, pagination_limit: "50", sort_column: "registered_at", sort_direction: "desc nulls last" });
-  const page = await luma<{ entries: LumaGuest[] }>(`/v1/events/guests/list?${params}`);
-  return page.entries.map(toGuest);
 }
 
 let syncing: Promise<GuestList> | null = null;
@@ -139,24 +146,47 @@ export function refreshGuestList(): Promise<GuestList> {
   return syncing;
 }
 
-/** The saved guest list (refreshed in the background if the cron hasn't kept it fresh). */
-export async function guestList(): Promise<GuestList> {
+const refreshIfStale = (syncedAt: number) => {
+  if (Date.now() - syncedAt > STALE_MS) waitUntil(refreshGuestList().catch((err) => console.error("Couldn't refresh the Luma guest list", err)));
+};
+
+/** The saved guest list (fetched from Luma first if there isn't one yet). */
+async function guestList(): Promise<GuestList> {
   const row = await env.DB.prepare("SELECT guests, synced_at FROM guest_list WHERE event_id = ?")
     .bind(env.LUMA_EVENT_ID)
     .first<{ guests: string; synced_at: number }>();
   if (!row) return refreshGuestList();
-  if (Date.now() - row.synced_at > STALE_MS) waitUntil(refreshGuestList().catch((err) => console.error("Couldn't refresh the Luma guest list", err)));
+  refreshIfStale(row.synced_at);
   return { guests: JSON.parse(row.guests) as Guest[], syncedAt: row.synced_at };
 }
 
-/** Adds Luma's newest registrations to the saved list, so anyone who registered since the last refresh is on it. */
+/** When the guest list last came from Luma, for the page, without reading the whole list. */
+export async function listFreshness(): Promise<Freshness> {
+  const row = await env.DB.prepare("SELECT synced_at, json_array_length(guests) AS guest_count FROM guest_list WHERE event_id = ?")
+    .bind(env.LUMA_EVENT_ID)
+    .first<{ synced_at: number; guest_count: number }>();
+  if (!row) {
+    const list = await refreshGuestList();
+    return { syncedAt: list.syncedAt, guestCount: list.guests.length };
+  }
+  refreshIfStale(row.synced_at);
+  return { syncedAt: row.synced_at, guestCount: row.guest_count };
+}
+
+/**
+ * Adds Luma's newest registrations to the list, so anyone who registered since
+ * the last refresh is on it, and saves it unless a full refresh has replaced
+ * the list meanwhile. Returns the same list when nothing changed.
+ */
 async function addNewest(list: GuestList, newest: Guest[]): Promise<GuestList> {
   const byId = new Map(list.guests.map((g) => [g.id, g]));
   const changed = newest.filter((g) => JSON.stringify(byId.get(g.id)) !== JSON.stringify(g));
   if (!changed.length) return list;
   for (const g of changed) byId.set(g.id, g);
   const guests = [...byId.values()];
-  await env.DB.prepare("UPDATE guest_list SET guests = ? WHERE event_id = ?").bind(JSON.stringify(guests), env.LUMA_EVENT_ID).run();
+  await env.DB.prepare("UPDATE guest_list SET guests = ? WHERE event_id = ? AND synced_at = ?")
+    .bind(JSON.stringify(guests), env.LUMA_EVENT_ID, list.syncedAt)
+    .run();
   return { guests, syncedAt: list.syncedAt };
 }
 
@@ -172,17 +202,17 @@ interface CheckInRow {
 
 const demoFlag = () => (isDemo() ? 1 : 0);
 
-/**
- * Everyone who can be checked in (Luma's guests plus walk-ins), and how to
- * show each. With `newest`, Luma's newest registrations are added first.
- */
-async function desk(newest = false) {
-  const [saved, { results: rows }, latest] = await Promise.all([
-    guestList(),
-    env.DB.prepare("SELECT guest_id, name, email, walk_in, checked_in_at FROM check_ins WHERE demo = ?").bind(demoFlag()).all<CheckInRow>(),
-    newest ? fetchNewestGuests() : null,
-  ]);
-  const list = latest ? await addNewest(saved, latest) : saved;
+interface Desk {
+  list: GuestList;
+  rows: CheckInRow[];
+  /** Luma's guests plus walk-ins. */
+  guests: Guest[];
+  show: (g: Guest) => GuestResult;
+  freshness: Freshness;
+}
+
+/** Everyone who can be checked in, and how to show each. */
+function deskFrom(list: GuestList, rows: CheckInRow[]): Desk {
   const byId = new Map(rows.map((r) => [r.guest_id, r]));
   // A walk-in who's since shown up in Luma's list (live mode) is the same person.
   const byEmail = new Map(rows.filter((r) => r.walk_in && r.email).map((r) => [r.email!.toLowerCase(), r]));
@@ -205,8 +235,24 @@ async function desk(newest = false) {
       walkIn: g.id.startsWith("walkin-"),
     };
   };
-  const guests = [...list.guests, ...walkIns];
-  return { guests, show, freshness: { syncedAt: list.syncedAt, guestCount: list.guests.length } satisfies Freshness };
+  return { list, rows, guests: [...list.guests, ...walkIns], show, freshness: { syncedAt: list.syncedAt, guestCount: list.guests.length } };
+}
+
+/** The desk from the saved list. With `newest`, Luma's newest registrations are added too. */
+async function openDesk(newest = false): Promise<Desk> {
+  const [list, { results: rows }, latest] = await Promise.all([
+    guestList(),
+    env.DB.prepare("SELECT guest_id, name, email, walk_in, checked_in_at FROM check_ins WHERE demo = ?").bind(demoFlag()).all<CheckInRow>(),
+    newest ? fetchNewestGuests() : null,
+  ]);
+  return deskFrom(latest ? await addNewest(list, latest) : list, rows);
+}
+
+/** The same desk with Luma's newest registrations added, or the same desk if there are none new. */
+async function withNewest(d: Desk): Promise<Desk> {
+  const latest = await fetchNewestGuests();
+  const list = latest ? await addNewest(d.list, latest) : d.list;
+  return list === d.list ? d : deskFrom(list, d.rows);
 }
 
 /** Saves a check-in (once) and returns when it happened. */
@@ -224,7 +270,7 @@ async function record(guest: Pick<Guest, "id" | "name" | "email">, adminId: stri
 
 const PROMPT = `You match what a staff member typed at a conference check-in desk (a full name, a last name, a first name or an email) to registered guests.
 Score each candidate 0-100 for how likely they are the person meant. Nicknames (Bob for Robert), typos, missing or extra middle names and swapped first and last names can still be the person. A different first name with the same last name usually isn't.
-List every candidate scoring 40 or more, best first.
+List every candidate scoring ${MIN_AI_SCORE} or more, best first.
 Set "obvious" to a candidate's id only when that one candidate is clearly the person and no other candidate is plausible; otherwise null. A last name alone is obvious only if just one candidate has it.`;
 
 const RANKING_SCHEMA = {
@@ -240,10 +286,10 @@ const RANKING_SCHEMA = {
   additionalProperties: false,
 };
 const ranking = z.object({ matches: z.array(z.object({ id: z.string(), score: z.number() })), obvious: z.string().nullable() });
-
 type Ranking = z.infer<typeof ranking>;
+type Messages = { role: string; content: string }[];
 
-async function askOpenRouter(messages: { role: string; content: string }[]): Promise<Ranking> {
+async function askOpenRouter(messages: Messages): Promise<Ranking> {
   const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     signal: AbortSignal.timeout(AI_TIMEOUT_MS),
@@ -251,8 +297,9 @@ async function askOpenRouter(messages: { role: string; content: string }[]): Pro
     body: JSON.stringify({
       model: AI_MODEL,
       temperature: 0,
-      max_tokens: 400,
-      provider: { sort: "latency" },
+      max_tokens: AI_MAX_TOKENS,
+      // Only providers that don't keep or train on what's sent (guests' names and emails).
+      provider: { sort: "latency", data_collection: "deny" },
       messages,
       response_format: { type: "json_schema", json_schema: { name: "ranking", strict: true, schema: RANKING_SCHEMA } },
     }),
@@ -262,10 +309,12 @@ async function askOpenRouter(messages: { role: string; content: string }[]): Pro
   return ranking.parse(JSON.parse(data.choices?.[0]?.message?.content ?? ""));
 }
 
-async function askWorkersAi(messages: { role: string; content: string }[]): Promise<Ranking> {
-  const answer = env.AI.run(BACKUP_MODEL, { temperature: 0, max_tokens: 400, messages, response_format: { type: "json_schema", json_schema: RANKING_SCHEMA } });
-  const timeout = new Promise<never>((_, reject) => setTimeout(() => reject(new Error(`No answer in ${BACKUP_TIMEOUT_MS}ms`)), BACKUP_TIMEOUT_MS));
-  const { response } = (await Promise.race([answer, timeout])) as { response?: unknown };
+async function askWorkersAi(messages: Messages): Promise<Ranking> {
+  const { response } = (await env.AI.run(
+    BACKUP_MODEL,
+    { temperature: 0, max_tokens: AI_MAX_TOKENS, messages, response_format: { type: "json_schema", json_schema: RANKING_SCHEMA } },
+    { signal: AbortSignal.timeout(BACKUP_TIMEOUT_MS) },
+  )) as { response?: unknown };
   // The answer is usually parsed JSON already, sometimes text around JSON.
   const text = typeof response === "string" ? response : null;
   return ranking.parse(text ? JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1)) : response);
@@ -278,10 +327,12 @@ async function judge(query: string, people: Guest[]): Promise<Ranking | null> {
     // Short IDs, so the answer is short and quick.
     { role: "user", content: JSON.stringify({ typed: query, candidates: people.map((g, i) => ({ id: String(i), name: g.name, email: g.email })) }) },
   ];
-  try {
-    return await askOpenRouter(messages);
-  } catch (err) {
-    console.error("OpenRouter couldn't judge the check-in matches; asking Workers AI", err);
+  if (env.OPENROUTER_API_KEY) {
+    try {
+      return await askOpenRouter(messages);
+    } catch (err) {
+      console.error("OpenRouter couldn't judge the check-in matches; asking Workers AI", err);
+    }
   }
   try {
     return await askWorkersAi(messages);
@@ -293,6 +344,25 @@ async function judge(query: string, people: Guest[]): Promise<Ranking | null> {
 
 // What the page does ------------------------------------------------------------
 
+/** The guest typed, if it's obvious who, otherwise everyone who might be them. */
+async function find(query: string, d: Desk, single: boolean): Promise<{ match: Guest | null; options: Guest[] }> {
+  const found = candidates(query, d.guests);
+  if (!found.length) return { match: null, options: [] };
+  const exact = single ? exactMatch(query, d.guests) : null;
+  if (exact) return { match: exact, options: [] };
+
+  const scores = await judge(query, found.map((c) => c.guest));
+  // Without the AI, spelling alone, and never sure enough to pick one.
+  if (!scores) return { match: null, options: found.map((c) => c.guest) };
+  const ranked = scores.matches.filter((m) => m.score >= MIN_AI_SCORE && found[Number(m.id)]).sort((a, b) => b.score - a.score);
+  const best = ranked[0];
+  // Never one obvious guest when several have the name typed, like "john" or
+  // someone registered twice.
+  const shared = found.filter((c) => sharesName(query, c.guest)).length > 1;
+  if (single && !shared && best && scores.obvious === best.id && best.score >= OBVIOUS_SCORE) return { match: found[Number(best.id)].guest, options: [] };
+  return { match: null, options: [...new Set(ranked.map((m) => found[Number(m.id)].guest))] };
+}
+
 /**
  * Finds the guest that was typed: the one guest when it's obvious who,
  * otherwise everyone who might be them, best first. Nobody is checked in
@@ -300,73 +370,59 @@ async function judge(query: string, people: Guest[]): Promise<Ranking | null> {
  * list, as after "Wrong person?".
  */
 export async function search(query: string, single = true): Promise<SearchResult> {
-  let d = await desk();
-  let found = candidates(query, d.guests);
+  let d = await openDesk();
+  let found = await find(query, d, single);
   // Nobody: they may have only just registered, so check Luma's newest registrations.
-  if (!found.length) {
-    d = await desk(true);
-    found = candidates(query, d.guests);
+  if (!found.match && !found.options.length) {
+    const newer = await withNewest(d);
+    if (newer !== d) found = await find(query, (d = newer), single);
   }
-  if (!found.length) return { ...d.freshness, match: null, options: [] };
-
-  let match = single ? exactMatch(query, d.guests) : null;
-  let options: Guest[] = [];
-  if (!match) {
-    const scores = await judge(query, found.map((c) => c.guest));
-    if (scores) {
-      const ranked = scores.matches
-        .filter((m) => m.score >= MIN_AI_SCORE && found[Number(m.id)])
-        .sort((a, b) => b.score - a.score);
-      options = [...new Set(ranked.map((m) => found[Number(m.id)].guest))];
-      const best = ranked[0];
-      // Never one obvious guest when several have the name typed, like "john"
-      // or someone registered twice.
-      const shared = found.filter((c) => sharesName(query, c.guest)).length > 1;
-      if (single && !shared && best && scores.obvious === best.id && best.score >= OBVIOUS_SCORE) match = found[Number(best.id)].guest;
-    } else {
-      // Without the AI, spelling alone, and never sure enough to pick one.
-      options = found.filter((c) => c.score >= 0.85).map((c) => c.guest);
-    }
-  }
-
-  if (match) return { ...d.freshness, match: d.show(match), options: [] };
-  return { ...d.freshness, match: null, options: options.map(d.show) };
+  return { ...d.freshness, match: found.match && d.show(found.match), options: found.options.map(d.show) };
 }
 
 /** Checks in a guest from the list. */
 export async function checkIn(guestId: string, adminId: string): Promise<GuestResult> {
-  const d = await desk();
-  const guest = d.guests.find((g) => g.id === guestId);
+  let d = await openDesk();
+  let guest = d.guests.find((g) => g.id === guestId);
+  // Someone found among the newest registrations, before a full refresh saved them.
+  if (!guest) {
+    d = await withNewest(d);
+    guest = d.guests.find((g) => g.id === guestId);
+  }
   if (!guest) throw new CheckInError("That guest isn't on the list any more.");
   const shown = d.show(guest);
   return shown.checkedInAt ? shown : { ...shown, checkedInAt: await record(guest, adminId), checkedInHere: true };
 }
 
-/** Takes back a check-in made here (one made in Luma stays). A walk-in added in demo mode is removed. */
+/**
+ * Takes back a check-in made here (one made in Luma stays). A walk-in's record
+ * here goes too; in live mode Luma keeps their registration.
+ */
 export async function undoCheckIn(guestId: string): Promise<GuestResult | null> {
-  await env.DB.prepare("DELETE FROM check_ins WHERE guest_id = ? AND demo = ?").bind(guestId, demoFlag()).run();
-  const d = await desk();
-  const guest = d.guests.find((g) => g.id === guestId);
-  return guest ? d.show(guest) : null;
+  const d = await openDesk();
+  const email = d.guests.find((g) => g.id === guestId)?.email.toLowerCase() ?? "";
+  // A walk-in's check-in is saved under its walkin- ID, even once Luma lists them.
+  const undone = (r: CheckInRow) => r.guest_id === guestId || (r.walk_in === 1 && !!email && r.email?.toLowerCase() === email);
+  await env.DB.prepare("DELETE FROM check_ins WHERE demo = ? AND (guest_id = ? OR (walk_in = 1 AND ? != '' AND lower(email) = ?))")
+    .bind(demoFlag(), guestId, email, email)
+    .run();
+  const after = deskFrom(d.list, d.rows.filter((r) => !undone(r)));
+  const guest = after.guests.find((g) => g.id === guestId);
+  return guest ? after.show(guest) : null;
 }
 
 /**
  * Someone who isn't on the list: gives them a ticket and checks them in. In
- * demo mode they're saved only here; otherwise Luma adds them as going (and
- * emails them their ticket).
+ * demo mode they're saved only here; otherwise Luma adds them as going with
+ * the event's default ticket type (and emails them their ticket).
  *
  * First it checks Luma's newest registrations, in case they registered since
- * the last refresh. If the email is registered, that guest is returned to check in
- * instead. If a guest has a similar name, nothing is added until the admin
- * says it's someone else (`newPerson`).
+ * the last refresh. If the email is registered, that guest is returned to
+ * check in instead. If a guest has a similar name, nothing is added until the
+ * admin says it's someone else (`newPerson`).
  */
-export async function addWalkIn(
-  name: string,
-  email: string,
-  adminId: string,
-  newPerson = false,
-): Promise<WalkInResult> {
-  const d = await desk(true);
+export async function addWalkIn(name: string, email: string, adminId: string, newPerson = false): Promise<WalkInResult> {
+  const d = await openDesk(true);
   const registered = d.guests.find((g) => g.email.toLowerCase() === email.toLowerCase());
   if (registered) return { ...d.freshness, guest: d.show(registered), registered: true };
   if (!newPerson) {
