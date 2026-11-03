@@ -208,11 +208,13 @@ logged as an `admin_action` event.
 menu) is for the door. Type a full name, a last name or an email:
 
 - The app keeps a copy of the Luma event's guest list (`LUMA_EVENT_ID`) in D1,
-  because Luma sends 50 guests per request (about 3 seconds for the whole
-  list). A cron refreshes it every 10 minutes in conference week (November
-  1-7, UTC), and otherwise searches refresh it in the background once it's 15
-  minutes old. New registrations in between are caught by the newest-50
-  check below. The page shows when it last came from Luma.
+  without guests whose only ticket is a livestream one (they watch online and
+  are never checked in; Luma still has them). It's a copy because Luma sends 50
+  guests per request (about 3 seconds for the whole list). A cron refreshes it
+  every 10 minutes in conference week (November 1-7, UTC), and otherwise
+  searches refresh it in the background once it's 15 minutes old. New
+  registrations in between are caught by the newest-50 check below. The page
+  shows when it last came from Luma.
 - Likely guests are picked by spelling (`src/lib/guest-match.ts`), and Claude
   Sonnet 5.5, through OpenRouter, judges which of them was meant and orders
   them (about 1.2 seconds). If OpenRouter is busy (new accounts have a low
@@ -224,7 +226,7 @@ menu) is for the door. Type a full name, a last name or an email:
   be them, five at a time (**Show all**). A name several guests share, like
   "john", or someone registered twice, always gets the list. Nobody is checked
   in until you tap **Check in**. Guests who aren't going (declined,
-  waitlisted, invited) or have only a livestream ticket are flagged.
+  waitlisted, invited) are flagged.
 - If nobody matches on the copy, the app checks Luma's 50 newest
   registrations (about 0.15 seconds) and looks again before saying so.
 - A walk-in gets a name and email. First the app checks Luma's newest

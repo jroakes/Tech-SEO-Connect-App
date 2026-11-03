@@ -44,7 +44,7 @@ async function post<T>(body: object): Promise<T> {
  */
 function GuestRow(props: { guest: GuestResult; justCheckedIn?: boolean; busy: boolean; disabled: boolean; onCheckIn: () => void; onUndo: () => void }) {
   const { guest, justCheckedIn, busy, disabled, onCheckIn, onUndo } = props;
-  const notes = [STATUS[guest.status], guest.livestreamOnly && "Livestream ticket only"].filter(Boolean) as string[];
+  const note = STATUS[guest.status];
   return (
     <li
       className={`flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between ${justCheckedIn ? "bg-primary/5" : ""}`}
@@ -53,7 +53,7 @@ function GuestRow(props: { guest: GuestResult; justCheckedIn?: boolean; busy: bo
       <div className="min-w-0">
         <div className="text-lg font-semibold text-foreground">{guest.name}</div>
         <div className="truncate text-sm text-muted-foreground">{[guest.email, guest.tickets.join(", ")].filter(Boolean).join(" · ")}</div>
-        {notes.length > 0 && <div className="mt-1 text-sm font-medium text-destructive">{notes.join(" · ")}</div>}
+        {note && <div className="mt-1 text-sm font-medium text-destructive">{note}</div>}
       </div>
       <div className="flex shrink-0 flex-wrap items-center gap-2">
         {busy ? (

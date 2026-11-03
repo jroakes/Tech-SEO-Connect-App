@@ -37,7 +37,6 @@ export interface GuestResult {
   email: string;
   tickets: string[];
   status: string;
-  livestreamOnly: boolean;
   checkedInAt: string | null;
   /** Checked in here (so it can be undone), rather than in Luma. */
   checkedInHere: boolean;
@@ -87,6 +86,10 @@ function toGuest(g: LumaGuest): Guest {
   };
 }
 
+// Guests with only a livestream ticket watch online and are never checked in,
+// so they're left off the list.
+const inTheRoom = (g: Guest) => !livestreamOnly(g);
+
 async function luma<T>(path: string, init: RequestInit = {}): Promise<T> {
   const res = await fetch(`${LUMA}${path}`, { ...init, headers: { "x-luma-api-key": env.LUMA_API_KEY, "Content-Type": "application/json" } });
   if (!res.ok) throw new Error(`Luma ${path.split("?")[0]} answered ${res.status}: ${(await res.text()).slice(0, 200)}`);
@@ -100,7 +103,7 @@ async function fetchAllGuests(): Promise<Guest[]> {
     const params = new URLSearchParams({ event_id: env.LUMA_EVENT_ID, pagination_limit: "50" });
     if (cursor) params.set("pagination_cursor", cursor);
     const page = await luma<{ entries: LumaGuest[]; has_more: boolean; next_cursor?: string }>(`/v1/events/guests/list?${params}`);
-    guests.push(...page.entries.map(toGuest));
+    guests.push(...page.entries.map(toGuest).filter(inTheRoom));
     cursor = page.has_more ? page.next_cursor : undefined;
   } while (cursor);
   return guests;
@@ -111,7 +114,7 @@ async function fetchNewestGuests(): Promise<Guest[] | null> {
   const params = new URLSearchParams({ event_id: env.LUMA_EVENT_ID, pagination_limit: "50", sort_column: "registered_at", sort_direction: "desc nulls last" });
   try {
     const page = await luma<{ entries: LumaGuest[] }>(`/v1/events/guests/list?${params}`, { signal: AbortSignal.timeout(LUMA_NEWEST_TIMEOUT_MS) });
-    return page.entries.map(toGuest);
+    return page.entries.map(toGuest).filter(inTheRoom);
   } catch (err) {
     console.error("Couldn't check Luma's newest registrations; using the saved list", err);
     return null;
@@ -229,7 +232,6 @@ function deskFrom(list: GuestList, rows: CheckInRow[]): Desk {
       email: g.email,
       tickets: g.tickets,
       status: g.status,
-      livestreamOnly: livestreamOnly(g),
       checkedInAt: here?.checked_in_at ?? g.lumaCheckedInAt,
       checkedInHere: !!here,
       walkIn: g.id.startsWith("walkin-"),

@@ -136,5 +136,5 @@ export function sharesName(query: string, guest: Guest): boolean {
   return typed.length > 0 && typed.every((w) => theirs.includes(w));
 }
 
-/** Livestream-only guests are registered, but not for the room. */
+/** Whether every ticket is a livestream one: they watch online, not in the room. */
 export const livestreamOnly = (g: Guest) => g.tickets.length > 0 && g.tickets.every((t) => /livestream/i.test(t));
