@@ -25,7 +25,12 @@
     // The main site's homepage carries the schedule (see src/lib/schedule-parse.ts).
     "SCHEDULE_SOURCE_URL": "https://www.techseoconnect.com/",
     // Who can see /analytics: comma-separated, verified Clerk email addresses.
-    "ORGANIZER_EMAILS": "jroakes@gmail.com"
+    "ORGANIZER_EMAILS": "jroakes@gmail.com",
+    // Guest check-in (/admin/check-in): the conference's Luma event, and demo
+    // mode, where check-ins and walk-ins are saved only in this app and
+    // nothing is sent to Luma. Set it to "false" to add walk-ins to Luma.
+    "LUMA_EVENT_ID": "evt-MaWa34aN1dC2Qal",
+    "CHECK_IN_DEMO": "true"
   },
   "observability": {
     "enabled": true

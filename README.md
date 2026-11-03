@@ -31,7 +31,8 @@ Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
   AI assistant use go to the `events` table in D1, alongside GA4.
 - **Admin** at `/admin`, for admins only (see below): the users list, where
   admins can make another user an admin, block a user from signing in, or
-  delete a user, and the analytics at `/admin/analytics`.
+  delete a user, the analytics at `/admin/analytics`, and guest check-in at
+  `/admin/check-in`.
 - Installable as a PWA, with the schedule available offline.
 
 ## How it fits together
@@ -45,6 +46,7 @@ src/pages/             Astro pages and API routes
   meet.astro           Meet people (rendered in the browser)
   admin/index.astro    Admins' users list, from Clerk
   admin/analytics.astro  Admins' analytics, rendered per request from D1
+  admin/check-in.astro   Checking guests in at the door, against Luma
   map / locations /    Prerendered at build time (served free as static assets)
   sponsors .astro
   api/events.ts        POST batches of analytics events
@@ -54,10 +56,13 @@ src/pages/             Astro pages and API routes
   api/me.ts            GET whether the signed-in user is an admin
   api/admin/users.ts   POST admin actions on a user
   api/admin/events.ts  GET every event as CSV or JSON (admins only)
+  api/admin/check-in.ts  POST guest searches, check-ins and walk-ins (admins only)
 src/mcp/server.ts      MCP tools for a signed-in attendee (stateless)
 src/lib/mcp-auth.ts    MCP sign-in: OAuth discovery and Clerk token checks
 src/lib/insights.ts    Queries behind the analytics page
 src/lib/matching.ts    Topic counts, people by topic and LinkedIn links (pure, tested)
+src/lib/check-in.ts    Luma guest list, the AI's judgment of matches, check-ins
+src/lib/guest-match.ts Likely guests for a typed name or email (pure, tested)
 src/lib/topic-layout.ts  Where the Meet topic circles go (d3-force)
 src/lib/clerk.ts       Clerk Backend API client and who's an admin
 src/lib/schedule-*.ts  Main-site schedule parser and the hourly sync
@@ -114,7 +119,8 @@ after a build, then open `http://localhost:8787/__scheduled`.
 1. Build with the production keys in `.env`, then run `npm run deploy`. The
    first deploy creates the D1 database.
 2. Apply the schema: `npm run db:migrate:remote`.
-3. Set the Clerk secret: `npx wrangler secret put CLERK_SECRET_KEY`.
+3. Set the secrets: `npx wrangler secret put CLERK_SECRET_KEY`, and for
+   check-in `OPENROUTER_API_KEY` and `LUMA_API_KEY` the same way.
 4. Let AI assistants sign in: in the Clerk Dashboard, open **OAuth
    applications**, then the **Settings** tab, and under **Client onboarding**
    turn on **Publish CIMD support** (with **Client admission** set to **Any
@@ -160,6 +166,30 @@ search. For each user an admin can:
 
 Admins can't remove, block or delete organizers or themselves. Each action is
 logged as an `admin_action` event.
+
+**Check-in** (`/admin/check-in`, and **Check-in Guests** in an admin's account
+menu) is for the door. Type a full name, a last name or an email:
+
+- The app keeps a copy of the Luma event's guest list (`LUMA_EVENT_ID`) in D1,
+  refreshed in the background every couple of minutes, because Luma sends 50
+  guests per request.
+- Likely guests are picked by spelling (`src/lib/guest-match.ts`), and Claude
+  Sonnet 5.5, through OpenRouter, judges which of them was meant and orders
+  them. An exact email or full name skips the AI.
+- If it's obvious who, they're checked in at once, unless they're already in,
+  not going (declined, waitlisted, invited) or have only a livestream ticket.
+  Otherwise the closest five are listed, each with **Check in**.
+- If nobody matches, a walk-in gets a name and email. First the app gets
+  Luma's latest list: a registered email checks that guest in instead, and a
+  similar name is shown to confirm before anyone new is added.
+- A check-in can be taken back: **Wrong person?** right after it (which then
+  lists the other close guests), or **Undo check-in** when you search them.
+
+`CHECK_IN_DEMO` in `wrangler.jsonc` is `"true"` for now: check-ins and walk-ins
+are saved only in this app, and nothing is sent to Luma. With `"false"`,
+walk-ins are added to Luma as going (Luma emails them a ticket). Luma's API
+can read check-ins but can't make them, so check-ins stay in this app's
+`check_ins` table either way.
 
 **Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
 page views, signed-in attendees, directions taps, saves and AI assistant use,
