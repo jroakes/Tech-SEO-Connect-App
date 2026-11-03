@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
 import { z } from "zod";
 import { json } from "@/lib/auth-server";
-import { clerk, currentAdmin, displayName, isAdmin, isOrganizer } from "@/lib/clerk";
+import { clerk, currentAdmin, displayName, forgetAdminCheck, isAdmin, isOrganizer } from "@/lib/clerk";
 import { deleteUserData, insertEvents } from "@/lib/db";
 import { deleteProfile } from "@/lib/profiles";
 
@@ -56,6 +56,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     await users.deleteUser(userId);
     await deleteUserData(env.DB, userId);
   }
+
+  forgetAdminCheck(userId);
 
   // An audit trail of admin changes, in the events table.
   await insertEvents(env.DB, [{ type: "admin_action", ts: Date.now(), userId: admin.id, path: "/admin", props: { action, target_user_id: userId } }]).catch((err) =>

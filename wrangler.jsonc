@@ -37,7 +37,12 @@
     // only in this app and nothing is sent to Luma. The desk's live switch
     // changes it for every desk.
     "LUMA_EVENT_ID": "evt-MaWa34aN1dC2Qal",
-    "CHECK_IN_DEMO": "false"
+    "CHECK_IN_DEMO": "false",
+    // The production Clerk instance's public key, so sign-ins are checked
+    // without first fetching it from Clerk. It's public, from
+    // https://clerk.app.techseoconnect.com/.well-known/jwks.json; if Clerk
+    // ever rotates its keys, replace it, or remove it to fetch it again.
+    "CLERK_JWT_KEY": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs0OwhUQfVcOzlXobc7gu\nQ5as/U/GFQrPyyqUDB8Z2EF6Jgg/gJZ3LO8YNOurl7S48zHEZh8npLMMtMfN8esw\ncpVnJQKwbjosI6SGHU0qmmhX2NsPh0cx2vgTd43i/1UMrwk9lJ7bRVxCBZp6wtWE\n/2zRPQ4vXIVs9XshwSqYwIdXTiSXiJk38AA7dvj0unNitqJ4LrknGk1ZJUNwpckM\n9WkRQkY/IwXscX4cdpF+SEgEAG9Xc9mHomQnBNyaPwXu2L+2McmVFsqa3YREs+Uk\njScxJdSKbp5x+cxzIkooJHXqOvrX/3NHcaTezG6C+eLXpmXD+7PB4tEOGZWAI9q5\n6QIDAQAB\n-----END PUBLIC KEY-----"
   },
   "observability": {
     "enabled": true

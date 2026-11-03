@@ -7,13 +7,14 @@ import Layout from "@/layouts/Layout.astro";
 import AdminHeader from "@/components/AdminHeader.astro";
 import AdminLocked from "@/components/AdminLocked.astro";
 import { getUserId } from "@/lib/auth-server";
-import { currentAdmin } from "@/lib/clerk";
+import { isRecentAdmin } from "@/lib/clerk";
 import { isDemo } from "@/lib/check-in";
 import { getInsights, RANGES, type Range } from "@/lib/insights";
 
 export const prerender = false;
 
-const admin = import.meta.env.PUBLIC_CLERK_ENABLED ? await currentAdmin(Astro.locals) : null;
+// A yes from Clerk in the last minute will do (see isRecentAdmin), so the page doesn't wait on Clerk.
+const admin = import.meta.env.PUBLIC_CLERK_ENABLED ? await isRecentAdmin(Astro.locals, true) : false;
 const signedIn = !!getUserId(Astro.locals);
 Astro.response.headers.set("Cache-Control", "no-store");
 if (!admin) Astro.response.status = signedIn ? 403 : 401;

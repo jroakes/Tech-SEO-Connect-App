@@ -46,7 +46,10 @@ check-in).
   admins can make another user an admin, block a user from signing in, or
   delete a user, the analytics at `/admin/analytics`, and guest check-in at
   `/admin/check-in`.
-- Installable as a PWA, with the schedule available offline.
+- Installable as a PWA, with the schedule available offline. Pages open
+  straight from the phone's cache once visited and refresh in the background
+  (`public/service-worker.js`); after a deploy, an open page from the old
+  build reloads once.
 
 ## How it fits together
 
@@ -55,9 +58,9 @@ src/worker.ts          Worker entry: /mcp -> MCP server (after the sign-in check
                        everything else -> Astro; crons -> schedule sync (hourly)
                        and the check-in guest list (every 10 minutes, Nov 1-7)
 src/pages/             Astro pages and API routes
-  schedule.astro       Rendered per request from D1
-  my-conference.astro  Rendered per request from D1
-  meet.astro           Meet people (rendered in the browser)
+  schedule.astro       Rendered from D1, then kept 5 minutes at each Cloudflare
+  my-conference.astro  location (see src/worker.ts)
+  meet.astro           Meet people (prerendered; filled in the browser)
   admin/index.astro    Admins' users list, from Clerk
   admin/analytics.astro  Admins' analytics, rendered per request from D1
   admin/check-in.astro   Checking guests in at the door, against Luma

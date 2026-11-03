@@ -50,7 +50,7 @@ const adminChecks = new Map<string, { admin: boolean; at: number }>(); // user I
 /**
  * Whether the signed-in user is an admin, trusting Clerk's answer from the
  * last minute, so requests that come often (the account menu on every page,
- * check-in) don't each wait on Clerk. Its API allows 100 requests per 10
+ * the admin pages, check-in) don't each wait on Clerk. Its API allows 100 requests per 10
  * seconds on a development instance and 1,000 in production. `recheckNo`
  * asks Clerk again when the last answer was no, so someone just made an admin
  * isn't turned away.
@@ -65,6 +65,11 @@ export async function isRecentAdmin(locals: App.Locals, recheckNo = false): Prom
   const admin = isAdmin(user);
   adminChecks.set(userId, { admin, at: Date.now() });
   return admin;
+}
+
+/** Forgets Clerk's last answer for a user whose admin rights just changed, so this server asks again. */
+export function forgetAdminCheck(userId: string): void {
+  adminChecks.delete(userId);
 }
 
 /**

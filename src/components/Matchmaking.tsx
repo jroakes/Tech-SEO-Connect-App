@@ -32,23 +32,55 @@ export default function Matchmaking() {
     }
   };
 
+  /**
+   * Loads the attendee's answers and people together. Before Clerk has
+   * started (`early`), a sign-in that isn't accepted returns false, so it can
+   * be tried again; after, it means they're signed out (or blocked).
+   */
+  const load = async (early = false): Promise<boolean> => {
+    const responses = await Promise.all([fetch("/api/profile"), fetch("/api/matches")]).catch(() => null);
+    // Meet needs a connection; the rest of the app works offline.
+    if (!responses) {
+      setState({ status: "offline" });
+      return true;
+    }
+    const [profileRes, matchesRes] = responses;
+    if (profileRes.status === 401 && early) return false;
+    if (!profileRes.ok) {
+      setState({ status: "signed-out" });
+      return true;
+    }
+    const data = (await profileRes.json()) as { profile: Profile | null; suggestedName: string; lockedTopics: string[] | null };
+    if (data.profile) {
+      if (matchesRes.ok) setState({ status: "ready", ...((await matchesRes.json()) as { me: Profile; others: Profile[]; counts: TopicCount[] }) });
+      else await loadMatches();
+    }
+    // Topics kept without a profile: they joined once and left.
+    else if (data.lockedTopics) setState({ status: "left", suggestedName: data.suggestedName, lockedTopics: data.lockedTopics });
+    else setState({ status: "form", profile: null, suggestedName: data.suggestedName, lockedTopics: data.lockedTopics });
+    return true;
+  };
+
+  // Meet loads as the page opens, with the sign-in the browser already has,
+  // instead of waiting for Clerk to start up. If that sign-in had run out,
+  // it's tried again once Clerk has renewed it.
+  const firstLoad = useRef<Promise<boolean> | null>(null);
+  useEffect(() => {
+    firstLoad.current = load(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     if (!auth.isLoaded) return;
+    const first = firstLoad.current;
+    firstLoad.current = null;
     if (!auth.isSignedIn) {
       setState({ status: "signed-out" });
       return;
     }
-    (async () => {
-      const res = await fetch("/api/profile").catch(() => null);
-      // Meet needs a connection; the rest of the app works offline.
-      if (!res) return setState({ status: "offline" });
-      if (!res.ok) return setState({ status: "signed-out" });
-      const data = (await res.json()) as { profile: Profile | null; suggestedName: string; lockedTopics: string[] | null };
-      if (data.profile) await loadMatches();
-      // Topics kept without a profile: they joined once and left.
-      else if (data.lockedTopics) setState({ status: "left", suggestedName: data.suggestedName, lockedTopics: data.lockedTopics });
-      else setState({ status: "form", profile: null, suggestedName: data.suggestedName, lockedTopics: data.lockedTopics });
-    })();
+    if (first) first.then((ok) => ok || load());
+    else load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.isLoaded, auth.isSignedIn]);
 
   const leave = async () => {

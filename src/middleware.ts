@@ -1,3 +1,4 @@
+import { env } from "cloudflare:workers";
 import { defineMiddleware } from "astro:middleware";
 import { clerkMiddleware } from "@clerk/astro/server";
 
@@ -10,6 +11,8 @@ const passthrough = defineMiddleware((_context, next) => next());
 // pages always have.
 const readsSignIn = (path: string) => path.startsWith("/api/") || path === "/admin" || path.startsWith("/admin/");
 
-// Clerk is optional; see astro.config.mjs.
-const clerk = import.meta.env.PUBLIC_CLERK_ENABLED ? clerkMiddleware() : passthrough;
+// Clerk is optional; see astro.config.mjs. With its public key (CLERK_JWT_KEY
+// in wrangler.jsonc), a server that's just started doesn't wait on Clerk for
+// it before checking the first sign-in.
+const clerk = import.meta.env.PUBLIC_CLERK_ENABLED ? clerkMiddleware({ jwtKey: (env as { CLERK_JWT_KEY?: string }).CLERK_JWT_KEY }) : passthrough;
 export const onRequest = defineMiddleware((context, next) => (readsSignIn(context.url.pathname) ? clerk(context, next) : next()));

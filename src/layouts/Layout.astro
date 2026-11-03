@@ -88,6 +88,10 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
         navigator.serviceWorker.register("/service-worker.js").catch(function (err) {
           console.log("ServiceWorker registration failed: ", err);
         });
+        // This page came from the cache, and the app has been updated since.
+        navigator.serviceWorker.addEventListener("message", function (e) {
+          if (e.data && e.data.type === "reload") location.reload();
+        });
       }
     </script>
     <script>
