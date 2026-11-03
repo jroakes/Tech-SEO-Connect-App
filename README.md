@@ -162,10 +162,22 @@ Nothing else needs setting up: Workers AI and the cron triggers come with the
 Worker. The schedule appears from the bundled copy until the hourly sync runs,
 and the check-in guest list loads from Luma the first time the page opens.
 
-The Workers Paid plan ($5/month) is recommended for the conference month. On
-the free plan, D1 queries fail once the daily row limits are reached, and
-Workers AI (check-in's backup AI) has a small daily allowance. OpenRouter needs
-credit on its account.
+Use the Workers Paid plan ($5/month) for the conference month. On the free
+plan, D1 stops answering once 5 million rows are read in a day, and each view
+of the analytics page reads about 20 rows per logged event (some 1 million
+rows once 50,000 events are logged); Workers AI (check-in's backup AI) also
+has a small daily allowance there. Use a production Clerk instance: Clerk's
+API allows 1,000 requests per 10 seconds in production but only 100 on a
+development instance. OpenRouter needs credit on its account.
+
+**Capacity.** On November 2, 2026, 200 simulated attendees on the review site
+(each opening a page and logging an event every 1 to 2 seconds, far busier
+than real use) made 226 requests a second for 47 seconds with no errors;
+95% of pages answered within 0.25 seconds and every event was stored. Twenty
+check-in searches at once all answered (median 0.1 seconds, slowest 1.8). The
+account menu asks whether someone is an admin once per browser session, and
+the server remembers Clerk's answer for a minute, so busy pages don't run
+into Clerk's limits.
 
 **Moving the data** from another account is optional. Saved talks, Meet
 answers and check-ins belong to Clerk user IDs, so they only carry over if the
@@ -251,8 +263,10 @@ table either way; demo and real ones are kept apart.
 **Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
 page views, signed-in attendees, directions taps, saves and AI assistant use,
 page views over time, Meet (who's on it, joins, changed answers, leaves,
-topic opens and LinkedIn taps, by topic), the places people go, the
-most-saved talks, and what people ask the AI assistant. **Download every
+topic opens and LinkedIn taps, by topic), check-in (checked in, walk-ins and
+the size of the guest list; demo check-ins in demo mode), the places people
+go, the most-saved talks, and the AI assistant (requests by tool, and the
+searches and Meet topics people asked about). **Download every
 event** links there give the whole `events` table as CSV or JSON
 (`/api/admin/events?format=csv|json`, admins only) for another tool.
 

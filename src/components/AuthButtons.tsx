@@ -10,17 +10,29 @@ const USER_CHECK_ICON =
 const icon = (svg: string) => ({ mountIcon: (el: HTMLDivElement) => (el.innerHTML = svg), unmountIcon: (el?: HTMLDivElement) => el && (el.innerHTML = "") });
 
 export default function AuthButtons() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, userId } = useAuth();
   const [admin, setAdmin] = useState(false);
 
-  // Admins get a link to the admin pages in their account menu.
+  // Admins get links to the admin pages in their account menu. The answer is
+  // kept for the browser session, so it isn't asked for on every page.
   useEffect(() => {
-    if (!isSignedIn) return setAdmin(false);
+    if (!isSignedIn || !userId) return setAdmin(false);
+    const key = `tsc_admin_${userId}`;
+    try {
+      const known = sessionStorage.getItem(key);
+      if (known) return setAdmin(known === "1");
+    } catch {}
     fetch("/api/me")
       .then((res) => (res.ok ? (res.json() as Promise<{ admin: boolean }>) : null))
-      .then((data) => setAdmin(!!data?.admin))
+      .then((data) => {
+        if (!data) return;
+        setAdmin(data.admin);
+        try {
+          sessionStorage.setItem(key, data.admin ? "1" : "0");
+        } catch {}
+      })
       .catch(() => {});
-  }, [isSignedIn]);
+  }, [isSignedIn, userId]);
 
   // A fixed-size slot, the size of the fallback in Header.astro, so the header
   // doesn't shift as the page starts up and Clerk loads.

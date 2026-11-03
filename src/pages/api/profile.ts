@@ -26,7 +26,9 @@ const logMeet = (type: string, userId: string, props?: Record<string, unknown>) 
 export const GET: APIRoute = async ({ locals }) => {
   const userId = getUserId(locals);
   if (!userId) return json({ error: "Sign in to meet people." }, 401);
-  const [profile, user] = await Promise.all([getProfile(env.DB, userId), currentUser(locals)]);
+  const profile = await getProfile(env.DB, userId);
+  // Their account name starts the form off, so Clerk is asked only before they join.
+  const user = profile ? null : await currentUser(locals);
   return json({ profile, suggestedName: user ? displayName(user) : "" });
 };
 

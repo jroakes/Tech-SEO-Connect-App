@@ -1,13 +1,14 @@
 ---
-// Admin analytics: what attendees view, save and get directions to, and how
-// they use Meet and the AI assistant connector. Every event can be downloaded
-// from /api/admin/events.
+// Admin analytics: what attendees view, save and get directions to, how they
+// use Meet and the AI assistant connector, and check-in at the door. Every
+// event can be downloaded from /api/admin/events.
 import { env } from "cloudflare:workers";
 import Layout from "@/layouts/Layout.astro";
 import AdminHeader from "@/components/AdminHeader.astro";
 import AdminLocked from "@/components/AdminLocked.astro";
 import { getUserId } from "@/lib/auth-server";
 import { currentAdmin } from "@/lib/clerk";
+import { isDemo } from "@/lib/check-in";
 import { getInsights, RANGES, type Range } from "@/lib/insights";
 
 export const prerender = false;
@@ -19,7 +20,8 @@ if (!admin) Astro.response.status = signedIn ? 403 : 401;
 
 const requested = Astro.url.searchParams.get("range");
 const range: Range = RANGES.some((r) => r.value === requested) ? (requested as Range) : "7d";
-const data = admin ? await getInsights(env.DB, range) : null;
+const demo = isDemo();
+const data = admin ? await getInsights(env.DB, range, demo) : null;
 
 const n = (value: number) => value.toLocaleString("en-US");
 const toolNames: Record<string, string> = {
@@ -31,6 +33,8 @@ const toolNames: Record<string, string> = {
   get_my_conference: "My Conference",
   save_to_my_conference: "Save to My Conference",
   remove_from_my_conference: "Remove from My Conference",
+  get_meet_topics: "Meet topics",
+  find_people_to_meet: "People to meet",
 };
 
 // Activity chart scale: the y-axis tops out at a round number.
@@ -60,6 +64,14 @@ const meetStats = meet
       { label: "Left", value: meet.leaves },
       { label: "Topics opened", value: meet.topicOpens },
       { label: "LinkedIn taps", value: meet.linkedinTaps },
+    ]
+  : [];
+const checkIn = data?.checkIn;
+const checkInStats = checkIn
+  ? [
+      { label: "Checked in", value: checkIn.checkedIn, note: checkIn.guests ? `${Math.round((100 * checkIn.checkedIn) / checkIn.guests)}% of the guest list` : undefined },
+      { label: "Walk-ins", value: checkIn.walkIns },
+      { label: "On the guest list", value: checkIn.guests, note: "From Luma, now; no livestream-only tickets" },
     ]
   : [];
 // Two side-by-side tables on wide screens.
@@ -203,6 +215,24 @@ const meetHalves = [meetTopics.slice(0, Math.ceil(meetTopics.length / 2)), meetT
               ) : (
                 <p class="py-6 text-center text-sm text-muted-foreground">Nobody has joined Meet yet.</p>
               )}
+            </section>
+
+            <section class="mb-6 rounded-md border border-border bg-card p-4" aria-labelledby="check-in-title" data-testid="section-check-in">
+              <div class="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <h2 id="check-in-title" class="text-base font-semibold text-foreground">Check-in</h2>
+                <p class="text-xs text-muted-foreground">
+                  {demo ? "Demo mode: these are test check-ins, saved only in this app." : "For the selected range."}
+                </p>
+              </div>
+              <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {checkInStats.map((s) => (
+                  <div class="rounded-md bg-muted/60 p-3">
+                    <div class="text-xs font-medium text-muted-foreground">{s.label}</div>
+                    <div class="mt-0.5 text-xl font-bold tabular-nums text-foreground">{n(s.value)}</div>
+                    {s.note && <div class="text-xs text-muted-foreground">{s.note}</div>}
+                  </div>
+                ))}
+              </div>
             </section>
 
             <div class="grid items-start gap-6 lg:grid-cols-2">

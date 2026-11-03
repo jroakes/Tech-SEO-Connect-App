@@ -45,20 +45,29 @@ export async function currentAdmin(locals: App.Locals): Promise<User | null> {
   return user && isAdmin(user) ? user : null;
 }
 
-const recentAdmins = new Map<string, number>(); // user ID → when Clerk last said they're an admin
+const adminChecks = new Map<string, { admin: boolean; at: number }>(); // user ID → Clerk's last answer
 
 /**
- * The signed-in admin's ID, trusting an answer from Clerk in the last minute,
- * so a busy admin tool (check-in) doesn't wait on Clerk for every request.
+ * Whether the signed-in user is an admin, trusting Clerk's answer from the
+ * last minute, so requests that come often (the account menu on every page,
+ * check-in) don't each wait on Clerk. Its API allows 100 requests per 10
+ * seconds on a development instance and 1,000 in production.
  */
-export async function recentAdmin(locals: App.Locals): Promise<{ id: string } | null> {
+export async function isRecentAdmin(locals: App.Locals): Promise<boolean> {
   const userId = getUserId(locals);
-  if (!userId) return null;
-  if (Date.now() - (recentAdmins.get(userId) ?? 0) < 60_000) return { id: userId };
-  const admin = await currentAdmin(locals);
-  if (admin) recentAdmins.set(userId, Date.now());
-  else recentAdmins.delete(userId);
+  if (!userId) return false;
+  const known = adminChecks.get(userId);
+  if (known && Date.now() - known.at < 60_000) return known.admin;
+  const user = await currentUser(locals);
+  if (!user) return false; // Clerk didn't answer: ask again next time
+  const admin = isAdmin(user);
+  adminChecks.set(userId, { admin, at: Date.now() });
   return admin;
+}
+
+/** The signed-in admin's ID, from `isRecentAdmin`, or null. */
+export async function recentAdmin(locals: App.Locals): Promise<{ id: string } | null> {
+  return (await isRecentAdmin(locals)) ? { id: getUserId(locals)! } : null;
 }
 
 export function displayName(user: User): string {

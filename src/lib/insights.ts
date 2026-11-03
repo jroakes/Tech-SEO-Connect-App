@@ -1,5 +1,6 @@
 // Queries for the organizers' analytics page (src/pages/admin/analytics.astro),
-// over the events table, the saved talks and places, and Meet profiles.
+// over the events table, the saved talks and places, Meet profiles and
+// check-ins.
 import { TOPICS } from "../data/topics";
 
 export type Range = "24h" | "7d" | "all";
@@ -42,6 +43,13 @@ export interface Insights {
     /** Topics anyone picked or opened: picked now, and opens and LinkedIn taps in the range. */
     topics: { topic: string; label: string; people: number; opens: number; taps: number }[];
   };
+  checkIn: {
+    /** Check-ins in the range (demo ones in demo mode). */
+    checkedIn: number;
+    walkIns: number;
+    /** On the guest list now. */
+    guests: number;
+  };
 }
 
 const TIME_ZONE = "America/New_York";
@@ -53,7 +61,8 @@ function localOffset(now: Date): string {
   return `${Math.round((local.getTime() - utc.getTime()) / 3_600_000)} hours`;
 }
 
-export async function getInsights(db: D1Database, range: Range, now = new Date()): Promise<Insights> {
+/** `demo`: count demo check-ins (CHECK_IN_DEMO) rather than real ones. */
+export async function getInsights(db: D1Database, range: Range, demo: boolean, now = new Date()): Promise<Insights> {
   const since = range === "all" ? "0000" : new Date(now.getTime() - (range === "24h" ? 24 : 7 * 24) * 3_600_000).toISOString();
   const offset = localOffset(now);
   const unit = range === "24h" ? "hour" : "day";
@@ -113,9 +122,10 @@ export async function getInsights(db: D1Database, range: Range, now = new Date()
        FROM events WHERE type = 'mcp_tool_call' AND ts >= ? GROUP BY tool ORDER BY calls DESC`,
       since,
     ),
+    // Searches, and the Meet topics people asked about.
     all<{ query: string; count: number }>(
-      `SELECT lower(json_extract(props, '$.query')) AS query, COUNT(*) AS count
-       FROM events WHERE type = 'mcp_tool_call' AND ts >= ? AND json_extract(props, '$.query') IS NOT NULL
+      `SELECT lower(COALESCE(json_extract(props, '$.query'), json_extract(props, '$.topic'))) AS query, COUNT(*) AS count
+       FROM events WHERE type = 'mcp_tool_call' AND ts >= ? AND COALESCE(json_extract(props, '$.query'), json_extract(props, '$.topic')) IS NOT NULL
        GROUP BY query ORDER BY count DESC LIMIT 8`,
       since,
     ),
@@ -125,7 +135,7 @@ export async function getInsights(db: D1Database, range: Range, now = new Date()
     ),
   ]);
 
-  const [meetPeople, picked, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps] = await Promise.all([
+  const [meetPeople, picked, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps, checkedIn, walkIns, guests] = await Promise.all([
     one<{ people: number; withLinkedin: number }>("SELECT COUNT(*) AS people, COALESCE(SUM(linkedin IS NOT NULL), 0) AS withLinkedin FROM profiles"),
     all<{ topic: string; n: number }>("SELECT value AS topic, COUNT(*) AS n FROM profiles, json_each(profiles.topics) GROUP BY value"),
     all<{ topic: string; opens: number; taps: number }>(
@@ -138,6 +148,9 @@ export async function getInsights(db: D1Database, range: Range, now = new Date()
     ofType("match_leave"),
     ofType("match_topic_open"),
     ofType("match_linkedin_click"),
+    count("SELECT COUNT(*) AS n FROM check_ins WHERE demo = ? AND checked_in_at >= ?", demo ? 1 : 0, since),
+    count("SELECT COUNT(*) AS n FROM check_ins WHERE demo = ? AND walk_in = 1 AND checked_in_at >= ?", demo ? 1 : 0, since),
+    count("SELECT json_array_length(guests) AS n FROM guest_list"),
   ]);
   const meetTopics = TOPICS.map(({ id, label }) => {
     const activity = meetActivity.find((a) => a.topic === id);
@@ -170,6 +183,7 @@ export async function getInsights(db: D1Database, range: Range, now = new Date()
       linkedinTaps,
       topics: meetTopics,
     },
+    checkIn: { checkedIn, walkIns, guests },
   };
 }
 
