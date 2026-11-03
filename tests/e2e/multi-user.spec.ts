@@ -48,6 +48,16 @@ async function showToCamera(page: Page, text: string) {
   }, qr);
 }
 
+/** Opens a page and returns its account menu's links to the admin pages, once the menu knows the account. */
+async function adminLinks(page: Page, path: string) {
+  const account = page.waitForResponse((res) => res.url().endsWith("/__test/user"));
+  await open(page, path);
+  await (await account).finished();
+  // A frame for the menu to show what it learned.
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(resolve)));
+  return page.getByTestId("fake-user-button").locator('a[href^="/admin"]');
+}
+
 test("an admin makes an attendee an admin, who can then use the admin pages", async ({ browser }, info) => {
   test.skip(info.project.name !== "desktop", "Once is enough; the phone runs the check-in desk.");
   const ada = person("admin", "Ada", "Admin");
@@ -55,8 +65,8 @@ test("an admin makes an attendee an admin, who can then use the admin pages", as
   const adaPage = await signIn(browser, ada.id, info);
   const carolPage = await signIn(browser, carol.id, info);
 
-  // Carol signs in. She's an attendee, so the admin pages are locked.
-  await open(carolPage, "/schedule");
+  // Carol signs in. She's an attendee: no admin links, and the admin pages are locked.
+  await expect(await adminLinks(carolPage, "/schedule")).toHaveCount(0);
   await open(carolPage, "/admin");
   await expect(carolPage.getByTestId("panel-admin-locked")).toBeVisible();
 
@@ -67,7 +77,9 @@ test("an admin makes an attendee an admin, who can then use the admin pages", as
   await adaPage.getByTestId("button-confirm-action").click();
   await expect(row.getByRole("button", { name: "Remove admin" })).toBeVisible();
 
-  // Carol can open every admin page and use the check-in desk.
+  // On her next page her account menu has the admin links, and she can open
+  // every admin page and use the check-in desk.
+  await expect(await adminLinks(carolPage, "/schedule")).toHaveCount(2);
   await open(carolPage, "/admin");
   await expect(carolPage.getByTestId("list-users")).toBeVisible();
   await open(carolPage, "/admin/analytics");
@@ -77,18 +89,18 @@ test("an admin makes an attendee an admin, who can then use the admin pages", as
   await carolPage.getByTestId("button-check-in-search").click();
   await expect(carolPage.getByTestId("row-guest-g-dev")).toBeVisible();
 
-  // An admin's account menu links to the admin pages. (Someone just made an
-  // admin gets the links within two minutes; see AuthButtons.tsx.)
-  await open(adaPage, "/schedule");
+  // Ada's account menu links to the admin pages.
+  await expect(await adminLinks(adaPage, "/schedule")).toHaveCount(2);
   await adaPage.getByTestId("fake-user-button").click();
   await expect(adaPage.getByRole("link", { name: "Admin" })).toBeVisible();
   await expect(adaPage.getByRole("link", { name: "Check-in Guests" })).toBeVisible();
 
-  // Ada takes it back, and the admin pages lock again.
+  // Ada takes it back: on Carol's next page the links are gone and the admin pages lock again.
   await open(adaPage, `/admin?q=${encodeURIComponent(carol.name)}`);
   await row.getByRole("button", { name: "Remove admin" }).click();
   await adaPage.getByTestId("button-confirm-action").click();
   await expect(row.getByRole("button", { name: "Make admin" })).toBeVisible();
+  await expect(await adminLinks(carolPage, "/schedule")).toHaveCount(0);
   await open(carolPage, "/admin");
   await expect(carolPage.getByTestId("panel-admin-locked")).toBeVisible();
 });

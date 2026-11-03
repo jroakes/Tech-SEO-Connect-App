@@ -15,10 +15,11 @@ const now = Date.now();
 const event = (type: string, props?: Record<string, unknown>, extra: Partial<EventRecord> = {}): EventRecord => ({ type, ts: now - 60_000, anonId: "device-1", path: "/schedule", props, ...extra });
 
 describe("admin", () => {
-  it("tells the account menu who's an admin", async () => {
+  it("tells the account menu who's an organizer", async () => {
     expect((await call(me)).status).toBe(401);
-    expect((await call(me, { user: "attendee" })).data).toEqual({ admin: false });
-    expect((await call(me, { user: "admin1" })).data).toEqual({ admin: true });
+    expect((await call(me, { user: "attendee" })).data).toEqual({ organizer: false });
+    expect((await call(me, { user: "admin1" })).data).toEqual({ organizer: false });
+    expect((await call(me, { user: "organizer1" })).data).toEqual({ organizer: true });
   });
 
   it("guards the user actions", async () => {

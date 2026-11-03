@@ -70,7 +70,7 @@ src/pages/             Astro pages and API routes
   api/saved.ts         GET/POST a signed-in user's saved talks or places
   api/profile.ts       GET/PUT/DELETE the signed-in user's Meet answers
   api/matches.ts       GET everyone on Meet (only for those who joined)
-  api/me.ts            GET whether the signed-in user is an admin
+  api/me.ts            GET whether the signed-in user is an organizer
   api/admin/users.ts   POST admin actions on a user
   api/admin/events.ts  GET every event as CSV or JSON (admins only)
   api/admin/check-in.ts  POST guest searches, check-ins and walk-ins (admins only)
@@ -212,9 +212,10 @@ development instance. OpenRouter needs credit on its account.
 than real use) made 226 requests a second for 47 seconds with no errors;
 95% of pages answered within 0.25 seconds and every event was stored. Twenty
 check-in searches at once all answered (median 0.1 seconds, slowest 1.8). The
-account menu asks whether someone is an admin at most every two minutes, and
-the server remembers Clerk's answer for a minute, so busy pages don't run
-into Clerk's limits.
+account menu reads the admin role from the account Clerk's script already
+loads (and asks the server about organizers once per sign-in), and the
+check-in desk trusts Clerk's yes for a minute, so busy pages don't run into
+Clerk's limits.
 
 **Moving the data** from another account is optional. Saved talks, Meet
 answers and check-ins belong to Clerk user IDs, so they only carry over if the
@@ -244,7 +245,12 @@ and only people in topics they picked. Tool calls are logged as
 
 Admins are the organizers in `ORGANIZER_EMAILS`, plus anyone an admin makes an
 admin (stored in Clerk as `publicMetadata.role = "admin"`). Admins get an
-**Admin** link in their account menu.
+**Admin** link in their account menu. The menu reads the role from the
+account Clerk's script loads on every page, so someone made an admin, or no
+longer one, sees the change on their next page; organizers are asked about
+once per sign-in and kept on the device until they sign out. Each admin page
+checks with Clerk when it opens; the check-in desk's actions trust a yes from
+the last minute.
 
 **Users** (`/admin`) lists everyone who has signed in, newest first, with
 search. For each user an admin can:

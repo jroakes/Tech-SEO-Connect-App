@@ -20,9 +20,10 @@ real guest list. Together, the two test suites check:
 
 **Several people at once** (`tests/e2e/multi-user.spec.ts`)
 
-- [ ] An admin makes an attendee an admin. The new admin can open the Users,
-      Analytics and Check-in pages and search the guest list right away. Taking
-      admin away locks the pages again.
+- [ ] An admin makes an attendee an admin. On the new admin's next page their
+      account menu has the admin links, and they can open the Users,
+      Analytics and Check-in pages and search the guest list right away.
+      Taking admin away removes the links and locks the pages again.
 - [ ] Two admins at the check-in desk, on phones: one finds a guest by name and
       checks them in, the other finds the same guest by email, sees they're
       checked in and undoes it, and the first sees the undo.

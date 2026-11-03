@@ -49,11 +49,11 @@ const adminChecks = new Map<string, { admin: boolean; at: number }>(); // user I
 
 /**
  * Whether the signed-in user is an admin, trusting Clerk's answer from the
- * last minute, so requests that come often (the account menu on every page,
- * the admin pages, check-in) don't each wait on Clerk. Its API allows 100 requests per 10
- * seconds on a development instance and 1,000 in production. `recheckNo`
- * asks Clerk again when the last answer was no, so someone just made an admin
- * isn't turned away.
+ * last minute, so the check-in desk's searches and check-ins don't each wait
+ * on Clerk (the admin pages ask Clerk every time). Its API allows 100
+ * requests per 10 seconds on a development instance and 1,000 in production.
+ * `recheckNo` asks Clerk again when the last answer was no, so someone just
+ * made an admin isn't turned away.
  */
 export async function isRecentAdmin(locals: App.Locals, recheckNo = false): Promise<boolean> {
   const userId = getUserId(locals);

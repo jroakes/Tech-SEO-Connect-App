@@ -24,7 +24,7 @@ export const clerk = () => ({
   },
 });
 export const isAdmin = (user: User) => user.publicMetadata?.role === "admin";
-export const isOrganizer = () => false;
+export const isOrganizer = (user: User) => user.id.startsWith("organizer");
 export const displayName = (user: User) => `${user.firstName} ${user.lastName}`;
 export const primaryEmail = (user: User) => user.emailAddresses[0]?.emailAddress ?? null;
 export const currentUser = async (locals: App.Locals) => {

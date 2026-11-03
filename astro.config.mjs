@@ -15,6 +15,11 @@ const env = loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "");
 const fakeAuth = process.env.FAKE_AUTH === "1";
 const clerkEnabled = fakeAuth || Boolean(env.PUBLIC_CLERK_PUBLISHABLE_KEY);
 const fake = (file) => fileURLToPath(new URL(`./tests/fake-auth/${file}`, import.meta.url));
+// The fake account as Clerk's browser script would load it (tests/fake-auth/client.ts).
+const fakeAuthRoutes = {
+  name: "fake-auth-routes",
+  hooks: { "astro:config:setup": ({ injectRoute }) => injectRoute({ pattern: "/__test/user", entrypoint: fake("user-route.ts") }) },
+};
 
 export default defineConfig({
   site: "https://app.techseoconnect.com",
@@ -23,7 +28,7 @@ export default defineConfig({
   // and an Images binding this app doesn't use.
   session: false,
   adapter: cloudflare({ imageService: "passthrough" }),
-  integrations: [react(), ...(clerkEnabled && !fakeAuth ? [clerk()] : [])],
+  integrations: [react(), ...(clerkEnabled && !fakeAuth ? [clerk()] : []), ...(fakeAuth ? [fakeAuthRoutes] : [])],
   redirects: {
     "/": "/schedule",
     "/analytics": "/admin/analytics",
@@ -42,6 +47,7 @@ export default defineConfig({
         alias: [
           { find: /^@clerk\/astro\/react$/, replacement: fake("react.tsx") },
           { find: /^@clerk\/astro\/server$/, replacement: fake("server.ts") },
+          { find: /^@clerk\/astro\/client$/, replacement: fake("client.ts") },
           { find: /^@clerk\/backend$/, replacement: fake("backend.ts") },
         ],
       },

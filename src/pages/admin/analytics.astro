@@ -7,14 +7,15 @@ import Layout from "@/layouts/Layout.astro";
 import AdminHeader from "@/components/AdminHeader.astro";
 import AdminLocked from "@/components/AdminLocked.astro";
 import { getUserId } from "@/lib/auth-server";
-import { isRecentAdmin } from "@/lib/clerk";
+import { currentAdmin } from "@/lib/clerk";
 import { isDemo } from "@/lib/check-in";
 import { getInsights, RANGES, type Range } from "@/lib/insights";
 
 export const prerender = false;
 
-// A yes from Clerk in the last minute will do (see isRecentAdmin), so the page doesn't wait on Clerk.
-const admin = import.meta.env.PUBLIC_CLERK_ENABLED ? await isRecentAdmin(Astro.locals, true) : false;
+// Asked of Clerk on every admin page, so someone just made an admin gets in,
+// and someone who no longer is gets turned away, right away.
+const admin = import.meta.env.PUBLIC_CLERK_ENABLED ? await currentAdmin(Astro.locals) : null;
 const signedIn = !!getUserId(Astro.locals);
 Astro.response.headers.set("Cache-Control", "no-store");
 if (!admin) Astro.response.status = signedIn ? 403 : 401;
