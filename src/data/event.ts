@@ -9,7 +9,7 @@ export const event = {
   website: "https://www.techseoconnect.com",
   appUrl: "https://app.techseoconnect.com",
   // For questions about the app, its privacy policy and terms.
-  contactEmail: "techseoconnect@gmail.com",
+  contactEmail: "hello@techseoconnect.com",
   // Between Bay 7 and the downtown core. Bay 7 itself is 35.9934627, -78.9052607.
   mapCenter: [35.9955, -78.9025] as [number, number],
 };
