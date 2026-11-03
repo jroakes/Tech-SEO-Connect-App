@@ -1,3 +1,4 @@
+import { appleMapsUrl, googleMapsUrl } from "./maps";
 import type { Place, Session } from "./types";
 
 declare global {
@@ -157,9 +158,5 @@ export function trackPlaceSave(place: Place, saved: boolean) {
 }
 
 export function openDirections(mapType: "google_maps" | "apple_maps", place: Place) {
-  const url =
-    mapType === "google_maps"
-      ? `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lng}`
-      : `https://maps.apple.com/?q=${encodeURIComponent(place.name)}&ll=${place.lat},${place.lng}`;
-  window.open(url, "_blank", "noopener");
+  window.open(mapType === "google_maps" ? googleMapsUrl(place) : appleMapsUrl(place), "_blank", "noopener");
 }

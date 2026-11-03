@@ -427,6 +427,14 @@ https://www.ninthstbakery.com/</description>
           <coordinates>-78.9029143,35.9966967,0</coordinates>
         </Point>
       </Placemark>
+      <Placemark>
+        <name>Alimentari at Mothers &amp; Sons</name>
+        <address>105 W Chapel Hill St, Durham, NC 27701</address>
+        <description>The casual Italian deli, market and coffee bar next door to Mothers &amp; Sons Trattoria.</description>
+        <Point>
+          <coordinates>-78.9043686,35.9968828,0</coordinates>
+        </Point>
+      </Placemark>
     </Folder>
     <Folder>
       <name>Dinner</name>

@@ -93,7 +93,12 @@ content/               Source files for places (KML export and narratives)
   `src/data/schedule.ts`.
 - **Places:** built from `content/places.kml` (a Google My Maps export) and
   `content/place-narratives.json` with `npm run import:places`, which writes
-  `src/data/places.json`.
+  `src/data/places.json`. `content/google-listings.json` links each place, by
+  name, to its Google Maps listing (Place ID, address and the listing's exact
+  coordinates), so the Google Maps button opens the listing itself rather than
+  a pin. Pins move to the listing's coordinates and keep the KML's as
+  `originalLat`/`originalLng`; `npm run import:places -- --original-pins` goes
+  back to the KML pins. A listing marked `closed_forever` leaves its place out.
 - **Session IDs:** each one is the date plus the speaker (or the time plus the
   title for breaks). A retitled talk keeps its saves, and so does a talk that
   moves to another day: the sync points saved IDs at the speaker's new one,

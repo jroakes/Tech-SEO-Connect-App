@@ -7,6 +7,12 @@ export interface Place {
   narrative?: string;
   /** The conference venue, always shown on the map as a gold star. */
   isVenue?: boolean;
+  /** Its Google Maps listing (see content/google-listings.json). */
+  googlePlaceId?: string;
+  address?: string;
+  /** The pin's coordinates before they were set from the Google listing. */
+  originalLat?: number;
+  originalLng?: number;
 }
 
 export interface Session {

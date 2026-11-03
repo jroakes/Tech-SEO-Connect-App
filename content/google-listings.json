@@ -1,0 +1,956 @@
+{
+  "Bay 7 - Conference Venue": {
+    "title": "Bay 7",
+    "address": "324 Blackwell St #700, Durham, NC 27701",
+    "placeId": "ChIJB8S19uDlrIkR-vFZ8Uc9mSo",
+    "cid": "3069552000230879738",
+    "lat": 35.9934627,
+    "lng": -78.9052607,
+    "status": "operational"
+  },
+  "SO/IF Bar - Welcome Drinks": {
+    "title": "SOIF",
+    "address": "331 W Main St, Durham, NC 27701",
+    "placeId": "ChIJUVXCXnvlrIkRvfSIIjYs66I",
+    "cid": "11739525464690586813",
+    "lat": 35.9965255,
+    "lng": -78.9036678,
+    "status": "operational"
+  },
+  "Mateo Bar de Tapas - Welcome Party": {
+    "title": "Mateo Bar de Tapas",
+    "address": "109 W Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJqbMjoHLkrIkRU_pHV3Z9LMM",
+    "cid": "14063753683595164243",
+    "lat": 35.9968525,
+    "lng": -78.9047943,
+    "status": "operational"
+  },
+  "BOOM Club - After Party": {
+    "title": "BOOM Club",
+    "address": "600 Foster St Ste B, Durham, NC 27701",
+    "placeId": "ChIJXQTuFj3lrIkR0sQZ1OEz48U",
+    "cid": "14259297890204239058",
+    "lat": 36.002354,
+    "lng": -78.9010113,
+    "status": "operational"
+  },
+  "delafia - Farewell Party": {
+    "title": "delafia",
+    "address": "1103 S Roxboro St, Durham, NC 27707",
+    "placeId": "ChIJ51C4ynHlrIkRB6uma7dM_bc",
+    "cid": "13257837228717419271",
+    "lat": 35.9832881,
+    "lng": -78.9026308,
+    "status": "operational"
+  },
+  "Aloft Durham Downtown": {
+    "title": "Aloft by Marriott Durham Downtown",
+    "address": "345 Blackwell St, Durham, NC 27701",
+    "placeId": "ChIJ2wId-2zkrIkRqb3TnHKqSmU",
+    "cid": "7298833555341426089",
+    "lat": 35.9931769,
+    "lng": -78.9027894,
+    "status": "operational"
+  },
+  "21c Museum Hotel Durham": {
+    "title": "21c Museum Hotel Durham",
+    "address": "111 Corcoran St, Durham, NC 27701",
+    "placeId": "ChIJv3x6823krIkRHHKCf1JtFEQ",
+    "cid": "4905666095207313948",
+    "lat": 35.996052,
+    "lng": -78.9017456,
+    "status": "operational"
+  },
+  "The Durham Hotel": {
+    "title": "The Durham Hotel",
+    "address": "315 E Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJp1GfG3LkrIkRnnRp3c0Xd30",
+    "cid": "9040720949919970462",
+    "lat": 35.9970358,
+    "lng": -78.9009182,
+    "status": "operational"
+  },
+  "Durham Marriott City Center": {
+    "title": "Durham Marriott City Center",
+    "address": "201 Foster St, Durham, NC 27701",
+    "placeId": "ChIJE0U5aXLkrIkRlL4Jt7lbazE",
+    "cid": "3561040783564455572",
+    "lat": 35.9970476,
+    "lng": -78.9027052,
+    "status": "operational"
+  },
+  "Aaktun Coffee, Restaurant and Bar": {
+    "title": "Aaktun Coffee, Restaurant and Bar",
+    "address": "704 Ramseur St, Durham, NC 27701",
+    "placeId": "ChIJy8JoVQDlrIkRXw7_bTyJsm4",
+    "cid": "7976588782663044703",
+    "lat": 35.9893315,
+    "lng": -78.8957363,
+    "status": "operational"
+  },
+  "Yonder Coffee at the Daily": {
+    "title": "Yonder Coffee at the Daily",
+    "address": "108 E Main St Suite 101, Durham, NC 27701",
+    "placeId": "ChIJa6vTrBLlrIkRYWGJm5RXmkk",
+    "cid": "5303647806958428513",
+    "lat": 35.9946091,
+    "lng": -78.9005212,
+    "status": "operational"
+  },
+  "Cocoa Cinnamon": {
+    "title": "Cocoa Cinnamon",
+    "address": "420 W Geer St, Durham, NC 27701",
+    "placeId": "ChIJ005xLnTkrIkRyOEuOjvwi94",
+    "cid": "16036175035352670664",
+    "lat": 36.0039706,
+    "lng": -78.9010749,
+    "status": "operational"
+  },
+  "The Oak House Durham": {
+    "title": "The Oak House Durham",
+    "address": "126 W Main St, Durham, NC 27701",
+    "placeId": "ChIJ3bV4bPPlrIkRECCV5a1aRXc",
+    "cid": "8594375166834057232",
+    "lat": 35.9956143,
+    "lng": -78.9014868,
+    "status": "operational"
+  },
+  "PRESS Coffee Crêpes Cocktails": {
+    "title": "PRESS Coffee Crêpes Cocktails",
+    "address": "American Tobacco Campus, 359 Blackwell St #135, Durham, NC 27701",
+    "placeId": "ChIJK6mpSzvlrIkRiTvq-mJqmcQ",
+    "cid": "14166471076219599753",
+    "lat": 35.9925864,
+    "lng": -78.9042099,
+    "status": "operational"
+  },
+  "Narrative Coffee Company": {
+    "title": "Narrative Coffee Company",
+    "address": "300 Morris St Ste 101, Durham, NC 27701",
+    "placeId": "ChIJ38_sW6yj9QQRXdXMxgAU6M0",
+    "cid": "14837130965939967325",
+    "lat": 35.999837,
+    "lng": -78.903272,
+    "status": "operational"
+  },
+  "Foster Street Coffee": {
+    "title": "Foster Street Coffee",
+    "address": "530 Foster St #2, Durham, NC 27701",
+    "placeId": "ChIJOX1b8HPkrIkRw54taJI6xkI",
+    "cid": "4811597652379410115",
+    "lat": 36.0016425,
+    "lng": -78.9012925,
+    "status": "operational"
+  },
+  "Yonderlust Cafe": {
+    "title": "Yonderlust Cafe",
+    "address": "109 N Gregson St, Durham, NC 27701",
+    "placeId": "ChIJgzK1NbLlrIkRsOsIPmZ3YaA",
+    "cid": "11556649399820544944",
+    "lat": 36.000436,
+    "lng": -78.909064,
+    "status": "operational"
+  },
+  "Nectar Cafe": {
+    "title": "Nectar Cafe",
+    "address": "620 Foster St, Durham, NC 27701",
+    "placeId": "ChIJvQVbFQDlrIkRZDK8kFehpIQ",
+    "cid": "9557941706649514596",
+    "lat": 36.0031511,
+    "lng": -78.9007002,
+    "status": "operational"
+  },
+  "Ninth Street Bakery": {
+    "title": "Ninth Street Bakery",
+    "address": "136 E Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJAfNvh3LkrIkRYBlZaka20RY",
+    "cid": "1644295752515131744",
+    "lat": 35.9966967,
+    "lng": -78.9029143,
+    "status": "operational"
+  },
+  "Fare&Fellow": {
+    "title": "Fare&Fellow - Coffee Shop - Downtown Durham",
+    "address": "411 W Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJIRnaQUrlrIkR6J6_oEyxl4E",
+    "cid": "9338127295048556264",
+    "lat": 35.9963806,
+    "lng": -78.9083214,
+    "status": "operational"
+  },
+  "Montwood Café": {
+    "title": "Montwood Café",
+    "address": "123 Market St Ste a, Durham, NC 27701",
+    "placeId": "ChIJhZ9FwSflrIkRvb7O788DioM",
+    "cid": "9478392557371047613",
+    "lat": 35.9968433,
+    "lng": -78.9021835,
+    "status": "operational"
+  },
+  "The Can Opener": {
+    "title": "The Can Opener",
+    "address": "205 S Gregson St, Durham, NC 27701",
+    "placeId": "ChIJDXATip7lrIkR-SeRCIiYFS4",
+    "cid": "3320728010282313721",
+    "lat": 35.9985175,
+    "lng": -78.9100663,
+    "status": "operational"
+  },
+  "Juicekeys": {
+    "title": "Juicekeys",
+    "address": "110 N Corcoran St, Durham, NC 27701",
+    "placeId": "ChIJE9BUjKnlrIkRc1LAFF3SFGQ",
+    "cid": "7211620200548946547",
+    "lat": 35.9959335,
+    "lng": -78.9015257,
+    "status": "operational"
+  },
+  "QueenBurger": {
+    "title": "QueenBurger",
+    "address": "359 Blackwell St Ste 125, Durham, NC 27701",
+    "placeId": "ChIJLViBXl3lrIkRJScUfso8TUk",
+    "cid": "5281944778371770149",
+    "lat": 35.9927674,
+    "lng": -78.9039817,
+    "status": "operational"
+  },
+  "Bull City Burger and Brewery": {
+    "title": "Bull City Burger and Brewery",
+    "address": "107 E Parrish St, Durham, NC 27701",
+    "placeId": "ChIJh3eRD27krIkRpG-tTJnXAf8",
+    "cid": "18375205008064737188",
+    "lat": 35.9954939,
+    "lng": -78.8997764,
+    "status": "operational"
+  },
+  "Durham Food Hall": {
+    "title": "Durham Food Hall",
+    "address": "530 Foster St Ste 1, Durham, NC 27701",
+    "placeId": "ChIJM5mle8PlrIkRiVJVIhrzwHM",
+    "cid": "8340933803460874889",
+    "lat": 36.0013101,
+    "lng": -78.9013355,
+    "status": "operational"
+  },
+  "Anjappar Chettinad Indian Restaurant, Durham": {
+    "title": "Anjappar Indian",
+    "address": "201 E Main St Ste 150, Durham, NC 27701",
+    "placeId": "ChIJ79GmOgDlrIkR402_UvaopG8",
+    "cid": "8044740610294238691",
+    "lat": 35.9942028,
+    "lng": -78.8987389,
+    "status": "operational"
+  },
+  "Counting House": {
+    "title": "Counting House",
+    "address": "111 Corcoran St, Durham, NC 27701",
+    "placeId": "ChIJv3x6823krIkRKSZN_waUaVo",
+    "cid": "6514901093742093865",
+    "lat": 35.9959681,
+    "lng": -78.9018032,
+    "status": "operational"
+  },
+  "Thaiangle Restaurant": {
+    "title": "Thaiangle Restaurant",
+    "address": "200 N Mangum St Ste 101, Durham, NC 27701",
+    "placeId": "ChIJJS3nqKrlrIkRBykZ9Fi6JIQ",
+    "cid": "9521940403383249159",
+    "lat": 35.9957636,
+    "lng": -78.8999034,
+    "status": "operational"
+  },
+  "Queeny's": {
+    "title": "Queeny's",
+    "address": "321 E Chapel Hill St Ste 100, Durham, NC 27701",
+    "placeId": "ChIJkxoe8wzlrIkR-XryANP0hg8",
+    "cid": "1118850744539314937",
+    "lat": 35.9970318,
+    "lng": -78.9007613,
+    "status": "operational"
+  },
+  "Gym Tacos": {
+    "title": "Gym Tacos",
+    "address": "102 City Hall Plaza, Durham, NC 27701",
+    "placeId": "ChIJmfwqBwDlrIkRywt9FdPcKAw",
+    "cid": "876192926680288203",
+    "lat": 35.9959033,
+    "lng": -78.8995789,
+    "status": "operational"
+  },
+  "Luna Rotisserie and Empanadas": {
+    "title": "Luna Rotisserie and Empanadas",
+    "address": "112 W Main St, Durham, NC 27701",
+    "placeId": "ChIJP59o423krIkRSMWfvuK7-GY",
+    "cid": "7419886968628036936",
+    "lat": 35.9953339,
+    "lng": -78.9009837,
+    "status": "operational"
+  },
+  "Dashi Ramen and Izakaya Cocktail Bar": {
+    "title": "Dashi Ramen and Izakaya Cocktail Bar",
+    "address": "415 E Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJaeOL6XHkrIkRT_9lpSiN73I",
+    "cid": "8281993445470764879",
+    "lat": 35.9970933,
+    "lng": -78.8992279,
+    "status": "operational"
+  },
+  "Barsa New Indian": {
+    "title": "Barsa New Indian",
+    "address": "105 W Morgan St Ste 100, Durham, NC 27701",
+    "placeId": "ChIJiVjIZjDlrIkRTJ4cBxiDob8",
+    "cid": "13808462071716421196",
+    "lat": 35.9976495,
+    "lng": -78.8988562,
+    "status": "operational"
+  },
+  "Pokeworks": {
+    "title": "Pokeworks",
+    "address": "122 W Main St, Durham, NC 27701",
+    "placeId": "ChIJaUj8Dw7lrIkR-lBQF4bu8fM",
+    "cid": "17578093080287924474",
+    "lat": 35.995535,
+    "lng": -78.901368,
+    "status": "operational"
+  },
+  "Pizzeria Toro": {
+    "title": "Pizzeria Toro",
+    "address": "105 E Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJmRWKh3LkrIkRUVpp9W-ENqY",
+    "cid": "11976905875431971409",
+    "lat": 35.9971175,
+    "lng": -78.9036011,
+    "status": "operational"
+  },
+  "Pie Pushers": {
+    "title": "Pie Pushers",
+    "address": "117A W Main St, Durham, NC 27701",
+    "placeId": "ChIJI4s46W3krIkRkY4krTc4xoc",
+    "cid": "9783569052288192145",
+    "lat": 35.995255,
+    "lng": -78.901495,
+    "status": "operational"
+  },
+  "Parker and Otis": {
+    "title": "Parker and Otis",
+    "address": "324 Blackwell St Bay 4, Durham, NC 27701",
+    "placeId": "ChIJi4QcCA3krIkRmLOBMbpxlgc",
+    "cid": "546749449280533400",
+    "lat": 35.992789,
+    "lng": -78.9055208,
+    "status": "operational"
+  },
+  "Lutra Cafe and Bakery": {
+    "title": "Lutra Cafe and Bakery",
+    "address": "312 Blackwell St Noell Building #102, Durham, NC 27701",
+    "placeId": "ChIJw3QlINflrIkRa3s-afSHDPg",
+    "cid": "17873810504934128491",
+    "lat": 35.9943301,
+    "lng": -78.9040269,
+    "status": "operational"
+  },
+  "East of Texas": {
+    "title": "East of Texas",
+    "address": "318 Blackwell St #100, Durham, NC 27701",
+    "placeId": "ChIJ2UXEhsPlrIkRoP89AJg9hHc",
+    "cid": "8612076110487617440",
+    "lat": 35.99329,
+    "lng": -78.90433,
+    "status": "operational"
+  },
+  "Tobacco Road Sports Cafe": {
+    "title": "Tobacco Road Sports Cafe",
+    "address": "280 S Mangum St #100, Durham, NC 27701",
+    "placeId": "ChIJZVPcYGzkrIkRgacF7fD3QD8",
+    "cid": "4557915437039724417",
+    "lat": 35.9925223,
+    "lng": -78.903499,
+    "status": "operational"
+  },
+  "Toast": {
+    "title": "Toast",
+    "address": "345 W Main St, Durham, NC 27701",
+    "placeId": "ChIJt1CZg3LkrIkRoNY1wquWveY",
+    "cid": "16626611063763621536",
+    "lat": 35.9967317,
+    "lng": -78.9039702,
+    "status": "operational"
+  },
+  "M Kokko": {
+    "title": "M Kokko",
+    "address": "311 Holland St Ste B, Durham, NC 27701",
+    "placeId": "ChIJbSVVF3LkrIkRbrlb1t94cMI",
+    "cid": "14010831343518988654",
+    "lat": 35.9973085,
+    "lng": -78.9012266,
+    "status": "operational"
+  },
+  "Alimentari at Mothers & Sons": {
+    "title": "Alimentari at Mothers & Sons",
+    "address": "105 W Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJyaggVbTlrIkRsdSo3A2-Fps",
+    "cid": "11175328492112368817",
+    "lat": 35.9968153,
+    "lng": -78.904611,
+    "status": "operational"
+  },
+  "Viceroy": {
+    "title": "Viceroy",
+    "address": "335 W Main St, Durham, NC 27701",
+    "placeId": "ChIJiYT1gXLkrIkRbifooF3adXE",
+    "cid": "8175680794227386222",
+    "lat": 35.9965393,
+    "lng": -78.9036861,
+    "status": "operational"
+  },
+  "Seraphine": {
+    "title": "Seraphine",
+    "address": "324 Blackwell St Ste 4, Durham, NC 27701",
+    "placeId": "ChIJkTeRHmLlrIkRP-FRYW1Vkdk",
+    "cid": "15677405706125959487",
+    "lat": 35.9928259,
+    "lng": -78.9057665,
+    "status": "operational"
+  },
+  "Mateo Bar de Tapas": {
+    "title": "Mateo Bar de Tapas",
+    "address": "109 W Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJqbMjoHLkrIkRU_pHV3Z9LMM",
+    "cid": "14063753683595164243",
+    "lat": 35.9968525,
+    "lng": -78.9047943,
+    "status": "operational"
+  },
+  "Alley Twenty Six": {
+    "title": "Alley Twenty Six",
+    "address": "320 E Chapel Hill St Ste 200, Durham, NC 27701",
+    "placeId": "ChIJCbZ4-HHkrIkRsfgIvQo-epg",
+    "cid": "10987162456765823153",
+    "lat": 35.996751,
+    "lng": -78.900525,
+    "status": "operational"
+  },
+  "M Sushi": {
+    "title": "M Sushi",
+    "address": "311 Holland St, Durham, NC 27701",
+    "placeId": "ChIJZV6PEHLkrIkR86cbGcfzM-g",
+    "cid": "16731985077056808947",
+    "lat": 35.9973242,
+    "lng": -78.9011981,
+    "status": "operational"
+  },
+  "Little Bull": {
+    "title": "Little Bull",
+    "address": "301 E Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJt1-VgdLlrIkRTwobcHHBJNQ",
+    "cid": "15286555728158591567",
+    "lat": 35.9970325,
+    "lng": -78.9015868,
+    "status": "operational"
+  },
+  "Bar Virgile": {
+    "title": "Bar Virgile",
+    "address": "105 S Mangum St Unit 1, Durham, NC 27701",
+    "placeId": "ChIJZ6Fe3m3krIkRFkAGozd8dKE",
+    "cid": "11634060315804975126",
+    "lat": 35.9947192,
+    "lng": -78.9007933,
+    "status": "operational"
+  },
+  "Rue Cler": {
+    "title": "Rue Cler",
+    "address": "401 E Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJzZET7nHkrIkR_ZLX_AM7e4Q",
+    "cid": "9546288723454825213",
+    "lat": 35.9970869,
+    "lng": -78.8997435,
+    "status": "operational"
+  },
+  "NanaSteak": {
+    "title": "NanaSteak",
+    "address": "345 Blackwell St, Durham, NC 27701",
+    "placeId": "ChIJiWMmUmzkrIkRQ6cpNrEt8A8",
+    "cid": "1148468144120637251",
+    "lat": 35.9935313,
+    "lng": -78.9027412,
+    "status": "operational"
+  },
+  "M Tempura": {
+    "title": "M Tempura",
+    "address": "111 W Orange St, Durham, NC 27701",
+    "placeId": "ChIJBwAMAG7krIkRuwcbTJ6SlhQ",
+    "cid": "1483534335844485051",
+    "lat": 35.9961601,
+    "lng": -78.9005111,
+    "status": "operational"
+  },
+  "Nerra": {
+    "title": "Nerra",
+    "address": "506 Ramseur St Ste 2, Durham, NC 27701",
+    "placeId": "ChIJ1z1vDfflrIkR4nRy6rurrPc",
+    "cid": "17846828246943036642",
+    "lat": 35.9903696,
+    "lng": -78.8964666,
+    "status": "operational"
+  },
+  "Flying Bull Restaurant and Brewery": {
+    "title": "Flying Bull Restaurant and Brewery",
+    "address": "300 Morris St Ste 103, Durham, NC 27701",
+    "placeId": "ChIJi_ponF_lrIkRUTMRFSA86Co",
+    "cid": "3091787252679914321",
+    "lat": 36.000063,
+    "lng": -78.9034592,
+    "status": "operational"
+  },
+  "Mothers & Sons Trattoria": {
+    "title": "Mothers & Sons Trattoria",
+    "address": "107 W Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJwW6kn3LkrIkRemHrEJP9xSA",
+    "cid": "2361572387711574394",
+    "lat": 35.996868,
+    "lng": -78.9047132,
+    "status": "operational"
+  },
+  "Cucciolo Osteria Durham": {
+    "title": "Cucciolo Osteria Durham",
+    "address": "601 W Main St Ste c, Durham, NC 27701",
+    "placeId": "ChIJB1ezo-LlrIkRpA1ptS3kt4k",
+    "cid": "9923651188902399396",
+    "lat": 35.9979014,
+    "lng": -78.9064199,
+    "status": "operational"
+  },
+  "Zweli's Ekhaya": {
+    "title": "Zweli’s Ekhaya",
+    "address": "406 Blackwell St Ste 100, Durham, NC 27701",
+    "placeId": "ChIJQdCMCEnlrIkReatrqOC1jek",
+    "cid": "16829307359056341881",
+    "lat": 35.9923679,
+    "lng": -78.9050984,
+    "status": "operational"
+  },
+  "Taberna Tapas": {
+    "title": "Taberna Tapas",
+    "address": "325 W Main St, Durham, NC 27701",
+    "placeId": "ChIJK_rmf23krIkR06taxOVUYLg",
+    "cid": "13285712246561483731",
+    "lat": 35.9964204,
+    "lng": -78.9034589,
+    "status": "operational"
+  },
+  "Cheeni": {
+    "title": "Cheeni",
+    "address": "202 Corcoran St Ste 100, Durham, NC 27701",
+    "placeId": "ChIJhb31vIXlrIkRtUjmO7bMPJo",
+    "cid": "11113983063504603317",
+    "lat": 35.9967698,
+    "lng": -78.9012588,
+    "status": "operational"
+  },
+  "Nikos": {
+    "title": "Nikos",
+    "address": "BrightLeaf Square, 905 W Main St Unit 21B, Durham, NC 27701",
+    "placeId": "ChIJ_x9-aXHlrIkRftJI4-J7huQ",
+    "cid": "16466985301932823166",
+    "lat": 36.0002225,
+    "lng": -78.9103777,
+    "status": "operational"
+  },
+  "Convivio Restaurant": {
+    "title": "Convivio Restaurant",
+    "address": "104 City Hall Plaza Ste 100, Durham, NC 27701",
+    "placeId": "ChIJR4i3B9flrIkRglXBfPxe2Wg",
+    "cid": "7555174288408532354",
+    "lat": 35.9957585,
+    "lng": -78.8994022,
+    "status": "operational"
+  },
+  "Goorsha": {
+    "title": "Goorsha",
+    "address": "910 W Main St, Durham, NC 27701",
+    "placeId": "ChIJ83PfRAzkrIkR3EsIXfHVz1c",
+    "cid": "6327511234103495644",
+    "lat": 36.0006213,
+    "lng": -78.9098046,
+    "status": "operational"
+  },
+  "delafia": {
+    "title": "delafia",
+    "address": "1103 S Roxboro St, Durham, NC 27707",
+    "placeId": "ChIJ51C4ynHlrIkRB6uma7dM_bc",
+    "cid": "13257837228717419271",
+    "lat": 35.9832881,
+    "lng": -78.9026308,
+    "status": "operational"
+  },
+  "Weldon Mills Distillery Durham": {
+    "title": "Weldon Mills Distillery Durham",
+    "address": "300 E Main St Ste 001, Durham, NC 27701",
+    "placeId": "ChIJAQCQV27krIkRC7_hUrSJWFw",
+    "cid": "6654219857017552651",
+    "lat": 35.9934615,
+    "lng": -78.8983669,
+    "status": "operational"
+  },
+  "Honeygirl Meadery & Tasting Room": {
+    "title": "Honeygirl Meadery & Tasting Room",
+    "address": "312 Blackwell St, Durham, NC 27701",
+    "placeId": "ChIJi7yq32XkrIkRfirdE2aqYFY",
+    "cid": "6224162040422673022",
+    "lat": 35.9941544,
+    "lng": -78.9040098,
+    "status": "operational"
+  },
+  "Bull City Ciderworks Durham": {
+    "title": "Bull City Ciderworks Durham",
+    "address": "305 S Roxboro St, Durham, NC 27701",
+    "placeId": "ChIJ6ez2s27krIkRrlrL086Uwh8",
+    "cid": "2288555176695126702",
+    "lat": 35.9909566,
+    "lng": -78.8993013,
+    "status": "operational"
+  },
+  "Ponysaurus Brewing Co.": {
+    "title": "Ponysaurus Brewing Co.",
+    "address": "219 Hood St, Durham, NC 27701",
+    "placeId": "ChIJUTeQPhDkrIkRQlRqhOL2P54",
+    "cid": "11403104234269987906",
+    "lat": 35.9895842,
+    "lng": -78.8952496,
+    "status": "operational"
+  },
+  "Fullsteam": {
+    "title": "Fullsteam at American Tobacco",
+    "address": "320 Blackwell St #101, Durham, NC 27701",
+    "placeId": "ChIJHyVUmHbkrIkRZlRM8J2u7Uc",
+    "cid": "5182990739537941606",
+    "lat": 35.9937821,
+    "lng": -78.9045813,
+    "status": "temporarily_closed"
+  },
+  "The Velvet Hippo Bar & Lounge": {
+    "title": "The Velvet Hippo Bar & Lounge",
+    "address": "119 W Orange St 3rd Floor, Durham, NC 27701",
+    "placeId": "ChIJA8_mtF_lrIkReTidKOV3bWc",
+    "cid": "7452744784480647289",
+    "lat": 35.9964307,
+    "lng": -78.9004895,
+    "status": "operational"
+  },
+  "Dram and Draught": {
+    "title": "Dram and Draught",
+    "address": "701 W Main St Ste 123, Durham, NC 27701",
+    "placeId": "ChIJYzT-E4rlrIkR27AEuVhwNk8",
+    "cid": "5707873104102207707",
+    "lat": 35.9989879,
+    "lng": -78.9080672,
+    "status": "operational"
+  },
+  "Boxcar Bar + Arcade": {
+    "title": "Boxcar Bar + Arcade",
+    "address": "621 Foster St, Durham, NC 27701",
+    "placeId": "ChIJI1YlSk_lrIkRaOUH5kh6juE",
+    "cid": "16253062558742209896",
+    "lat": 36.003381,
+    "lng": -78.9016694,
+    "status": "operational"
+  },
+  "Kingfisher": {
+    "title": "Kingfisher",
+    "address": "321 E Chapel Hill St, Durham, NC 27701",
+    "placeId": "ChIJ_ZNX85zlrIkRMfygBL0t-Xc",
+    "cid": "8644991249564105777",
+    "lat": 35.9970432,
+    "lng": -78.9008011,
+    "status": "operational"
+  },
+  "Hi-Wire Brewing Durham": {
+    "title": "Hi-Wire Brewing Durham",
+    "address": "800 Taylor St #9-150, Durham, NC 27701",
+    "placeId": "ChIJr-tRwVblrIkRG2-tifsOzZo",
+    "cid": "11154588325576011547",
+    "lat": 35.9915365,
+    "lng": -78.8900261,
+    "status": "operational"
+  },
+  "West End Social": {
+    "title": "West End Social",
+    "address": "601 W Main St Ste E, Durham, NC 27701",
+    "placeId": "ChIJb7cDfiflrIkRpFpuxepPZuA",
+    "cid": "16169699381873629860",
+    "lat": 35.998049,
+    "lng": -78.9063091,
+    "status": "operational"
+  },
+  "DSSOLVR Durham": {
+    "title": "DSSOLVR Durham",
+    "address": "630 Rigsbee Ave, Durham, NC 27701",
+    "placeId": "ChIJF0_laJnlrIkRmagQBFHLTjM",
+    "cid": "3697115892938746009",
+    "lat": 36.0018623,
+    "lng": -78.8997983,
+    "status": "operational"
+  },
+  "La Mala Mexican Inspired Cocktails": {
+    "title": "La Mala Mexican Inspired Cocktails",
+    "address": "110 Corcoran St, Durham, NC 27701",
+    "placeId": "ChIJm5kmBKvlrIkRaQ7FjwiWnd0",
+    "cid": "15969084817241607785",
+    "lat": 35.9956818,
+    "lng": -78.9016279,
+    "status": "operational"
+  },
+  "Durham Beer Garden": {
+    "title": "Durham Beer Garden",
+    "address": "812 N Mangum St, Durham, NC 27701",
+    "placeId": "ChIJw3hOD-blrIkRCXzwRVOkg1I",
+    "cid": "5945776610621815817",
+    "lat": 36.0020079,
+    "lng": -78.8948379,
+    "status": "operational"
+  },
+  "The Wine Feed": {
+    "title": "The Wine Feed",
+    "address": "307 S Roxboro St, Durham, NC 27701",
+    "placeId": "ChIJOS52vW7krIkRth8rNe_GHVQ",
+    "cid": "6061219404202057654",
+    "lat": 35.9910474,
+    "lng": -78.8995761,
+    "status": "operational"
+  },
+  "Eve": {
+    "title": "Eve",
+    "address": "108 E Parrish St, Durham, NC 27701",
+    "placeId": "ChIJRSxxIQDlrIkRulGZ4KifAzg",
+    "cid": "4036245238725562810",
+    "lat": 35.9952399,
+    "lng": -78.8999299,
+    "status": "operational"
+  },
+  "The Pinhook": {
+    "title": "The Pinhook",
+    "address": "117 W Main St, Durham, NC 27701",
+    "placeId": "ChIJpcRH6W3krIkRO60J8c-GwRQ",
+    "cid": "1495624778924010811",
+    "lat": 35.995254,
+    "lng": -78.901501,
+    "status": "operational"
+  },
+  "High Dive Durham": {
+    "title": "High Dive Durham",
+    "address": "101 W Main St Ste Lo2, Durham, NC 27701",
+    "placeId": "ChIJP2yeQADlrIkR6X1ZXPObw2I",
+    "cid": "7116703305704242665",
+    "lat": 35.9948848,
+    "lng": -78.9010196,
+    "status": "operational"
+  },
+  "The Daily Beer Bar": {
+    "title": "The Daily",
+    "address": "108 E Main St Suite 101, Durham, NC 27701",
+    "placeId": "ChIJpSTQiK3lrIkRPCGygy9Eq0s",
+    "cid": "5452526744725758268",
+    "lat": 35.9947478,
+    "lng": -78.9004488,
+    "status": "operational"
+  },
+  "The Glass Jug Beer Lab - Downtown Durham": {
+    "title": "The Glass Jug Beer Lab - Downtown Durham",
+    "address": "545 Foster St Ste 10, Durham, NC 27701",
+    "placeId": "ChIJ1SVPy4TlrIkRzyz2XoLeC9M",
+    "cid": "15207493218266918095",
+    "lat": 36.0013327,
+    "lng": -78.9016062,
+    "status": "operational"
+  },
+  "Rhythm & Brews Bar and Grill": {
+    "title": "Rhythm & Brews Bar and Grill",
+    "address": "908 Fayetteville St #101, Durham, NC 27701",
+    "placeId": "ChIJm8TjhIHlrIkR9oAoaXr388M",
+    "cid": "14119901361858969846",
+    "lat": 35.9846018,
+    "lng": -78.8994718,
+    "status": "operational"
+  },
+  "Atomic Clock Brewing Company": {
+    "title": "Atomic Clock Brewing Company",
+    "address": "501 Washington St # A, Durham, NC 27701",
+    "placeId": "ChIJhzL9P-nlrIkRoNa3W1WmcLs",
+    "cid": "13506478168025323168",
+    "lat": 36.0025519,
+    "lng": -78.9041536,
+    "status": "operational"
+  },
+  "Ramblers Beer & Wine": {
+    "title": "Ramblers Beer & Wine",
+    "address": "115 Fuller St, Durham, NC 27701",
+    "placeId": "ChIJd3OL1wzkrIkRMLFBrqInidE",
+    "cid": "15098642805398024496",
+    "lat": 35.9996361,
+    "lng": -78.906942,
+    "status": "operational"
+  },
+  "Clouds Brewing - Durham Brewcade + Kitchen": {
+    "title": "Clouds Brewing - Durham Brewcade + Kitchen",
+    "address": "Brightleaf Square, 905 W Main St #22, Durham, NC 27701",
+    "placeId": "ChIJ0RFTNAzkrIkRn_wc1r9uXsM",
+    "cid": "14077811255416781983",
+    "lat": 36.0000348,
+    "lng": -78.9104668,
+    "status": "operational"
+  },
+  "The Waiting Room": {
+    "title": "The Waiting Room",
+    "address": "300 Blackwell St #100, Durham, NC 27701",
+    "placeId": "ChIJXR9vx8_lrIkRoXxq_0izyIY",
+    "cid": "9712209722528660641",
+    "lat": 35.9946808,
+    "lng": -78.9037368,
+    "status": "operational"
+  },
+  "Primrose Bar and Lounge": {
+    "title": "Primrose Bar and Lounge",
+    "address": "111 W Main St, Durham, NC 27701",
+    "placeId": "ChIJlxiIr_3lrIkRmiPQXFKApuc",
+    "cid": "16692170160128140186",
+    "lat": 35.995129,
+    "lng": -78.9012738,
+    "status": "operational"
+  },
+  "Conniption Bar & Lounge": {
+    "title": "Conniption Bar & Lounge - Formerly known as Corpse Reviver Bar & Lounge",
+    "address": "715 Washington St STE B, Durham, NC 27701",
+    "placeId": "ChIJZT1UGSvlrIkRJLrL3Bo8hOg",
+    "cid": "16754582599796242980",
+    "lat": 36.0046403,
+    "lng": -78.9029041,
+    "status": "operational"
+  },
+  "Pour Taproom": {
+    "title": "Pour Taproom",
+    "address": "202 Corcoran St #200, Durham, NC 27701",
+    "placeId": "ChIJU5hWymjlrIkRMXAtkITwdSo",
+    "cid": "3059615974013366321",
+    "lat": 35.9966673,
+    "lng": -78.9012878,
+    "status": "operational"
+  },
+  "Bull McCabe's Irish Pub": {
+    "title": "Bull McCabe's Irish Pub with the TanDurm Kitchen",
+    "address": "427 W Main St, Durham, NC 27701",
+    "placeId": "ChIJIddko3LkrIkRLLvb22U90Jg",
+    "cid": "11011368596610464556",
+    "lat": 35.9972605,
+    "lng": -78.9050297,
+    "status": "operational"
+  },
+  "Arcana Bar and Lounge": {
+    "title": "Arcana Bar and Lounge",
+    "address": "331 W Main St, Durham, NC 27701",
+    "placeId": "ChIJs5wch23krIkRFsxmoLh_7kg",
+    "cid": "5255278246129749014",
+    "lat": 35.9964812,
+    "lng": -78.9037318,
+    "status": "operational"
+  },
+  "106 Main": {
+    "title": "106 Main",
+    "address": "106 E Main St, Durham, NC 27701",
+    "placeId": "ChIJjbV8323krIkREEPQ2t2oaQ0",
+    "cid": "966489265860002576",
+    "lat": 35.9947366,
+    "lng": -78.90051,
+    "status": "operational"
+  },
+  "American Tobacco Campus": {
+    "title": "American Tobacco Campus",
+    "address": "300 Blackwell St #104, Durham, NC 27701",
+    "placeId": "ChIJv-CR4MvlrIkR0fP0Hr0ERUo",
+    "cid": "5351688942514402257",
+    "lat": 35.9933333,
+    "lng": -78.9041667,
+    "status": "operational"
+  },
+  "Durham Bulls Athletic Park": {
+    "title": "Durham Bulls Athletic Park",
+    "address": "409 Blackwell St, Durham, NC 27701",
+    "placeId": "ChIJ70wim2zkrIkRPX5-jedLkQ4",
+    "cid": "1049703646037442109",
+    "lat": 35.991542,
+    "lng": -78.9049079,
+    "status": "operational"
+  },
+  "\"Major\" – Durham Bull Bronze Sculpture": {
+    "title": "\"Major\" – Durham Bull Bronze Sculpture",
+    "address": "211 W Parrish St, Durham, NC 27701",
+    "placeId": "ChIJOVhJCnLkrIkRm1d8cy9usac",
+    "cid": "12083560425291798427",
+    "lat": 35.9964874,
+    "lng": -78.9017088,
+    "status": "operational"
+  },
+  "Museum of Durham History": {
+    "title": "Museum of Durham History",
+    "address": "500 W Main St, Durham, NC 27701",
+    "placeId": "ChIJbZaBwXLkrIkR19Il9PsYhFY",
+    "cid": "6234135254599586519",
+    "lat": 35.9982755,
+    "lng": -78.9049802,
+    "status": "operational"
+  },
+  "Durham Central Park": {
+    "title": "Durham Central Park",
+    "address": "501 Foster St, Durham, NC 27701",
+    "placeId": "ChIJjZKhwnPkrIkROc-3yE0_Pys",
+    "cid": "3116279070476193593",
+    "lat": 36.0006687,
+    "lng": -78.901347,
+    "status": "operational"
+  },
+  "Durham Performing Arts Center (DPAC)": {
+    "title": "Durham Performing Arts Center",
+    "address": "123 William V Bill Bell Wy, Durham, NC 27701",
+    "placeId": "ChIJu-ZMSWzkrIkR5y7cYEquZsI",
+    "cid": "14008075325458362087",
+    "lat": 35.993248,
+    "lng": -78.9021923,
+    "status": "operational"
+  },
+  "The Carolina Theatre": {
+    "title": "The Carolina Theatre",
+    "address": "309 W Morgan St, Durham, NC 27701",
+    "placeId": "ChIJvavvXHLkrIkRQwjH_Cqnc-8",
+    "cid": "17254318400457869379",
+    "lat": 35.9976533,
+    "lng": -78.9027674,
+    "status": "operational"
+  },
+  "American Tobacco Trail (downtown trailhead)": {
+    "title": "American Tobacco Trail",
+    "address": "American Tobacco Trail, Durham, NC 27701",
+    "placeId": "ChIJiaXidLnlrIkRblVmfeoPc34",
+    "cid": "9111643970901267822",
+    "lat": 35.990532,
+    "lng": -78.9062615,
+    "status": "operational"
+  },
+  "Letters Community Bookshop": {
+    "title": "Letters Community Bookshop",
+    "address": "116 W Main St, Durham, NC 27701",
+    "placeId": "ChIJr84AhG3krIkRJWB33d2VLxs",
+    "cid": "1958949143065354277",
+    "lat": 35.9954863,
+    "lng": -78.9010528,
+    "status": "operational"
+  },
+  "State of Golf": {
+    "title": "State of Golf",
+    "address": "318 Blackwell St, Durham, NC 27701",
+    "placeId": "ChIJOznIxwjlrIkR9rABjUE2l94",
+    "cid": "16039348253069783286",
+    "lat": 35.993246,
+    "lng": -78.9044638,
+    "status": "operational"
+  }
+}

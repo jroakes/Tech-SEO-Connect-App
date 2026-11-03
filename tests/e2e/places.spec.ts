@@ -30,7 +30,8 @@ test("opens a place, gets directions and saves it", async ({ page, events, opene
 
   await card.getByTestId("button-google-maps").click();
   await card.getByTestId("button-apple-maps").click();
-  expect(opened[0]).toMatch(/^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=/);
+  // Google Maps opens the place's own listing, not a pin.
+  expect(opened[0]).toMatch(/^https:\/\/www\.google\.com\/maps\/search\/\?api=1&query=.+&query_place_id=ChIJ/);
   expect(opened[1]).toMatch(/^https:\/\/maps\.apple\.com\/\?q=/);
 
   await card.getByTestId("text-location-name").click();

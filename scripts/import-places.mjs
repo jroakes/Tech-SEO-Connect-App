@@ -1,16 +1,26 @@
 // Builds src/data/places.json from a Google My Maps KML export plus a JSON
 // file of narratives keyed by place name.
 //
-// Usage: node scripts/import-places.mjs [kml] [narratives] [out]
+// Usage: node scripts/import-places.mjs [--original-pins] [kml] [narratives] [out]
 // Defaults: content/places.kml content/place-narratives.json src/data/places.json
 //
 // KML folders become categories. A place whose name contains
 // "Conference Venue" is flagged as the venue (gold star on the map).
+//
+// Each place is linked to its Google Maps listing from
+// content/google-listings.json (keyed by place name), so the Google Maps
+// button opens the listing itself. Its pin moves to the listing's
+// coordinates, keeping the KML's as originalLat/originalLng;
+// --original-pins keeps the KML pins instead. A place whose listing is
+// permanently closed is left out.
 
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 
+const args = process.argv.slice(2);
+const originalPins = args.includes("--original-pins");
 const [kmlPath = "content/places.kml", narrativesPath = "content/place-narratives.json", outPath = "src/data/places.json"] =
-  process.argv.slice(2);
+  args.filter((a) => !a.startsWith("--"));
+const listingsPath = "content/google-listings.json";
 
 const decode = (s) =>
   s
@@ -37,14 +47,20 @@ const slugify = (s) =>
 
 const kml = readFileSync(kmlPath, "utf8");
 const narratives = existsSync(narrativesPath) ? JSON.parse(readFileSync(narrativesPath, "utf8")) : {};
+const listings = existsSync(listingsPath) ? JSON.parse(readFileSync(listingsPath, "utf8")) : {};
 
 const places = [];
 const usedIds = new Set();
+const closed = [];
 
 const addPlacemark = (placemark, category) => {
   const name = firstTag(placemark, "name");
   const [lng, lat] = firstTag(placemark, "coordinates").split(",").map(Number);
   if (!name || Number.isNaN(lat) || Number.isNaN(lng)) return;
+  const listing = listings[name];
+  if (listing?.status === "closed_forever") return void closed.push(name);
+  const moved = listing && !originalPins && (listing.lat !== lat || listing.lng !== lng);
+  const address = listing?.address || firstTag(placemark, "address");
 
   let id = slugify(name);
   for (let n = 2; usedIds.has(id); n++) id = `${slugify(name)}-${n}`;
@@ -54,10 +70,13 @@ const addPlacemark = (placemark, category) => {
     id,
     name,
     category,
-    lat,
-    lng,
+    lat: moved ? listing.lat : lat,
+    lng: moved ? listing.lng : lng,
     ...(narratives[name] ? { narrative: narratives[name] } : {}),
     ...(/conference venue/i.test(name) ? { isVenue: true } : {}),
+    ...(listing ? { googlePlaceId: listing.placeId } : {}),
+    ...(address ? { address } : {}),
+    ...(moved ? { originalLat: lat, originalLng: lng } : {}),
   });
 };
 
@@ -77,5 +96,8 @@ for (const placemark of outsideFolders.match(/<Placemark>[\s\S]*?<\/Placemark>/g
 writeFileSync(outPath, JSON.stringify(places, null, 2) + "\n");
 
 const missing = places.filter((p) => !p.narrative).map((p) => p.name);
-console.log(`Wrote ${places.length} places to ${outPath}.`);
+const unlisted = [...new Set(places.filter((p) => !p.googlePlaceId).map((p) => p.name))];
+console.log(`Wrote ${places.length} places to ${outPath}${originalPins ? ", with the original KML pins" : ""}.`);
 if (missing.length) console.log(`No narrative for ${missing.length}: ${missing.join("; ")}`);
+if (unlisted.length) console.log(`No Google listing for ${unlisted.length}: ${unlisted.join("; ")}`);
+if (closed.length) console.log(`Left out ${closed.length} permanently closed: ${closed.join("; ")}`);

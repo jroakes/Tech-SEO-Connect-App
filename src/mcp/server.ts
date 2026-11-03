@@ -8,6 +8,7 @@ import { event } from "@/data/event";
 import { TOPICS, topicLabel } from "@/data/topics";
 import { getSavedIds, getSchedule, insertEvents, updateSaved } from "@/lib/db";
 import { peopleIn, sharingATopic, topicCounts, type Profile } from "@/lib/matching";
+import { googleMapsUrl } from "@/lib/maps";
 import { listProfiles } from "@/lib/profiles";
 import { fold } from "@/lib/utils";
 import { formatDuration, getScheduleDays } from "@/lib/sessions";
@@ -42,7 +43,8 @@ function placeSummary(p: Place) {
     name: p.name,
     category: p.category,
     ...(p.narrative ? { about: p.narrative } : {}),
-    googleMaps: `https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`,
+    ...(p.address ? { address: p.address } : {}),
+    googleMaps: googleMapsUrl(p),
     ...(p.isVenue ? { conferenceVenue: true } : {}),
   };
 }
