@@ -44,7 +44,10 @@ export const PUT: APIRoute = async ({ request, locals }) => {
     return json({ error: "Invalid JSON." }, 400);
   }
   const parsed = profileSchema.safeParse(body);
-  if (!parsed.success) return json({ error: "Please check your answers.", issues: parsed.error.issues }, 400);
+  if (!parsed.success) {
+    const nameMissing = parsed.error.issues.some((i) => i.path[0] === "name");
+    return json({ error: nameMissing ? "Please add your name." : "Please check your answers.", issues: parsed.error.issues }, 400);
+  }
   const { name, title, topics, linkedin } = parsed.data;
   if (!topics.length) return json({ error: "Pick at least one topic so we can find your people." }, 400);
   if (new Set(topics).size > MAX_TOPICS) return json({ error: `Pick up to ${MAX_TOPICS} topics.` }, 400);
@@ -62,7 +65,10 @@ export const PUT: APIRoute = async ({ request, locals }) => {
 export const DELETE: APIRoute = async ({ locals }) => {
   const userId = getUserId(locals);
   if (!userId) return json({ error: "Sign in to meet people." }, 401);
-  await deleteProfile(env.DB, userId);
-  await logMeet("match_leave", userId);
+  // Logged only if they were on Meet, so a second tap doesn't count twice.
+  if (await getProfile(env.DB, userId)) {
+    await deleteProfile(env.DB, userId);
+    await logMeet("match_leave", userId);
+  }
   return new Response(null, { status: 204 });
 };

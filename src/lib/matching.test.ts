@@ -42,6 +42,8 @@ describe("linkedinUrl", () => {
     expect(linkedinUrl("linkedin.com.example.com/in/x")).toBeNull();
     expect(linkedinUrl("javascript:alert(1)")).toBeNull();
     expect(linkedinUrl("https://linkedin.com/")).toBeNull();
+    expect(linkedinUrl("linkedin.com/feed/")).toBeNull();
+    expect(linkedinUrl("https://www.linkedin.com/company/acme")).toBeNull();
     expect(linkedinUrl("find me at lunch")).toBeNull();
   });
 });

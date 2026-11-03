@@ -30,6 +30,20 @@ describe("schedule sync", () => {
     expect(await lastRun()).toMatchObject({ status: "ok", session_count: sessions.length });
   });
 
+  it("moves saves of a talk that moved to another day", async () => {
+    // Saved when Lauren Green was on Thursday; the page has her on Friday.
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO saved_sessions (user_id, session_id) VALUES ('ann', '2026-11-05-lauren-green'), ('bob', '2026-11-05-lauren-green'), ('bob', '2026-11-06-lauren-green')"),
+    ]);
+    mainSite(fixture);
+    await syncSchedule(env);
+    const saved = await rows<{ user_id: string; session_id: string }>(env.DB, "SELECT user_id, session_id FROM saved_sessions ORDER BY user_id");
+    expect(saved).toEqual([
+      { user_id: "ann", session_id: "2026-11-06-lauren-green" },
+      { user_id: "bob", session_id: "2026-11-06-lauren-green" },
+    ]);
+  });
+
   it("keeps the current schedule when the page has too few talks", async () => {
     mainSite(fixture);
     await syncSchedule(env);

@@ -9,7 +9,8 @@ check-in).
 ## What it does
 
 - **Schedule** synced every hour from the schedule on
-  [www.techseoconnect.com](https://www.techseoconnect.com/).
+  [www.techseoconnect.com](https://www.techseoconnect.com/), with each
+  party's details and links. During the conference it opens on today.
 - **My Conference**: tap the heart on a talk, hotel, restaurant, bar or
   anything else to save it. Saves stay on the device; signed-in attendees (via
   [Clerk](https://clerk.com)) keep them in their account across devices.
@@ -22,7 +23,8 @@ check-in).
   topics in dark green. Only their own topics open: tapping one lists everyone
   in it (`/meet#bigquery`), and tapping someone opens their LinkedIn to message
   them and meet up. Other topics show only a count, and the API sends people
-  only for topics the attendee shares. Answers are shown only to other
+  only for topics the attendee shares, without their account IDs or the
+  topics they don't share. Answers are shown only to other
   attendees who join, and anyone can edit or leave. No intro emails.
 - **Sponsors**.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
@@ -90,7 +92,9 @@ content/               Source files for places (KML export and narratives)
   `content/place-narratives.json` with `npm run import:places`, which writes
   `src/data/places.json`.
 - **Session IDs:** each one is the date plus the speaker (or the time plus the
-  title for breaks). A retitled talk keeps its saves.
+  title for breaks). A retitled talk keeps its saves, and so does a talk that
+  moves to another day: the sync points saved IDs at the speaker's new one,
+  and the pages do the same for saves kept on a device.
 
 ## Development
 
@@ -132,7 +136,7 @@ after a build, then open
 | Command | What it runs |
 |---|---|
 | `npm test` | **Unit tests** (`src/**/*.test.ts`): the schedule parser, Meet matching and check-in's name matching. **Integration tests** (`tests/integration`), run inside workerd (Cloudflare's runtime) against a local D1 database, with Clerk, Luma and the AI stubbed: the schedule sync from the main site, My Conference saves, the event log, Meet (joining, answers, leaving, who sees whom), check-in (search, the AI, livestream filtering, newest registrations, check in and undo, walk-ins), admin (the event export, who's an admin), the analytics numbers, and every MCP tool. About 2 seconds. |
-| `npm run test:e2e` | **Browser tests** (`tests/e2e`), on a phone and a desktop: the schedule, saving talks and places and removing them in My Conference, searching and filtering places, directions, the map's pins, every sponsor's logo, the For AI bots dialog, locked admin pages and APIs, redirects, the 404 page, and that each page logs its events. They build the app and run it with Wrangler on port 8788, in the installed Google Chrome with a fresh profile. About 30 seconds after the build. |
+| `npm run test:e2e` | **Browser tests** (`tests/e2e`), on a phone and a desktop: the schedule, saving talks and places and removing them in My Conference, searching and filtering places, directions, the map's pins, every sponsor's logo, the For AI bots dialog, locked admin pages and APIs, redirects, the 404 page, and that each page logs its events. They build the app and run it with Wrangler on port 8788 with a local D1 of their own (`.wrangler/e2e`), in the installed Google Chrome with a fresh profile. About 30 seconds after the build. |
 | `npm run test:all` | Both. |
 
 Pages that need a real Clerk sign-in (Meet, admin, analytics and check-in once signed in) can't be clicked through in the browser tests; their APIs are covered by the integration tests.
@@ -227,7 +231,8 @@ search. For each user an admin can:
 
 - **Make admin** or **Remove admin**.
 - **Block**: bans them in Clerk, which signs them out and stops them signing
-  in. **Unblock** reverses it. Their saves stay.
+  in, and removes their Meet answers so nobody can find them there.
+  **Unblock** reverses the ban (they can join Meet again). Their saves stay.
 - **Delete**: deletes the Clerk user and their saved talks, saved places and
   Meet answers. Their past events stay, without the user ID.
 
@@ -251,7 +256,10 @@ menu) is for the door. Type a full name, a last name or an email:
   rate limit) or doesn't answer in 3 seconds, Llama 3.3 70B on Workers AI
   judges instead. An exact email or full name skips the AI. The likely
   guests' names and emails go to the AI; OpenRouter is asked to use only
-  providers that don't keep or train on them.
+  providers that don't keep or train on them. Guests are found by the name
+  on their Luma account too, when it differs from the name they registered.
+  A registration holding several tickets says so: checking it in covers
+  everyone on it.
 - If it's obvious who, that one guest is shown; otherwise everyone who might
   be them, five at a time (**Show all**). A name several guests share, like
   "john", or someone registered twice, always gets the list. Nobody is checked
@@ -263,7 +271,8 @@ menu) is for the door. Type a full name, a last name or an email:
   registrations the same way: a registered email shows that guest to check in
   instead, and a similar name is shown to confirm before anyone new is added.
 - A check-in can be taken back: **Wrong person?** right after it (which then
-  lists the other close guests), or **Undo check-in** when you search them.
+  lists the other close guests, without the one just taken back), or **Undo
+  check-in** when you search them.
 
 `CHECK_IN_DEMO` in `wrangler.jsonc` is `"true"` for now: check-ins and walk-ins
 are saved only in this app, and nothing is sent to Luma. With `"false"`,
@@ -274,10 +283,12 @@ check-ins but can't make them, so check-ins stay in this app's `check_ins`
 table either way; demo and real ones are kept apart.
 
 **Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
-page views, signed-in attendees, directions taps, saves and AI assistant use,
+page views (attendees', not organizers' on the admin pages), signed-in
+attendees, directions taps, saves and AI assistant use,
 page views over time, Meet (who's on it, joins, changed answers, leaves,
 topic opens and LinkedIn taps, by topic), check-in (checked in, walk-ins and
-the size of the guest list; demo check-ins in demo mode), the places people
+the size of the guest list, whose share leaves out walk-ins; demo check-ins
+in demo mode), the places people
 go, the most-saved talks, and the AI assistant (requests by tool, and the
 searches and Meet topics people asked about). **Download every
 event** links there give the whole `events` table as CSV or JSON

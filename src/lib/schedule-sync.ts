@@ -1,6 +1,6 @@
 import { parseMainSiteSchedule } from "./schedule-parse";
 import { assignSessionIds } from "./sessions";
-import { recordSyncRun, replaceSchedule } from "./db";
+import { moveSavedSessions, recordSyncRun, replaceSchedule } from "./db";
 
 // Fewer talks than this means the page didn't parse properly; keep the
 // current schedule rather than replacing it with a partial one.
@@ -24,7 +24,9 @@ export async function syncSchedule(env: Env): Promise<void> {
       throw new Error(`Found only ${talks} talks at ${url}; kept the current schedule. ${warnings.join(" ")}`.trim());
     }
 
-    await replaceSchedule(env.DB, assignSessionIds(sessions));
+    const schedule = assignSessionIds(sessions);
+    await replaceSchedule(env.DB, schedule);
+    await moveSavedSessions(env.DB, schedule);
     await recordSyncRun(env.DB, "ok", sessions.length, warnings.join(" "));
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

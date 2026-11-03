@@ -6,6 +6,8 @@ export interface Guest {
   /** Luma's guest ID, or walkin-… for someone added at the desk. */
   id: string;
   name: string;
+  /** The name on their Luma account, when it isn't their first and last name. */
+  otherName?: string | null;
   firstName: string | null;
   lastName: string | null;
   email: string;
@@ -65,7 +67,7 @@ export function similarity(a: string, b: string): number {
   return j + prefix * 0.1 * (1 - j);
 }
 
-const nameWords = (g: Guest) => [...new Set([...words(g.name), ...words(g.firstName), ...words(g.lastName)])];
+const nameWords = (g: Guest) => [...new Set([...words(g.name), ...words(g.otherName), ...words(g.firstName), ...words(g.lastName)])];
 
 // How well one typed word matches the best of a guest's name words.
 function wordScore(typed: string, theirs: string[]): number {
@@ -124,7 +126,8 @@ export function exactMatch(query: string, guests: Guest[]): Guest | null {
     hits = guests.filter((g) => g.email.toLowerCase() === typed);
   } else {
     const typed = words(query).join(" ");
-    hits = typed ? guests.filter((g) => words(g.name).join(" ") === typed || words(`${g.firstName ?? ""} ${g.lastName ?? ""}`).join(" ") === typed) : [];
+    const names = (g: Guest) => [g.name, g.otherName, `${g.firstName ?? ""} ${g.lastName ?? ""}`].map((n) => words(n).join(" "));
+    hits = typed ? guests.filter((g) => names(g).includes(typed)) : [];
   }
   return hits.length === 1 ? hits[0] : null;
 }

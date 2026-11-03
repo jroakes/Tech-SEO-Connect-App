@@ -7,8 +7,13 @@ import { addWalkIn, checkIn, CheckInError, search, undoCheckIn } from "@/lib/che
 export const prerender = false;
 
 const requestSchema = z.discriminatedUnion("action", [
-  // single: false always lists the closest guests, as after "Wrong person?".
-  z.object({ action: z.literal("search"), query: z.string().trim().min(1).max(200), single: z.boolean().optional() }),
+  // single: false lists every close guest except `exclude`, as after "Wrong person?".
+  z.object({
+    action: z.literal("search"),
+    query: z.string().trim().min(1).max(200),
+    single: z.boolean().optional(),
+    exclude: z.string().min(1).max(100).optional(),
+  }),
   z.object({ action: z.literal("check_in"), guestId: z.string().min(1).max(100) }),
   z.object({ action: z.literal("undo"), guestId: z.string().min(1).max(100) }),
   // newPerson: the admin says they aren't a guest with a similar name.
@@ -31,7 +36,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const req = parsed.data;
 
   try {
-    if (req.action === "search") return json(await search(req.query, req.single ?? true));
+    if (req.action === "search") return json(await search(req.query, req.single ?? true, req.exclude));
     if (req.action === "check_in") return json({ guest: await checkIn(req.guestId, admin.id) });
     if (req.action === "undo") return json({ guest: await undoCheckIn(req.guestId) });
     return json(await addWalkIn(req.name, req.email.toLowerCase(), admin.id, req.newPerson ?? false));

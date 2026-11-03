@@ -4,6 +4,7 @@ import { z } from "zod";
 import { json } from "@/lib/auth-server";
 import { clerk, currentAdmin, displayName, isAdmin, isOrganizer } from "@/lib/clerk";
 import { deleteUserData, insertEvents } from "@/lib/db";
+import { deleteProfile } from "@/lib/profiles";
 
 export const prerender = false;
 
@@ -45,7 +46,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   if (action === "make_admin") target = await users.updateUserMetadata(userId, { publicMetadata: { role: "admin" } });
   if (action === "remove_admin") target = await users.updateUserMetadata(userId, { publicMetadata: { role: null } });
-  if (action === "block") target = await users.banUser(userId);
+  if (action === "block") {
+    target = await users.banUser(userId);
+    // A blocked user can't be contacted through Meet either.
+    await deleteProfile(env.DB, userId);
+  }
   if (action === "unblock") target = await users.unbanUser(userId);
   if (action === "delete") {
     await users.deleteUser(userId);

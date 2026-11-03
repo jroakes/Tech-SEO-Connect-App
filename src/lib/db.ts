@@ -1,3 +1,4 @@
+import { currentSessionId } from "./sessions";
 import type { Session } from "./types";
 import { fallbackSchedule } from "@/data/schedule";
 
@@ -52,6 +53,20 @@ export async function replaceSchedule(db: D1Database, sessions: Session[]): Prom
       insert.bind(s.id, s.day, s.date ?? null, i, s.time, s.duration, s.title, s.speaker ?? null, s.isBreak ? 1 : 0, s.description ?? null, now),
     ),
   ]);
+}
+
+/** Points saves of a talk that moved to another day at its new ID (see currentSessionId). */
+export async function moveSavedSessions(db: D1Database, sessions: Session[]): Promise<void> {
+  const { results } = await db.prepare("SELECT DISTINCT session_id AS id FROM saved_sessions").all<{ id: string }>();
+  const moves = results.map(({ id }) => [id, currentSessionId(id, sessions)]).filter(([from, to]) => from !== to);
+  if (!moves.length) return;
+  await db.batch(
+    moves.flatMap(([from, to]) => [
+      // Someone who saved both keeps one.
+      db.prepare("UPDATE OR IGNORE saved_sessions SET session_id = ? WHERE session_id = ?").bind(to, from),
+      db.prepare("DELETE FROM saved_sessions WHERE session_id = ?").bind(from),
+    ]),
+  );
 }
 
 export async function recordSyncRun(db: D1Database, status: "ok" | "skipped" | "error", sessionCount: number, message: string) {

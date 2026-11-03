@@ -5,7 +5,7 @@ import { ScheduleCard } from "./ScheduleCard";
 import { LocationCard } from "./LocationCard";
 import type { Place, Session } from "@/lib/types";
 import { useSaved } from "@/lib/saved";
-import { getScheduleDays } from "@/lib/sessions";
+import { currentSessionId, getScheduleDays } from "@/lib/sessions";
 import { trackPlaceSave, trackSessionSave } from "@/lib/analytics";
 
 interface MyConferenceProps {
@@ -33,7 +33,7 @@ function EmptyState({ icon: Icon, text, links }: { icon: typeof CalendarHeart; t
 }
 
 export default function MyConference({ sessions, places }: MyConferenceProps) {
-  const talks = useSaved("session");
+  const talks = useSaved("session", (id) => currentSessionId(id, sessions));
   const spots = useSaved("place");
   const auth = talks.auth;
 

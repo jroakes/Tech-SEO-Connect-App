@@ -25,6 +25,13 @@ describe("admin", () => {
     expect((await call(userAction, { method: "POST", user: "attendee", body: { userId: "x", action: "block" } })).status).toBe(403);
   });
 
+  it("removes a blocked user's Meet answers", async () => {
+    await env.DB.prepare("INSERT INTO profiles (user_id, name, topics) VALUES ('bob', 'Bob', '[\"python\"]')").run();
+    const res = await call(userAction, { method: "POST", user: "admin1", body: { userId: "bob", action: "block" } });
+    expect(res.data.user).toMatchObject({ id: "bob", banned: true });
+    expect(await env.DB.prepare("SELECT * FROM profiles WHERE user_id = 'bob'").first()).toBeNull();
+  });
+
   it("exports every event as CSV or JSON, for admins only", async () => {
     await insertEvents(env.DB, [event("page_view"), event("place_save", { place_id: "cafe", place_name: 'Joe\'s "Best", Coffee' })]);
     expect((await call(exportEvents, { path: "/api/admin/events" })).status).toBe(401);
@@ -63,6 +70,10 @@ describe("analytics", () => {
       event("match_topic_open", { topic: "bigquery" }),
       event("match_linkedin_click", { topic: "bigquery" }),
       event("page_view", undefined, { anonId: "old", ts: now - 10 * 86_400_000 }),
+      // An organizer on the admin pages isn't an attendee.
+      event("page_view", undefined, { anonId: "organizer", path: "/admin/analytics" }),
+      event("mcp_tool_call", { tool: "search_sessions", query: "Solís" }, { userId: "ann" }),
+      event("mcp_tool_call", { tool: "search_sessions", query: "solis" }, { userId: "ann" }),
     ]);
     await env.DB.batch([
       env.DB.prepare("INSERT INTO profiles (user_id, name, topics, linkedin) VALUES ('ann', 'Ann', '[\"bigquery\"]', 'https://www.linkedin.com/in/ann')"),
@@ -71,7 +82,7 @@ describe("analytics", () => {
     ]);
 
     const week = await getInsights(env.DB, "7d", true);
-    expect(week.totals).toMatchObject({ visitors: 2, pageViews: 3, signedIn: 1, directions: 2, talkSaves: 2, placeSaves: 1, aiRequests: 2 });
+    expect(week.totals).toMatchObject({ visitors: 2, pageViews: 3, signedIn: 1, directions: 2, talkSaves: 2, placeSaves: 1, aiRequests: 4 });
     expect(week.directionsByApp).toEqual({ google: 1, apple: 1 });
     expect(week.talks).toEqual([{ title: "Logs", speaker: "Ann", saves: 1 }]);
     expect(week.places).toEqual([{ name: "Cafe", category: "Coffee", views: 1, directions: 2, saves: 1 }]);
@@ -80,7 +91,11 @@ describe("analytics", () => {
       { path: "/map", views: 1 },
     ]);
     expect(week.aiTools.map((t) => t.tool).sort()).toEqual(["find_people_to_meet", "search_sessions"]);
-    expect(week.aiSearches.map((s) => s.query).sort()).toEqual(["bigquery", "crawl"]);
+    expect(week.aiSearches).toEqual([
+      { query: "solis", count: 2 },
+      { query: "bigquery", count: 1 },
+      { query: "crawl", count: 1 },
+    ]);
     expect(week.meet).toMatchObject({ people: 1, withLinkedin: 1, joins: 1, topicOpens: 1, linkedinTaps: 1 });
     expect(week.meet.topics).toEqual([{ topic: "bigquery", label: "BigQuery", people: 1, opens: 1, taps: 1 }]);
     expect(week.checkIn).toEqual({ checkedIn: 2, walkIns: 1, guests: 4 });

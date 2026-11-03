@@ -2,6 +2,7 @@
 // over the events table, the saved talks and places, Meet profiles and
 // check-ins.
 import { TOPICS } from "../data/topics";
+import { fold } from "./utils";
 
 export type Range = "24h" | "7d" | "all";
 
@@ -53,6 +54,8 @@ export interface Insights {
 }
 
 const TIME_ZONE = "America/New_York";
+// Page views by attendees: organizers' views of the admin pages aren't counted.
+const ATTENDEE_VIEW = "type = 'page_view' AND (path IS NULL OR path NOT LIKE '/admin%')";
 
 /** The conference's UTC offset right now, in SQLite modifier form, e.g. "-5 hours". */
 function localOffset(now: Date): string {
@@ -74,8 +77,8 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
   const ofType = (type: string) => count("SELECT COUNT(*) AS n FROM events WHERE type = ? AND ts >= ?", type, since);
 
   const [visitors, pageViews, signedIn, directions, talkSaves, placeSaves, aiRequests, opened, copied] = await Promise.all([
-    count("SELECT COUNT(DISTINCT anon_id) AS n FROM events WHERE anon_id IS NOT NULL AND type = 'page_view' AND ts >= ?", since),
-    ofType("page_view"),
+    count(`SELECT COUNT(DISTINCT anon_id) AS n FROM events WHERE anon_id IS NOT NULL AND ${ATTENDEE_VIEW} AND ts >= ?`, since),
+    count(`SELECT COUNT(*) AS n FROM events WHERE ${ATTENDEE_VIEW} AND ts >= ?`, since),
     count(
       `SELECT COUNT(DISTINCT user_id) AS n FROM (
          SELECT user_id FROM events WHERE user_id IS NOT NULL AND ts >= ?1
@@ -91,9 +94,9 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     ofType("mcp_url_copy"),
   ]);
 
-  const [activityRows, talks, places, pages, aiTools, aiSearches, apps] = await Promise.all([
+  const [activityRows, talks, places, pages, aiTools, searchRows, apps] = await Promise.all([
     all<{ bucket: string; n: number }>(
-      `SELECT strftime('${bucket}', ts, ?) AS bucket, COUNT(*) AS n FROM events WHERE type = 'page_view' AND ts >= ? GROUP BY bucket ORDER BY bucket`,
+      `SELECT strftime('${bucket}', ts, ?) AS bucket, COUNT(*) AS n FROM events WHERE ${ATTENDEE_VIEW} AND ts >= ? GROUP BY bucket ORDER BY bucket`,
       offset,
       since,
     ),
@@ -114,7 +117,7 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
       since,
     ),
     all<{ path: string; views: number }>(
-      "SELECT path, COUNT(*) AS views FROM events WHERE type = 'page_view' AND ts >= ? AND path IS NOT NULL AND path != '' GROUP BY path ORDER BY views DESC LIMIT 8",
+      `SELECT path, COUNT(*) AS views FROM events WHERE ${ATTENDEE_VIEW} AND ts >= ? AND path IS NOT NULL AND path != '' GROUP BY path ORDER BY views DESC LIMIT 8`,
       since,
     ),
     all<{ tool: string; calls: number; people: number }>(
@@ -126,7 +129,7 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     all<{ query: string; count: number }>(
       `SELECT lower(COALESCE(json_extract(props, '$.query'), json_extract(props, '$.topic'))) AS query, COUNT(*) AS count
        FROM events WHERE type = 'mcp_tool_call' AND ts >= ? AND COALESCE(json_extract(props, '$.query'), json_extract(props, '$.topic')) IS NOT NULL
-       GROUP BY query ORDER BY count DESC LIMIT 8`,
+       GROUP BY query ORDER BY count DESC LIMIT 500`,
       since,
     ),
     all<{ app: string; n: number }>(
@@ -134,6 +137,14 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
       since,
     ),
   ]);
+
+  // "Solís" and "solis" are one search.
+  const searches = new Map<string, number>();
+  for (const { query, count } of searchRows) searches.set(fold(query), (searches.get(fold(query)) ?? 0) + count);
+  const aiSearches = [...searches]
+    .map(([query, count]) => ({ query, count }))
+    .sort((a, b) => b.count - a.count || a.query.localeCompare(b.query))
+    .slice(0, 8);
 
   const [meetPeople, picked, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps, checkedIn, walkIns, guests] = await Promise.all([
     one<{ people: number; withLinkedin: number }>("SELECT COUNT(*) AS people, COALESCE(SUM(linkedin IS NOT NULL), 0) AS withLinkedin FROM profiles"),

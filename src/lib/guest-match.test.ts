@@ -78,6 +78,15 @@ describe("matchScore", () => {
   });
 });
 
+describe("a Luma account name that differs from the registration's", () => {
+  const paula = guest("paula", "Paula", "Morris", { otherName: "Matt Hill" });
+  it("finds them by either name", () => {
+    expect(exactMatch("Matt Hill", [paula, ...guests])?.id).toBe("paula");
+    expect(exactMatch("paula morris", [paula, ...guests])?.id).toBe("paula");
+    expect(candidates("Hill", [paula, ...guests])[0].guest.id).toBe("paula");
+  });
+});
+
 describe("sharesName", () => {
   it("is true when every word typed is one of their names", () => {
     expect(sharesName("smith", guests[0])).toBe(true);

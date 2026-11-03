@@ -25,6 +25,13 @@ const ago = (at: number, now: number) => {
 
 const LISTED = 5; // guests listed before "Show all"
 
+// "General Admission × 3, Free": a registration can hold several tickets.
+const ticketList = (tickets: string[]) =>
+  [...new Set(tickets)].map((t) => {
+    const n = tickets.filter((x) => x === t).length;
+    return n > 1 ? `${t} × ${n}` : t;
+  }).join(", ");
+
 const inputClass =
   "min-h-12 w-full rounded-md border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
 
@@ -52,7 +59,11 @@ function GuestRow(props: { guest: GuestResult; justCheckedIn?: boolean; busy: bo
     >
       <div className="min-w-0">
         <div className="text-lg font-semibold text-foreground">{guest.name}</div>
-        <div className="truncate text-sm text-muted-foreground">{[guest.email, guest.tickets.join(", ")].filter(Boolean).join(" · ")}</div>
+        {guest.otherName && <div className="text-sm text-muted-foreground">Luma account: {guest.otherName}</div>}
+        <div className="truncate text-sm text-muted-foreground">{[guest.email, ticketList(guest.tickets)].filter(Boolean).join(" · ")}</div>
+        {guest.tickets.length > 1 && (
+          <div className="mt-1 text-sm font-medium text-foreground">{guest.tickets.length} tickets: checking in covers everyone on this registration.</div>
+        )}
         {note && <div className="mt-1 text-sm font-medium text-destructive">{note}</div>}
       </div>
       <div className="flex shrink-0 flex-wrap items-center gap-2">
@@ -179,7 +190,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
       setShowAll(false);
       setQuery(typed);
       input.current?.focus();
-      const result = await run("search", () => post<SearchResult>({ action: "search", query: typed, single: false }));
+      const result = await run("search", () => post<SearchResult>({ action: "search", query: typed, single: false, exclude: guest.id }));
       if (result) setShown({ match: result.match, options: result.options, query: typed });
       if (result && !result.options.length) setWalkIn(walkInFrom(typed));
       return;

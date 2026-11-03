@@ -6,7 +6,7 @@
 // guest in, so real check-ins are kept here too.
 import { env, waitUntil } from "cloudflare:workers";
 import { z } from "zod";
-import { candidates, exactMatch, livestreamOnly, sharesName, type Guest } from "./guest-match";
+import { candidates, exactMatch, livestreamOnly, sharesName, words, type Guest } from "./guest-match";
 
 const LUMA = "https://public-api.luma.com";
 const LUMA_NEWEST_TIMEOUT_MS = 2000;
@@ -34,6 +34,8 @@ export class CheckInError extends Error {}
 export interface GuestResult {
   id: string;
   name: string;
+  /** The name on their Luma account, when it's different. */
+  otherName: string | null;
   email: string;
   tickets: string[];
   status: string;
@@ -74,9 +76,12 @@ function toGuest(g: LumaGuest): Guest {
   const tickets = g.event_tickets ?? [];
   // Some people's Luma name is only their first name.
   const fullName = g.user_first_name && g.user_last_name ? `${g.user_first_name} ${g.user_last_name}` : null;
+  const name = fullName ?? (g.user_name || g.user_email);
   return {
     id: g.id,
-    name: fullName ?? (g.user_name || g.user_email),
+    name,
+    // Someone may register one name with an account in another (and the desk may hear either).
+    otherName: g.user_name && words(g.user_name).join(" ") !== words(name).join(" ") ? g.user_name : null,
     firstName: g.user_first_name,
     lastName: g.user_last_name,
     email: g.user_email,
@@ -222,13 +227,14 @@ function deskFrom(list: GuestList, rows: CheckInRow[]): Desk {
   const lumaEmails = new Set(list.guests.map((g) => g.email.toLowerCase()));
   const walkIns: Guest[] = rows
     .filter((r) => r.walk_in && !(r.email && lumaEmails.has(r.email.toLowerCase())))
-    .map((r) => ({ id: r.guest_id, name: r.name, firstName: null, lastName: null, email: r.email ?? "", status: "approved", tickets: ["Walk-in"], lumaCheckedInAt: null }));
+    .map((r) => ({ id: r.guest_id, name: r.name, otherName: null, firstName: null, lastName: null, email: r.email ?? "", status: "approved", tickets: ["Walk-in"], lumaCheckedInAt: null }));
 
   const show = (g: Guest): GuestResult => {
     const here = byId.get(g.id) ?? byEmail.get(g.email.toLowerCase());
     return {
       id: g.id,
       name: g.name,
+      otherName: g.otherName ?? null,
       email: g.email,
       tickets: g.tickets,
       status: g.status,
@@ -327,7 +333,13 @@ async function judge(query: string, people: Guest[]): Promise<Ranking | null> {
   const messages = [
     { role: "system", content: PROMPT },
     // Short IDs, so the answer is short and quick.
-    { role: "user", content: JSON.stringify({ typed: query, candidates: people.map((g, i) => ({ id: String(i), name: g.name, email: g.email })) }) },
+    {
+      role: "user",
+      content: JSON.stringify({
+        typed: query,
+        candidates: people.map((g, i) => ({ id: String(i), name: g.otherName ? `${g.name} (Luma account: ${g.otherName})` : g.name, email: g.email })),
+      }),
+    },
   ];
   if (env.OPENROUTER_API_KEY) {
     try {
@@ -346,9 +358,13 @@ async function judge(query: string, people: Guest[]): Promise<Ranking | null> {
 
 // What the page does ------------------------------------------------------------
 
-/** The guest typed, if it's obvious who, otherwise everyone who might be them. */
-async function find(query: string, d: Desk, single: boolean): Promise<{ match: Guest | null; options: Guest[] }> {
-  const found = candidates(query, d.guests);
+/**
+ * The guest typed, if it's obvious who, otherwise everyone who might be them.
+ * Without `single` (after "Wrong person?") it lists every close guest except
+ * `exclude`, the one just taken back: the AI's picks first, then the rest.
+ */
+async function find(query: string, d: Desk, single: boolean, exclude?: string): Promise<{ match: Guest | null; options: Guest[] }> {
+  const found = candidates(query, d.guests).filter((c) => c.guest.id !== exclude);
   if (!found.length) return { match: null, options: [] };
   const exact = single ? exactMatch(query, d.guests) : null;
   if (exact) return { match: exact, options: [] };
@@ -362,7 +378,8 @@ async function find(query: string, d: Desk, single: boolean): Promise<{ match: G
   // someone registered twice.
   const shared = found.filter((c) => sharesName(query, c.guest)).length > 1;
   if (single && !shared && best && scores.obvious === best.id && best.score >= OBVIOUS_SCORE) return { match: found[Number(best.id)].guest, options: [] };
-  return { match: null, options: [...new Set(ranked.map((m) => found[Number(m.id)].guest))] };
+  const picked = ranked.map((m) => found[Number(m.id)].guest);
+  return { match: null, options: [...new Set(single ? picked : [...picked, ...found.map((c) => c.guest)])] };
 }
 
 /**
@@ -371,13 +388,13 @@ async function find(query: string, d: Desk, single: boolean): Promise<{ match: G
  * until the admin taps Check in. With `single` off it always returns the
  * list, as after "Wrong person?".
  */
-export async function search(query: string, single = true): Promise<SearchResult> {
+export async function search(query: string, single = true, exclude?: string): Promise<SearchResult> {
   let d = await openDesk();
-  let found = await find(query, d, single);
+  let found = await find(query, d, single, exclude);
   // Nobody: they may have only just registered, so check Luma's newest registrations.
   if (!found.match && !found.options.length) {
     const newer = await withNewest(d);
-    if (newer !== d) found = await find(query, (d = newer), single);
+    if (newer !== d) found = await find(query, (d = newer), single, exclude);
   }
   return { ...d.freshness, match: found.match && d.show(found.match), options: found.options.map(d.show) };
 }
@@ -439,7 +456,7 @@ export async function addWalkIn(name: string, email: string, adminId: string, ne
     });
     if (skipped.length) throw new CheckInError(`Luma won't add ${email}: they've unsubscribed from the calendar, or were removed or blocked.`);
   }
-  const guest: Guest = { id: `walkin-${crypto.randomUUID()}`, name, firstName: null, lastName: null, email, status: "approved", tickets: ["Walk-in"], lumaCheckedInAt: null };
+  const guest: Guest = { id: `walkin-${crypto.randomUUID()}`, name, otherName: null, firstName: null, lastName: null, email, status: "approved", tickets: ["Walk-in"], lumaCheckedInAt: null };
   const checkedInAt = await record(guest, adminId, true);
   return { ...d.freshness, guest: { ...d.show(guest), checkedInAt, checkedInHere: true }, registered: false };
 }

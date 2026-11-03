@@ -11,6 +11,10 @@ test("searches and filters the list", async ({ page }) => {
   await expect(cards).toHaveCount(1);
   await expect(cards.first().getByTestId("text-location-name")).toHaveText("Alimentari at Mothers & Sons");
 
+  // Accents don't matter.
+  await page.getByTestId("input-search").fill("crepes");
+  await expect(cards.first().getByTestId("text-location-name")).toContainText("Crêpes");
+
   await page.getByTestId("input-search").fill("");
   const category = page.locator('[data-testid^="button-category-"]').nth(1);
   await category.click();
@@ -50,6 +54,8 @@ test("shows the places on the map, with directions in each pin", async ({ page, 
   const pins = page.locator(".leaflet-marker-icon");
   await expect(pins.first()).toBeVisible({ timeout: 15_000 });
   expect(await pins.count()).toBeGreaterThan(20);
+  // Every pin says which place it is.
+  expect(await pins.evaluateAll((els) => els.every((el) => el.getAttribute("title")))).toBe(true);
   await pins.nth(3).click({ force: true });
   const apple = page.locator('[data-testid^="button-apple-maps-"]').first();
   await apple.click();

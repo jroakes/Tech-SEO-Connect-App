@@ -2,13 +2,16 @@
 import { env } from "cloudflare:workers";
 import Layout from "@/layouts/Layout.astro";
 import ScheduleView from "@/components/ScheduleView";
+import { event } from "@/data/event";
 import { getSchedule } from "@/lib/db";
 
 export const prerender = false;
 
 const sessions = await getSchedule(env.DB);
+// Today where the conference is, e.g. "2026-11-05", so the schedule opens on today.
+const today = new Intl.DateTimeFormat("en-CA", { timeZone: event.timezone }).format(new Date());
 ---
 
 <Layout title="Schedule">
-  <ScheduleView client:load sessions={sessions} />
+  <ScheduleView client:load sessions={sessions} today={today} />
 </Layout>

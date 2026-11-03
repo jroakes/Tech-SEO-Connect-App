@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { htmlToText, parseLongDate, parseMainSiteSchedule, parseTimeRange } from "./schedule-parse";
-import { assignSessionIds, getScheduleDays } from "./sessions";
+import { assignSessionIds, currentSessionId, getScheduleDays, openingDay } from "./sessions";
 
 // Schedule section of www.techseoconnect.com as of 2026-10-28.
 const fixture = readFileSync(new URL("./__fixtures__/main-site-schedule.html", import.meta.url), "utf8");
@@ -72,6 +72,18 @@ describe("parseMainSiteSchedule", () => {
     expect(party?.description).toContain("Mateo Tapas");
   });
 
+  it("keeps a description's paragraphs and links", () => {
+    const { sessions } = parseMainSiteSchedule(fixture);
+    const after = sessions.find((s) => s.title === "After Party");
+    expect(after?.description?.split("\n")).toEqual([
+      "At [BOOM Club](https://www.google.com/maps/search/?api=1&query=BOOM%20Club%2C%20600%20Foster%20St%2C%20Unit%20B%2C%20Durham%2C%20NC%2027701) in Durham",
+      "SEO and DJ Lily Ray, alongside [Ash Lauryn](https://www.instagram.com/ash_lauryn_/), LexOnLoud and thefacesblur",
+      "Free with your conference badge",
+      "No separate ticket needed",
+      "[View the event on Instagram](https://www.instagram.com/p/DeaHXqxD1DI/)",
+    ]);
+  });
+
   it("decodes apostrophes in titles", () => {
     expect(sessions.some((s) => s.title.startsWith("I Can't Code."))).toBe(true);
   });
@@ -84,5 +96,40 @@ describe("parseMainSiteSchedule", () => {
 
   it("reports a page with no schedule", () => {
     expect(parseMainSiteSchedule("<html></html>").warnings).toContain("No schedule days found on the page.");
+  });
+});
+
+describe("currentSessionId", () => {
+  const sessions = assignSessionIds([
+    { day: 2, date: "2026-11-05", time: "9:00 AM", duration: 30, title: "Logs", speaker: "Lauren Green", isBreak: false },
+    { day: 2, date: "2026-11-05", time: "12:15 PM", duration: 60, title: "Lunch", isBreak: true },
+    { day: 3, date: "2026-11-06", time: "12:15 PM", duration: 60, title: "Lunch", isBreak: true },
+  ]);
+
+  it("keeps an ID that's still on the schedule", () => {
+    expect(currentSessionId("2026-11-05-lauren-green", sessions)).toBe("2026-11-05-lauren-green");
+  });
+
+  it("follows a talk that moved to another day", () => {
+    expect(currentSessionId("2026-11-06-lauren-green", sessions)).toBe("2026-11-05-lauren-green");
+  });
+
+  it("leaves an ID alone when it can't tell which, or the talk is gone", () => {
+    expect(currentSessionId("2026-11-04-12-15-pm-lunch", sessions)).toBe("2026-11-04-12-15-pm-lunch");
+    expect(currentSessionId("2026-11-05-someone-else", sessions)).toBe("2026-11-05-someone-else");
+  });
+});
+
+describe("openingDay", () => {
+  const days = getScheduleDays(parseMainSiteSchedule(fixture).sessions.map((s, i) => ({ ...s, id: String(i) })));
+
+  it("opens on today during the conference", () => {
+    expect(openingDay(days, "2026-11-05")?.label).toBe("Thu, Nov 5");
+    expect(openingDay(days, "2026-11-06")?.label).toBe("Fri, Nov 6");
+  });
+
+  it("opens on the first day before or after it", () => {
+    expect(openingDay(days, "2026-11-02")?.label).toBe("Wed, Nov 4");
+    expect(openingDay(days, "2026-12-01")?.label).toBe("Wed, Nov 4");
   });
 });

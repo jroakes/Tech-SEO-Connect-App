@@ -9,6 +9,7 @@ import { TOPICS, topicLabel } from "@/data/topics";
 import { getSavedIds, getSchedule, insertEvents, updateSaved } from "@/lib/db";
 import { peopleIn, sharingATopic, topicCounts, type Profile } from "@/lib/matching";
 import { listProfiles } from "@/lib/profiles";
+import { fold } from "@/lib/utils";
 import { formatDuration, getScheduleDays } from "@/lib/sessions";
 import type { Place, Session } from "@/lib/types";
 
@@ -135,11 +136,11 @@ function createServer(userId: string) {
     },
     async ({ query }) => {
       await log("search_sessions", { query });
-      const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+      const terms = fold(query).split(/\s+/).filter(Boolean);
       const sessions = await getSchedule(env.DB);
       const matches = sessions.filter((s) => {
         if (s.isBreak) return false;
-        const haystack = `${s.title} ${s.speaker ?? ""} ${s.description ?? ""}`.toLowerCase();
+        const haystack = fold(`${s.title} ${s.speaker ?? ""} ${s.description ?? ""}`);
         return terms.every((t) => haystack.includes(t));
       });
       return text(matches.length ? matches.map(sessionSummary) : `No talks match "${query}".`);
@@ -161,10 +162,10 @@ function createServer(userId: string) {
     async ({ category, query, limit = 15 }) => {
       await log("find_places", { ...(category ? { category } : {}), ...(query ? { query } : {}) });
       const wantCategory = category?.toLowerCase();
-      const terms = query?.toLowerCase().split(/\s+/).filter(Boolean) ?? [];
+      const terms = query ? fold(query).split(/\s+/).filter(Boolean) : [];
       const matches = places.filter((p) => {
         if (wantCategory && p.category.toLowerCase() !== wantCategory) return false;
-        const haystack = `${p.name} ${p.narrative ?? ""}`.toLowerCase();
+        const haystack = fold(`${p.name} ${p.narrative ?? ""}`);
         return terms.every((t) => haystack.includes(t));
       });
       return text(matches.length ? matches.slice(0, limit).map(placeSummary) : "No places match. Try another category or fewer words.");
@@ -296,7 +297,9 @@ function createServer(userId: string) {
       await log("save_to_my_conference", { kind, id });
       const item = await findItem(kind, id);
       if (typeof item === "string") return text(item);
-      await updateSaved(env.DB, kind === "talk" ? "session" : "place", userId, [id], []);
+      const savedKind = kind === "talk" ? "session" : "place";
+      if ((await getSavedIds(env.DB, savedKind, userId)).includes(id)) return text(`"${item.name}" is already in My Conference.`);
+      await updateSaved(env.DB, savedKind, userId, [id], []);
       await logSave(kind, true, item.props);
       return text(`Saved "${item.name}" to My Conference.`);
     },
@@ -314,7 +317,9 @@ function createServer(userId: string) {
       await log("remove_from_my_conference", { kind, id });
       const item = await findItem(kind, id);
       if (typeof item === "string") return text(item);
-      await updateSaved(env.DB, kind === "talk" ? "session" : "place", userId, [], [id]);
+      const savedKind = kind === "talk" ? "session" : "place";
+      if (!(await getSavedIds(env.DB, savedKind, userId)).includes(id)) return text(`"${item.name}" isn't in My Conference.`);
+      await updateSaved(env.DB, savedKind, userId, [], [id]);
       await logSave(kind, false, item.props);
       return text(`Removed "${item.name}" from My Conference.`);
     },

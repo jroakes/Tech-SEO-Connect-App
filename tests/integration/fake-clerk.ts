@@ -15,9 +15,14 @@ const userFor = (id: string) =>
     publicMetadata: id.startsWith("admin") ? { role: "admin" } : {},
   }) as unknown as User;
 
-export const clerk = () => {
-  throw new Error("Clerk's API isn't available in tests.");
-};
+// The bits of Clerk's Backend API the admin user actions use.
+export const clerk = () => ({
+  users: {
+    getUser: async (id: string) => userFor(id),
+    banUser: async (id: string) => ({ ...userFor(id), banned: true }),
+    unbanUser: async (id: string) => ({ ...userFor(id), banned: false }),
+  },
+});
 export const isAdmin = (user: User) => user.publicMetadata?.role === "admin";
 export const isOrganizer = () => false;
 export const displayName = (user: User) => `${user.firstName} ${user.lastName}`;

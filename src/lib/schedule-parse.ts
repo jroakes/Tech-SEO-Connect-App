@@ -34,6 +34,11 @@ export function htmlToText(html: string): string {
     .trim();
 }
 
+// A paragraph's text with its links kept as [text](url), for the app to show
+// as links (and an AI assistant to read).
+const textWithLinks = (html: string) =>
+  htmlToText(html.replace(/<a\b[^>]*\bhref="(https?:[^"]+)"[^>]*>([\s\S]*?)<\/a>/g, (_, href: string, text: string) => `[${htmlToText(text)}](${href})`));
+
 /** "November 5, 2026" -> "2026-11-05" */
 export function parseLongDate(text: string): string | null {
   const m = text.trim().match(/^([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})$/);
@@ -119,14 +124,15 @@ export function parseMainSiteSchedule(html: string): ParsedSchedule {
 
       const headingText = htmlToText(heading[2]);
       const isTalk = (heading[1] ?? "").includes("launch-schedule-row__speaker");
-      const paragraphs = [...row.matchAll(/<p(?:\s+class="([^"]*)")?[^>]*>([\s\S]*?)<\/p>/g)].map(([, cls = "", inner]) => ({
-        isTitle: cls.includes("launch-schedule-row__title"),
-        text: htmlToText(inner),
-      }));
+      const paragraphs = [...row.matchAll(/<p(?:\s+class="([^"]*)")?[^>]*>([\s\S]*?)<\/p>/g)].map(([, cls = "", inner]) => {
+        const isTitle = cls.includes("launch-schedule-row__title");
+        return { isTitle, text: isTitle ? htmlToText(inner) : textWithLinks(inner) };
+      });
+      // One paragraph per line.
       const details = paragraphs
         .filter((p) => !p.isTitle && p.text)
         .map((p) => p.text)
-        .join(" ");
+        .join("\n");
 
       sessions.push({
         day,

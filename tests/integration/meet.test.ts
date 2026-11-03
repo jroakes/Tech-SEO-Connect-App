@@ -47,6 +47,16 @@ describe("Meet", () => {
     expect((await join("ann", { topics: ["bigquery"], linkedin: "https://twitter.com/ann" })).status).toBe(400);
     expect((await call(PUT, { method: "PUT", user: "ann", body: { name: " ", topics: ["bigquery"] } })).status).toBe(400);
     expect(await meetEvents()).toEqual([]);
+    expect((await call(PUT, { method: "PUT", user: "ann", body: { name: " ", topics: ["bigquery"] } })).data.error).toBe("Please add your name.");
+    expect((await join("ann", { topics: ["bigquery"], linkedin: "linkedin.com/feed/" })).status).toBe(400);
+  });
+
+  it("logs leaving only for someone who was on Meet", async () => {
+    await call(DELETE, { method: "DELETE", user: "ann" });
+    await join("ann", { topics: ["bigquery"] });
+    await call(DELETE, { method: "DELETE", user: "ann" });
+    await call(DELETE, { method: "DELETE", user: "ann" });
+    expect((await meetEvents()).map((e) => e.type)).toEqual(["match_join", "match_leave"]);
   });
 
   it("shows only people who share your topics, and only once you've joined", async () => {
@@ -60,7 +70,10 @@ describe("Meet", () => {
     const { status, data } = await call(matches, { user: "ann" });
     expect(status).toBe(200);
     expect(data.me.userId).toBe("ann");
-    expect(data.others.map((p: { userId: string }) => p.userId).sort()).toEqual(["bob", "dan"]);
+    expect(data.others.map((p: { name: string }) => p.name).sort()).toEqual(["Name bob", "Name dan"]);
+    // Others come without account IDs, and only with the topics they share with Ann.
+    expect(data.others.map((p: { userId: string }) => p.userId)).not.toEqual(expect.arrayContaining(["bob", "dan"]));
+    expect(data.others.find((p: { name: string }) => p.name === "Name dan").topics).toEqual(["bigquery"]);
     const count = (topic: string) => data.counts.find((c: { topic: string }) => c.topic === topic).count;
     expect([count("bigquery"), count("python"), count("local"), count("careers")]).toEqual([2, 2, 2, 0]);
   });

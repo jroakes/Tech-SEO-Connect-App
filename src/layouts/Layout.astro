@@ -19,7 +19,7 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex" />}
@@ -71,7 +71,9 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
 
     <div class="min-h-screen bg-background">
       <Header />
-      <slot />
+      <main>
+        <slot />
+      </main>
     </div>
 
     <script is:inline>

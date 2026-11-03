@@ -45,6 +45,10 @@ describe("MCP server", () => {
     );
   });
 
+  it("finds talks and places without minding accents", async () => {
+    expect((await tool("ann", "search_sessions", { query: "Solis" }))[0].speaker).toBe("Aleyda Solís");
+  });
+
   it("answers about the conference, talks, places and sponsors", async () => {
     expect(await tool("ann", "get_event_info")).toMatchObject({ name: "Tech SEO Connect", city: "Durham, NC" });
     const talks = await tool("ann", "search_sessions", { query: "log" });
@@ -69,8 +73,11 @@ describe("MCP server", () => {
     await tool("ann", "remove_from_my_conference", { kind: "talk", id: talk.id });
     expect((await tool("ann", "get_my_conference")).talks).toEqual([]);
 
-    const types = (await rows<{ type: string }>(env.DB, "SELECT type FROM events WHERE user_id = 'ann'")).map((e) => e.type);
-    expect(types).toEqual(expect.arrayContaining(["mcp_tool_call", "session_save", "place_save", "session_unsave"]));
+    // Saving twice, or removing something that isn't saved, isn't logged again.
+    expect(await tool("ann", "save_to_my_conference", { kind: "place", id: place.id })).toMatch(/already in My Conference/);
+    expect(await tool("ann", "remove_from_my_conference", { kind: "talk", id: talk.id })).toMatch(/isn't in My Conference/);
+    const types = (await rows<{ type: string }>(env.DB, "SELECT type FROM events WHERE user_id = 'ann' AND type != 'mcp_tool_call' ORDER BY id")).map((e) => e.type);
+    expect(types).toEqual(["session_save", "place_save", "session_unsave"]);
   });
 
   it("shows Meet only to people who've joined, and only their topics", async () => {

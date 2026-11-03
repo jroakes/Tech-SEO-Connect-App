@@ -12,6 +12,7 @@ import { topicLabel } from "@/data/topics";
 
 type State =
   | { status: "loading" }
+  | { status: "offline" }
   | { status: "signed-out" }
   | { status: "form"; profile: Profile | null; suggestedName: string }
   | { status: "ready"; me: Profile; others: Profile[]; counts: TopicCount[] };
@@ -22,7 +23,8 @@ export default function Matchmaking() {
   const [state, setState] = useState<State>({ status: "loading" });
 
   const loadMatches = async () => {
-    const res = await fetch("/api/matches");
+    const res = await fetch("/api/matches").catch(() => null);
+    if (!res) return setState({ status: "offline" });
     if (res.ok) {
       const data = (await res.json()) as { me: Profile; others: Profile[]; counts: TopicCount[] };
       setState({ status: "ready", ...data });
@@ -36,7 +38,9 @@ export default function Matchmaking() {
       return;
     }
     (async () => {
-      const res = await fetch("/api/profile");
+      const res = await fetch("/api/profile").catch(() => null);
+      // Meet needs a connection; the rest of the app works offline.
+      if (!res) return setState({ status: "offline" });
       if (!res.ok) return setState({ status: "signed-out" });
       const data = (await res.json()) as { profile: Profile | null; suggestedName: string };
       if (data.profile) await loadMatches();
@@ -60,6 +64,12 @@ export default function Matchmaking() {
           Pick the topics you're interested in and see who else is. Message them on LinkedIn to meet up at the conference.
         </p>
       </div>
+
+      {state.status === "offline" && (
+        <p className="rounded-md border border-border bg-card p-8 text-center text-foreground" data-testid="panel-meet-offline">
+          Meet needs an internet connection. Try again when you're back online.
+        </p>
+      )}
 
       {state.status === "loading" && (
         <div className="flex justify-center py-16 text-muted-foreground">

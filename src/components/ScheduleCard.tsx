@@ -3,6 +3,28 @@ import { FavoriteButton } from "./FavoriteButton";
 import type { Session } from "@/lib/types";
 import { formatDuration } from "@/lib/sessions";
 
+const LINK = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/;
+
+/** A description from the main site: one paragraph per line, with [text](url) links. */
+function Description({ text }: { text: string }) {
+  return text.split("\n").map((line, i) => (
+    <span key={i} className="block">
+      {line.split(new RegExp(`(${LINK.source})`)).map((part, j) => {
+        const link = part.match(new RegExp(`^${LINK.source}$`));
+        if (link) {
+          return (
+            <a key={j} href={link[2]} target="_blank" rel="noopener noreferrer nofollow" className="text-primary underline underline-offset-2">
+              {link[1]}
+            </a>
+          );
+        }
+        // The pieces split() captures inside a link (its text and URL) are skipped.
+        return j % 4 === 0 ? part : null;
+      })}
+    </span>
+  ));
+}
+
 interface ScheduleCardProps {
   session: Session;
   saved: boolean;
@@ -38,7 +60,7 @@ export function ScheduleCard({ session, saved, onToggle }: ScheduleCardProps) {
         )}
         {session.description && (
           <p className="text-sm text-muted-foreground mt-1 font-serif leading-relaxed" data-testid="text-session-description">
-            {session.description}
+            <Description text={session.description} />
           </p>
         )}
       </div>

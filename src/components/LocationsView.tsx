@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { fold } from "@/lib/utils";
 
 interface LocationsViewProps {
   places: Place[];
@@ -41,8 +42,7 @@ export default function LocationsView({ places: locations }: LocationsViewProps)
 
   const filteredLocations = useMemo(() => {
     return locations.filter(loc => {
-      const matchesSearch = loc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (loc.narrative?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
+      const matchesSearch = fold(`${loc.name} ${loc.narrative ?? ""}`).includes(fold(searchQuery));
       const matchesCategory = !selectedCategory || loc.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });

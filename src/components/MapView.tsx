@@ -114,11 +114,25 @@ export default function MapView({ places }: MapViewProps) {
 
   const getPlaceIcon = (place: Place) => (place.isVenue ? createVenueIcon() : getCategoryIcon(place.category));
 
+  // Places listed at exactly the same spot (one place in two categories) are
+  // nudged apart about 10 m, so each pin can be tapped.
+  const positions = useMemo(() => {
+    const seen = new Map<string, number>();
+    return new Map(
+      places.map((place) => {
+        const key = `${place.lat},${place.lng}`;
+        const n = seen.get(key) ?? 0;
+        seen.set(key, n + 1);
+        return [place.id, [place.lat, place.lng + n * 0.00012] as [number, number]];
+      }),
+    );
+  }, [places]);
+
   return (
     <div className="flex flex-col h-[calc(100vh-7rem)] md:h-[calc(100vh-3.5rem)]">
       <PlacesHeader current="map">
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-[170px] min-h-11 sm:w-[240px]" data-testid="select-category">
+          <SelectTrigger className="w-[170px] min-h-11 sm:w-[240px]" aria-label="Category" data-testid="select-category">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent className="z-[9999]">
@@ -147,12 +161,14 @@ export default function MapView({ places }: MapViewProps) {
           {filteredPlaces.map((location, idx) => (
             <Marker
               key={location.id}
-              position={[location.lat, location.lng]}
+              position={positions.get(location.id) ?? [location.lat, location.lng]}
               icon={getPlaceIcon(location)}
+              title={location.name}
+              alt={location.name}
               zIndexOffset={location.isVenue ? 1000 : 0}
               eventHandlers={{ popupopen: () => trackPlaceView(location, "map") }}
             >
-              <Popup maxWidth={320} minWidth={250}>
+              <Popup maxWidth={320} minWidth={250} autoPanPaddingTopLeft={[50, 90]}>
                 <div className="p-2">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 pt-1">

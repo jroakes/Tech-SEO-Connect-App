@@ -51,6 +51,10 @@ beforeEach(() => {
     guest("g-kris2", "Kristen", "Rathman", { user_email: "kristen@work.com", event_tickets: [{ name: "Free", checked_in_at: null }] }),
     guest("g-live", "Lara", "Stream", { event_tickets: [{ name: "Livestream", checked_in_at: null }] }),
     guest("g-dec", "Dave", "Bell", { approval_status: "declined", event_tickets: [] }),
+    // Registered as Paula Morris from an account named Matt Hill, with three tickets.
+    guest("g-paula", "Paula", "Morris", { user_name: "Matt Hill", event_tickets: Array(3).fill({ name: "General Admission", checked_in_at: null }) }),
+    guest("g-stox1", "Patrick", "Stox"),
+    guest("g-stox2", "Bob", "Stox"),
     ...["Lee", "Danita", "Mandy", "Alyssa", "Robert", "Jen", "Tom"].map((first, i) => guest(`g-smith${i}`, first, "Smith")),
   ];
   calls.all = calls.newest = calls.ai = 0;
@@ -176,10 +180,21 @@ describe("check-in", () => {
     expect((await desk({ action: "check_in", guestId: "g-nobody" })).status).toBe(400);
   });
 
-  it("lists the closest guests instead of one after Wrong person?", async () => {
-    const result = await search("ann lee", false);
-    expect(result.match).toBeNull();
-    expect(names(result.options)).toContain("Ann Lee");
+  it("finds a guest by the name on their Luma account", async () => {
+    const result = await search("Matt Hill");
+    expect(result.match).toMatchObject({ id: "g-paula", name: "Paula Morris", otherName: "Matt Hill" });
+    expect(result.match.tickets).toHaveLength(3);
+  });
+
+  it("lists the other close guests after Wrong person?", async () => {
+    judge = (_typed, candidates) => {
+      const patrick = candidates.find((c) => c.name === "Patrick Stox");
+      return { matches: patrick ? [{ id: patrick.id, score: 95 }] : [], obvious: null };
+    };
+    const result = await desk({ action: "search", query: "Patrick Stox", single: false, exclude: "g-stox1" });
+    expect(result.data.match).toBeNull();
+    expect(names(result.data.options)).toContain("Bob Stox");
+    expect(names(result.data.options)).not.toContain("Patrick Stox");
   });
 
   describe("walk-ins", () => {

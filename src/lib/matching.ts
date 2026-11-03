@@ -35,7 +35,8 @@ export function peopleIn(topic: string, people: Profile[]): Profile[] {
 
 /**
  * A LinkedIn profile link from what someone typed: a full link, one without
- * https://, or just their handle. Returns null if it isn't a LinkedIn link.
+ * https://, or just their handle. Returns null if it isn't a link to a
+ * person's profile (linkedin.com/in/...).
  */
 export function linkedinUrl(input: string): string | null {
   const value = input.trim().replace(/^@/, "");
@@ -45,7 +46,7 @@ export function linkedinUrl(input: string): string | null {
     const host = url.hostname.toLowerCase();
     if (host !== "linkedin.com" && !host.endsWith(".linkedin.com")) return null;
     const path = url.pathname.replace(/\/+$/, "");
-    return path ? `https://www.linkedin.com${path}` : null;
+    return /^\/in\/[^/]+$/.test(path) ? `https://www.linkedin.com${path}` : null;
   } catch {
     return null;
   }

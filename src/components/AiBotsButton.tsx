@@ -99,7 +99,7 @@ export default function AiBotsButton() {
             <label htmlFor="mcp-url" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               MCP server URL
             </label>
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <input
                 id="mcp-url"
                 readOnly
@@ -109,7 +109,7 @@ export default function AiBotsButton() {
                 className="min-h-11 min-w-0 flex-1 rounded-md border border-input bg-muted/40 px-3 font-mono text-sm text-foreground"
                 data-testid="input-mcp-url"
               />
-              <Button onClick={copy} className="min-h-11 w-24 shrink-0 gap-1.5" data-testid="button-copy-mcp-url">
+              <Button onClick={copy} className="min-h-11 shrink-0 gap-1.5 sm:w-24" data-testid="button-copy-mcp-url">
                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 {copied ? "Copied" : "Copy"}
               </Button>

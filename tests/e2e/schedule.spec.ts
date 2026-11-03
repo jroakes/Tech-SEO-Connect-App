@@ -35,6 +35,16 @@ test("saves a talk to My Conference and removes it there", async ({ page, events
   await expect(page.getByTestId("section-talks").locator('button[aria-pressed="true"]')).toHaveCount(0);
 });
 
+test("shows a party's details line by line, with its links", async ({ page }) => {
+  await open(page, "/schedule");
+  await page.getByRole("tab", { name: /Thu, Nov 5/ }).click();
+  const party = page.locator('[data-testid^="schedule-session-"]:visible', { hasText: "After Party" });
+  const link = party.getByRole("link", { name: "View the event on Instagram" });
+  await expect(link).toHaveAttribute("href", /^https:\/\/www\.instagram\.com\//);
+  await expect(link).toHaveAttribute("target", "_blank");
+  expect(await party.locator('[data-testid="text-session-description"] > span').count()).toBeGreaterThan(2);
+});
+
 test("/my-schedule goes to My Conference", async ({ page }) => {
   await page.goto("/my-schedule");
   await expect(page).toHaveURL(/\/my-conference$/);

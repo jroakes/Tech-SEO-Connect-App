@@ -4,15 +4,17 @@ import { ScheduleCard } from "./ScheduleCard";
 import { event } from "@/data/event";
 import type { Session } from "@/lib/types";
 import { useSaved } from "@/lib/saved";
-import { getScheduleDays } from "@/lib/sessions";
+import { currentSessionId, getScheduleDays, openingDay } from "@/lib/sessions";
 import { trackSessionSave } from "@/lib/analytics";
 
 interface ScheduleViewProps {
   sessions: Session[];
+  /** Today where the conference is (from the server, so the page and the browser agree). */
+  today: string;
 }
 
-export default function ScheduleView({ sessions }: ScheduleViewProps) {
-  const { saved, toggle } = useSaved("session");
+export default function ScheduleView({ sessions, today }: ScheduleViewProps) {
+  const { saved, toggle } = useSaved("session", (id) => currentSessionId(id, sessions));
   const days = getScheduleDays(sessions);
 
   const handleToggle = (session: Session) => {
@@ -39,7 +41,7 @@ export default function ScheduleView({ sessions }: ScheduleViewProps) {
           </p>
         </div>
 
-        <Tabs defaultValue={`day${days[0]?.day ?? 1}`} className="w-full">
+        <Tabs defaultValue={`day${openingDay(days, today)?.day ?? 1}`} className="w-full">
           <TabsList className="flex w-full mb-8">
             {days.map((d) => (
               <TabsTrigger key={d.day} value={`day${d.day}`} className="flex-1" data-testid={`tab-day${d.day}`}>

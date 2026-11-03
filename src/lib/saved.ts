@@ -42,12 +42,16 @@ async function postSaved(kind: SavedKind, change: { add?: string[]; remove?: str
 /**
  * Saved talks or places live on the device and, once signed in, in the
  * user's account. Signing in merges the device list into the account.
+ * `current` maps a saved ID to today's (a talk that moved day; see
+ * currentSessionId).
  */
-export function useSaved(kind: SavedKind) {
+export function useSaved(kind: SavedKind, current: (id: string) => string = (id) => id) {
   const auth = useAuthState();
   const [saved, setSaved] = useState<Set<string>>(() => new Set());
   const savedRef = useRef(saved);
   const wasSignedIn = useRef(false);
+  // Taps made while the first sync with the account is on its way (id → saved).
+  const tapsDuringSync = useRef<Map<string, boolean> | null>(null);
 
   const apply = useCallback(
     (next: Set<string>) => {
@@ -59,9 +63,13 @@ export function useSaved(kind: SavedKind) {
   );
 
   useEffect(() => {
-    const local = readLocal(kind);
+    const stored = readLocal(kind);
+    const local = new Set([...stored].map(current));
+    if (local.size !== stored.size || [...local].some((id) => !stored.has(id))) writeLocal(kind, local);
     savedRef.current = local;
     setSaved(local);
+    // `current` is the same for the page's life.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kind]);
 
   useEffect(() => {
@@ -76,11 +84,23 @@ export function useSaved(kind: SavedKind) {
 
     wasSignedIn.current = true;
     let cancelled = false;
+    tapsDuringSync.current = new Map();
     postSaved(kind, { add: [...readLocal(kind)] }).then((ids) => {
-      if (ids && !cancelled) apply(new Set(ids));
+      const taps = tapsDuringSync.current ?? new Map<string, boolean>();
+      tapsDuringSync.current = null;
+      if (!ids || cancelled) return;
+      // The account's list, with any taps made meanwhile on top (they're on
+      // their way to the account too).
+      const next = new Set(ids.map(current));
+      for (const [id, nowSaved] of taps) {
+        if (nowSaved) next.add(id);
+        else next.delete(id);
+      }
+      apply(next);
     });
     return () => {
       cancelled = true;
+      tapsDuringSync.current = null;
     };
   }, [auth.isLoaded, auth.isSignedIn, apply, kind]);
 
@@ -91,6 +111,7 @@ export function useSaved(kind: SavedKind) {
       if (nowSaved) next.add(id);
       else next.delete(id);
       apply(next);
+      tapsDuringSync.current?.set(id, nowSaved);
       if (auth.isSignedIn) postSaved(kind, nowSaved ? { add: [id] } : { remove: [id] });
       return nowSaved;
     },
