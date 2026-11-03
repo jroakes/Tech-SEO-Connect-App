@@ -27,6 +27,8 @@ const guest = (id: string, first: string, last: string, extra: Partial<LumaGuest
 });
 
 let luma: LumaGuest[]; // oldest registration first
+// Ticket QR code keys: guest keys (g-…) from emailed tickets, ticket keys from the CSV export.
+let byKey: Record<string, LumaGuest>;
 const calls = { all: 0, newest: 0, ai: 0 };
 // The stand-in AI: everyone who has a typed word in their name scores 90; one
 // such candidate is "obvious".
@@ -57,6 +59,13 @@ beforeEach(() => {
     guest("g-stox2", "Bob", "Stox"),
     ...["Lee", "Danita", "Mandy", "Alyssa", "Robert", "Jen", "Tom"].map((first, i) => guest(`g-smith${i}`, first, "Smith")),
   ];
+  byKey = {
+    "g-annkey": luma[0],
+    annticket: luma[0],
+    "g-livekey": luma.find((g) => g.id === "g-live")!,
+    // Registered since the list was last refreshed.
+    "g-newkey": guest("g-new", "Nia", "Fresh"),
+  };
   calls.all = calls.newest = calls.ai = 0;
   judge = usualJudge;
   aiDown = false;
@@ -64,6 +73,10 @@ beforeEach(() => {
     const url = new URL(input instanceof Request ? input.url : String(input));
     if (url.hostname === "public-api.luma.com") {
       expect(url.searchParams.get("event_id")).toBe("evt-test");
+      if (url.pathname === "/v1/events/guests/get") {
+        const found = byKey[url.searchParams.get("id")!];
+        return found ? json(found) : json({ message: "Guest not found" }, 404);
+      }
       if (url.searchParams.get("sort_column") === "registered_at") {
         calls.newest++;
         return json({ entries: [...luma].reverse().slice(0, 50), has_more: false });
@@ -195,6 +208,38 @@ describe("check-in", () => {
     expect(result.data.match).toBeNull();
     expect(names(result.data.options)).toContain("Bob Stox");
     expect(names(result.data.options)).not.toContain("Patrick Stox");
+  });
+
+  describe("scanning a ticket", () => {
+    const ticket = (key: string) => `https://luma.com/check-in/evt-test?pk=${key}`;
+
+    it("shows the guest on the ticket, and checks nobody in", async () => {
+      const result = (await desk({ action: "scan", code: ticket("g-annkey") })).data;
+      expect(result.match).toMatchObject({ id: "g-ann", name: "Ann Lee", checkedInAt: null });
+      expect(result.options).toEqual([]);
+      expect(result.guestCount).toBeGreaterThan(0);
+      expect((await desk({ action: "scan", code: ticket("annticket") })).data.match.id).toBe("g-ann");
+      expect(calls.ai).toBe(0);
+      expect(await rows(env.DB, "SELECT * FROM check_ins")).toEqual([]);
+    });
+
+    it("finds someone who registered since the last refresh, ready to check in", async () => {
+      await search("ann lee");
+      expect((await desk({ action: "scan", code: ticket("g-newkey") })).data.match).toMatchObject({ id: "g-new", name: "Nia Fresh" });
+      expect((await desk({ action: "check_in", guestId: "g-new" })).data.guest.checkedInHere).toBe(true);
+    });
+
+    it("refuses what isn't a ticket for this event, and livestream tickets", async () => {
+      const refused = async (code: string) => {
+        const res = await desk({ action: "scan", code });
+        expect(res.status).toBe(400);
+        return res.data.error as string;
+      };
+      expect(await refused("https://example.com/check-in/evt-test?pk=g-annkey")).toMatch(/^That isn't a Luma ticket/);
+      expect(await refused("Ann Lee")).toMatch(/^That isn't a Luma ticket/);
+      expect(await refused(ticket("g-nobody"))).toMatch(/^Luma didn't find that ticket/);
+      expect(await refused(ticket("g-livekey"))).toBe("Lara Stream has a livestream-only ticket, for watching online.");
+    });
   });
 
   describe("walk-ins", () => {

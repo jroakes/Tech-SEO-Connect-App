@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Check, Loader2, Search, Undo2, UserPlus } from "lucide-react";
+import { Check, Loader2, QrCode, Search, Undo2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import TicketScanner from "./TicketScanner";
 import type { Freshness, GuestResult, SearchResult, WalkInResult } from "@/lib/check-in";
 
 // Why a guest might not belong in the room, shown next to their name.
@@ -35,7 +36,8 @@ const ticketList = (tickets: string[]) =>
 const inputClass =
   "min-h-12 w-full rounded-md border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
 
-type Shown = Pick<SearchResult, "match" | "options"> & { query: string };
+// `scanned`: the guest came from their ticket's QR code rather than a search.
+type Shown = Pick<SearchResult, "match" | "options"> & { query: string; scanned?: boolean };
 type WalkIn = { name: string; email: string; similar?: GuestResult[] };
 
 async function post<T>(body: object): Promise<T> {
@@ -108,7 +110,7 @@ function FreshnessLine({ syncedAt, guestCount }: Freshness) {
   );
 }
 
-/** The check-in desk: type a name or email, check the guest in, or add a walk-in. */
+/** The check-in desk: type a name or email or scan a ticket, check the guest in, or add a walk-in. */
 export default function CheckIn({ demo, freshness: initialFreshness }: { demo: boolean; freshness: Freshness | null }) {
   const [query, setQuery] = useState("");
   const [shown, setShown] = useState<Shown | null>(null);
@@ -120,13 +122,15 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
   const [error, setError] = useState<string | null>(null);
   const [walkIn, setWalkIn] = useState<WalkIn | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [scanning, setScanning] = useState(false);
   const input = useRef<HTMLInputElement>(null);
 
-  // Ready for the next person, unless they've already started typing it.
+  // Ready for the next person, unless they've already started typing it. After
+  // a scan the keyboard stays down, ready to scan the next ticket.
   const next = (guest: GuestResult, typed: string) => {
     setLastCheckIn(guest.id);
     setQuery((q) => (q.trim() === typed ? "" : q));
-    input.current?.focus();
+    if (!shown?.scanned) input.current?.focus();
   };
 
   const replace = (guest: GuestResult) =>
@@ -147,23 +151,43 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
 
   const walkInFrom = (typed: string): WalkIn => (typed.includes("@") ? { name: "", email: typed } : { name: typed, email: "" });
 
-  const find = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const typed = query.trim();
-    // One thing at a time, so answers can't arrive out of order.
-    if (!typed || busy) return;
-    // Clear the last results at once, so they're never mistaken for these.
+  // Clear the last results at once, so they're never mistaken for the next.
+  const clear = () => {
     setShown(null);
     setShowAll(false);
     setNotice(null);
     setWalkIn(null);
     setLastCheckIn(null);
+  };
+
+  const find = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const typed = query.trim();
+    // One thing at a time, so answers can't arrive out of order.
+    if (!typed || busy) return;
+    setScanning(false);
+    clear();
     const result = await run("search", () => post<SearchResult>({ action: "search", query: typed }));
     if (!result) return;
     setFreshness({ syncedAt: result.syncedAt, guestCount: result.guestCount });
     setShown({ match: result.match, options: result.options, query: typed });
     // Nobody on the list: start a walk-in with what was typed.
     if (!result.match && !result.options.length) setWalkIn(walkInFrom(typed));
+  };
+
+  const startScan = () => {
+    clear();
+    setError(null);
+    setScanning(true);
+  };
+
+  // The guest on the scanned ticket, shown to check in like a search's one match.
+  const scanned = async (code: string) => {
+    setScanning(false);
+    const result = await run("scan", () => post<SearchResult>({ action: "scan", code }));
+    if (!result?.match) return;
+    setFreshness({ syncedAt: result.syncedAt, guestCount: result.guestCount });
+    setShown({ match: result.match, options: [], query: "", scanned: true });
   };
 
   const checkIn = async (guest: GuestResult) => {
@@ -184,7 +208,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
     setLastCheckIn(null);
     // Just checked in as the search's one match: show who else it could have
     // been, with the search back in the box to correct.
-    if (guest.id === lastCheckIn && shown?.match?.id === guest.id) {
+    if (guest.id === lastCheckIn && shown?.match?.id === guest.id && !shown.scanned) {
       const typed = shown.query;
       setShown(null);
       setShowAll(false);
@@ -241,7 +265,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Name, last name or email"
+          placeholder="Name or email"
           aria-label="Guest's name or email"
           autoFocus
           autoComplete="off"
@@ -256,8 +280,21 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
           {busy === "search" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
           Find
         </Button>
+        <Button
+          type="button"
+          variant="outline"
+          className="min-h-12 shrink-0 gap-1.5 px-4"
+          disabled={busy !== null || scanning}
+          onClick={startScan}
+          aria-label="Scan a ticket's QR code"
+          data-testid="button-scan-ticket"
+        >
+          {busy === "scan" ? <Loader2 className="h-4 w-4 animate-spin" /> : <QrCode className="h-4 w-4" />}
+          Scan
+        </Button>
       </form>
       {freshness && <FreshnessLine {...freshness} />}
+      {scanning && <TicketScanner onScan={scanned} onCancel={() => setScanning(false)} />}
 
       {error && (
         <p className="mt-4 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive" role="alert">
@@ -268,7 +305,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
       <div className="mt-6 space-y-3" aria-live="polite">
         {shown?.match && (
           <>
-            <h2 className="text-sm font-semibold text-muted-foreground">For “{shown.query}”</h2>
+            <h2 className="text-sm font-semibold text-muted-foreground">{shown.scanned ? "Scanned ticket" : `For “${shown.query}”`}</h2>
             {notice && <p className="text-sm text-muted-foreground">{notice}</p>}
             <ul className="overflow-hidden rounded-md border border-border bg-card">{row(shown.match)}</ul>
           </>

@@ -24,8 +24,11 @@ check-in).
   in it (`/meet#bigquery`), and tapping someone opens their LinkedIn to message
   them and meet up. Other topics show only a count, and the API sends people
   only for topics the attendee shares, without their account IDs or the
-  topics they don't share. Answers are shown only to other
-  attendees who join, and anyone can edit or leave. No intro emails.
+  topics they don't share. Topics are locked once saved, even after leaving
+  and joining again (only the topic IDs are kept, in `meet_topics`), so
+  nobody can cycle through the topics to see everyone on Meet. Answers are
+  shown only to other attendees who join, and anyone can edit their name,
+  title and LinkedIn or leave. No intro emails.
 - **Sponsors**.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
   other AI tools. They sign in through Clerk, then can ask about talks,
@@ -135,7 +138,7 @@ after a build, then open
 
 | Command | What it runs |
 |---|---|
-| `npm test` | **Unit tests** (`src/**/*.test.ts`): the schedule parser, Meet matching and check-in's name matching. **Integration tests** (`tests/integration`), run inside workerd (Cloudflare's runtime) against a local D1 database, with Clerk, Luma and the AI stubbed: the schedule sync from the main site, My Conference saves, the event log, Meet (joining, answers, leaving, who sees whom), check-in (search, the AI, livestream filtering, newest registrations, check in and undo, walk-ins), admin (the event export, who's an admin), the analytics numbers, and every MCP tool. About 2 seconds. |
+| `npm test` | **Unit tests** (`src/**/*.test.ts`): the schedule parser, Meet matching and check-in's name matching. **Integration tests** (`tests/integration`), run inside workerd (Cloudflare's runtime) against a local D1 database, with Clerk, Luma and the AI stubbed: the schedule sync from the main site, My Conference saves, the event log, Meet (joining, answers, locked topics, leaving, who sees whom), check-in (search, the AI, livestream filtering, newest registrations, scanned tickets, check in and undo, walk-ins), admin (the event export, who's an admin), the analytics numbers, and every MCP tool. About 2 seconds. |
 | `npm run test:e2e` | **Browser tests** (`tests/e2e`), on a phone and a desktop: the schedule, saving talks and places and removing them in My Conference, searching and filtering places, directions, the map's pins, every sponsor's logo, the For AI bots dialog, locked admin pages and APIs, redirects, the 404 page, and that each page logs its events. They build the app and run it with Wrangler on port 8788 with a local D1 of their own (`.wrangler/e2e`), in the installed Google Chrome with a fresh profile. About 30 seconds after the build. |
 | `npm run test:all` | Both. |
 
@@ -240,7 +243,9 @@ Admins can't remove, block or delete organizers or themselves. Each action is
 logged as an `admin_action` event.
 
 **Check-in** (`/admin/check-in`, and **Check-in Guests** in an admin's account
-menu) is for the door. Type a full name, a last name or an email:
+menu) is for the door. Type a full name, a last name or an email, or tap
+**Scan** to read the QR code on the guest's Luma ticket with the phone's
+camera:
 
 - The app keeps a copy of the Luma event's guest list (`LUMA_EVENT_ID`) in D1,
   without guests whose only ticket is a livestream one (they watch online and
@@ -265,6 +270,11 @@ menu) is for the door. Type a full name, a last name or an email:
   "john", or someone registered twice, always gets the list. Nobody is checked
   in until you tap **Check in**. Guests who aren't going (declined,
   waitlisted, invited) are flagged.
+- A scanned ticket (`https://luma.com/check-in/evt-…?pk=…`, with a guest key
+  from the emailed ticket or a ticket key from Luma's CSV export) is looked up
+  in Luma itself, so it's current, and shown like an obvious match: tap
+  **Check in**. A livestream-only ticket or another event's ticket is refused.
+  The camera works only over HTTPS (and on localhost).
 - If nobody matches on the copy, the app checks Luma's 50 newest
   registrations (about 0.15 seconds) and looks again before saying so.
 - A walk-in gets a name and email. First the app checks Luma's newest

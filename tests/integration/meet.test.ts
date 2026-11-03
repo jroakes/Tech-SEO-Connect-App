@@ -1,5 +1,5 @@
-// Meet: joining with topics and LinkedIn, changing answers, leaving, and who
-// can see whom.
+// Meet: joining with topics and LinkedIn, changing answers, topics that can't
+// change once saved, leaving, and who can see whom.
 import { env } from "cloudflare:workers";
 import { describe, expect, it, vi } from "vitest";
 import { GET as matches } from "@/pages/api/matches";
@@ -20,7 +20,7 @@ describe("Meet", () => {
   });
 
   it("suggests the account's name before joining", async () => {
-    expect((await call(GET, { user: "ann" })).data).toEqual({ profile: null, suggestedName: "Test ann" });
+    expect((await call(GET, { user: "ann" })).data).toEqual({ profile: null, suggestedName: "Test ann", lockedTopics: null });
   });
 
   it("joins, changes answers and leaves, logging each", async () => {
@@ -29,15 +29,29 @@ describe("Meet", () => {
     expect(joined.data.profile).toMatchObject({ name: "Name ann", title: "SEO Lead", topics: ["bigquery", "python"], linkedin: "https://www.linkedin.com/in/annsmith" });
     expect((await call(GET, { user: "ann" })).data.profile.topics).toEqual(["bigquery", "python"]);
 
-    await join("ann", { topics: ["local"] });
-    expect((await call(GET, { user: "ann" })).data.profile).toMatchObject({ topics: ["local"], linkedin: null });
+    await join("ann", { title: "Head of SEO", topics: ["python", "bigquery"] });
+    expect((await call(GET, { user: "ann" })).data.profile).toMatchObject({ title: "Head of SEO", topics: ["bigquery", "python"], linkedin: null });
 
     expect((await call(DELETE, { method: "DELETE", user: "ann" })).status).toBe(204);
-    expect((await call(GET, { user: "ann" })).data.profile).toBeNull();
+    expect((await call(GET, { user: "ann" })).data).toMatchObject({ profile: null, lockedTopics: ["bigquery", "python"] });
 
     const events = await meetEvents();
     expect(events.map((e) => e.type)).toEqual(["match_join", "match_update", "match_leave"]);
     expect(JSON.parse(events[0].props!)).toEqual({ topics: "bigquery,python", topic_count: 2, linkedin: true });
+  });
+
+  it("keeps the topics from the first save, even after leaving", async () => {
+    await join("ann", { topics: ["bigquery", "python"] });
+    const changed = await join("ann", { topics: ["local"] });
+    expect(changed.status).toBe(400);
+    expect(changed.data.error).toBe("Your topics were set when you first saved and can't be changed.");
+    expect((await join("ann", { topics: ["bigquery"] })).status).toBe(400);
+    expect((await join("ann", { topics: ["bigquery", "python", "local"] })).status).toBe(400);
+
+    await call(DELETE, { method: "DELETE", user: "ann" });
+    expect((await join("ann", { topics: ["local", "careers"] })).status).toBe(400);
+    expect((await call(GET, { user: "ann" })).data.profile).toBeNull();
+    expect((await join("ann", { topics: ["python", "bigquery"] })).data.profile.topics).toEqual(["bigquery", "python"]);
   });
 
   it("checks the answers", async () => {

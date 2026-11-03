@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MAX_TOPICS, TOPICS } from "@/data/topics";
+import { MAX_TOPICS, TOPICS, topicLabel } from "@/data/topics";
 import type { Profile } from "@/lib/matching";
 
 type Answers = { name: string; title: string; topics: string[]; linkedin: string };
@@ -9,6 +9,8 @@ type Answers = { name: string; title: string; topics: string[]; linkedin: string
 interface ProfileFormProps {
   initial: Profile | null;
   suggestedName: string;
+  /** The topics they saved first, which can't change (null before their first save). */
+  lockedTopics: string[] | null;
   onSaved: (profile: Profile) => void;
   onCancel?: () => void;
 }
@@ -27,11 +29,11 @@ const inputClass =
   "w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
 
 /** The Meet questions: name, title, topics and LinkedIn, for joining or editing. */
-export function ProfileForm({ initial, suggestedName, onSaved, onCancel }: ProfileFormProps) {
+export function ProfileForm({ initial, suggestedName, lockedTopics, onSaved, onCancel }: ProfileFormProps) {
   const [answers, setAnswers] = useState<Answers>({
     name: initial?.name ?? suggestedName,
     title: initial?.title ?? "",
-    topics: initial?.topics ?? [],
+    topics: lockedTopics ?? initial?.topics ?? [],
     linkedin: initial?.linkedin ?? "",
   });
   const [saving, setSaving] = useState(false);
@@ -79,28 +81,47 @@ export function ProfileForm({ initial, suggestedName, onSaved, onCancel }: Profi
         <h2 id="topics-label" className="text-sm font-medium text-foreground">
           Topics you're interested in
         </h2>
-        <p className="mt-0.5 text-xs text-muted-foreground">Pick up to {MAX_TOPICS}. You'll see who else picked each one.</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {TOPICS.map((t) => {
-            const on = answers.topics.includes(t.id);
-            const full = !on && answers.topics.length >= MAX_TOPICS;
-            return (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => toggle(t.id)}
-                aria-pressed={on}
-                disabled={full}
-                className={`min-h-9 rounded-full border px-3.5 text-sm transition-colors ${
-                  on ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground hover:border-primary/60"
-                } ${full ? "cursor-not-allowed opacity-40" : ""}`}
-                data-testid={`topic-${t.id}`}
-              >
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
+        {lockedTopics ? (
+          <>
+            <p className="mt-0.5 text-xs text-muted-foreground" data-testid="text-topics-locked">
+              Your topics were set when you first saved and can't be changed.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {lockedTopics.map((id) => (
+                <span key={id} className="inline-flex min-h-9 items-center rounded-full border border-primary bg-primary px-3.5 text-sm text-primary-foreground">
+                  {topicLabel(id)}
+                </span>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="mt-0.5 text-xs text-muted-foreground" data-testid="text-topics-hint">
+              Pick up to {MAX_TOPICS}. You'll see who else picked each one. <strong className="font-medium text-foreground">Once you save, your topics can't be changed.</strong>
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {TOPICS.map((t) => {
+                const on = answers.topics.includes(t.id);
+                const full = !on && answers.topics.length >= MAX_TOPICS;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => toggle(t.id)}
+                    aria-pressed={on}
+                    disabled={full}
+                    className={`min-h-9 rounded-full border px-3.5 text-sm transition-colors ${
+                      on ? "border-primary bg-primary text-primary-foreground" : "border-border bg-background text-foreground hover:border-primary/60"
+                    } ${full ? "cursor-not-allowed opacity-40" : ""}`}
+                    data-testid={`topic-${t.id}`}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
       </section>
 
       <section className={section}>

@@ -54,3 +54,19 @@ export async function saveProfile(db: D1Database, profile: Profile): Promise<voi
 export async function deleteProfile(db: D1Database, userId: string): Promise<void> {
   await db.prepare("DELETE FROM profiles WHERE user_id = ?").bind(userId).run();
 }
+
+/** The topics the attendee saved first, which they keep (see migrations/0006_locked_topics.sql), or null if they've never saved any. */
+export async function getLockedTopics(db: D1Database, userId: string): Promise<string[] | null> {
+  const row = await db.prepare("SELECT topics FROM meet_topics WHERE user_id = ?").bind(userId).first<{ topics: string }>();
+  return row ? parseTopics(row.topics) : null;
+}
+
+/** Saves the attendee's topics the first time only, and returns the topics they're locked to. */
+export async function lockTopics(db: D1Database, userId: string, topics: string[]): Promise<string[]> {
+  // The no-op update makes RETURNING give back the row that was already there.
+  const row = await db
+    .prepare("INSERT INTO meet_topics (user_id, topics) VALUES (?1, ?2) ON CONFLICT (user_id) DO UPDATE SET user_id = user_id RETURNING topics")
+    .bind(userId, JSON.stringify(topics))
+    .first<{ topics: string }>();
+  return row ? parseTopics(row.topics) : topics;
+}

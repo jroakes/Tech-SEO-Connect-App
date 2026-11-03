@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { z } from "zod";
 import { getUserId, json } from "@/lib/auth-server";
 import { recentAdmin } from "@/lib/clerk";
-import { addWalkIn, checkIn, CheckInError, search, undoCheckIn } from "@/lib/check-in";
+import { addWalkIn, checkIn, CheckInError, scan, search, undoCheckIn } from "@/lib/check-in";
 
 export const prerender = false;
 
@@ -14,13 +14,15 @@ const requestSchema = z.discriminatedUnion("action", [
     single: z.boolean().optional(),
     exclude: z.string().min(1).max(100).optional(),
   }),
+  // What a guest's Luma ticket QR code says: https://luma.com/check-in/evt-…?pk=…
+  z.object({ action: z.literal("scan"), code: z.string().trim().min(1).max(500) }),
   z.object({ action: z.literal("check_in"), guestId: z.string().min(1).max(100) }),
   z.object({ action: z.literal("undo"), guestId: z.string().min(1).max(100) }),
   // newPerson: the admin says they aren't a guest with a similar name.
   z.object({ action: z.literal("walk_in"), name: z.string().trim().min(1).max(200), email: z.email().max(200), newPerson: z.boolean().optional() }),
 ]);
 
-/** The check-in desk: find a guest, check them in or undo it, or add a walk-in (admins only). */
+/** The check-in desk: find a guest by name or ticket QR code, check them in or undo it, or add a walk-in (admins only). */
 export const POST: APIRoute = async ({ request, locals }) => {
   const admin = await recentAdmin(locals);
   if (!admin) return json({ error: "Only admins can check guests in." }, getUserId(locals) ? 403 : 401);
@@ -37,6 +39,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   try {
     if (req.action === "search") return json(await search(req.query, req.single ?? true, req.exclude));
+    if (req.action === "scan") return json(await scan(req.code));
     if (req.action === "check_in") return json({ guest: await checkIn(req.guestId, admin.id) });
     if (req.action === "undo") return json({ guest: await undoCheckIn(req.guestId) });
     return json(await addWalkIn(req.name, req.email.toLowerCase(), admin.id, req.newPerson ?? false));

@@ -14,7 +14,7 @@ type State =
   | { status: "loading" }
   | { status: "offline" }
   | { status: "signed-out" }
-  | { status: "form"; profile: Profile | null; suggestedName: string }
+  | { status: "form"; profile: Profile | null; suggestedName: string; lockedTopics: string[] | null }
   | { status: "ready"; me: Profile; others: Profile[]; counts: TopicCount[] };
 
 /** Meet: pick your topics, then browse every topic and the people in it. */
@@ -42,16 +42,17 @@ export default function Matchmaking() {
       // Meet needs a connection; the rest of the app works offline.
       if (!res) return setState({ status: "offline" });
       if (!res.ok) return setState({ status: "signed-out" });
-      const data = (await res.json()) as { profile: Profile | null; suggestedName: string };
+      const data = (await res.json()) as { profile: Profile | null; suggestedName: string; lockedTopics: string[] | null };
       if (data.profile) await loadMatches();
-      else setState({ status: "form", profile: null, suggestedName: data.suggestedName });
+      else setState({ status: "form", profile: null, suggestedName: data.suggestedName, lockedTopics: data.lockedTopics });
     })();
   }, [auth.isLoaded, auth.isSignedIn]);
 
   const leave = async () => {
-    if (!confirm("Leave Meet? Your answers will be deleted and other attendees won't see you.")) return;
+    if (!confirm("Leave Meet? Your answers will be deleted and other attendees won't see you. If you join again, your topics stay the same.")) return;
     await fetch("/api/profile", { method: "DELETE" });
-    setState({ status: "form", profile: null, suggestedName: state.status === "ready" ? state.me.name : "" });
+    const me = state.status === "ready" ? state.me : null;
+    setState({ status: "form", profile: null, suggestedName: me?.name ?? "", lockedTopics: me?.topics ?? null });
   };
 
   return (
@@ -93,6 +94,7 @@ export default function Matchmaking() {
         <ProfileForm
           initial={state.profile}
           suggestedName={state.suggestedName}
+          lockedTopics={state.lockedTopics}
           onSaved={async () => {
             await loadMatches();
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -106,7 +108,7 @@ export default function Matchmaking() {
           me={state.me}
           others={state.others}
           counts={state.counts}
-          onEdit={() => setState({ status: "form", profile: state.me, suggestedName: state.me.name })}
+          onEdit={() => setState({ status: "form", profile: state.me, suggestedName: state.me.name, lockedTopics: state.me.topics })}
           onLeave={leave}
         />
       )}

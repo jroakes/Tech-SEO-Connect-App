@@ -6,7 +6,7 @@ import { getUserId, json } from "@/lib/auth-server";
 import { currentUser, displayName } from "@/lib/clerk";
 import { insertEvents } from "@/lib/db";
 import { linkedinUrl } from "@/lib/matching";
-import { deleteProfile, getProfile, saveProfile } from "@/lib/profiles";
+import { deleteProfile, getLockedTopics, getProfile, lockTopics, saveProfile } from "@/lib/profiles";
 
 export const prerender = false;
 
@@ -22,17 +22,17 @@ const profileSchema = z.object({
 const logMeet = (type: string, userId: string, props?: Record<string, unknown>) =>
   insertEvents(env.DB, [{ type, ts: Date.now(), userId, path: "/meet", props }]).catch((err) => console.error(`Couldn't log ${type}`, err));
 
-/** The signed-in attendee's Meet profile (or null), plus their name from their account. */
+/** The signed-in attendee's Meet profile (or null), their name from their account, and the topics they're locked to (null before they first save). */
 export const GET: APIRoute = async ({ locals }) => {
   const userId = getUserId(locals);
   if (!userId) return json({ error: "Sign in to meet people." }, 401);
-  const profile = await getProfile(env.DB, userId);
+  const [profile, lockedTopics] = await Promise.all([getProfile(env.DB, userId), getLockedTopics(env.DB, userId)]);
   // Their account name starts the form off, so Clerk is asked only before they join.
   const user = profile ? null : await currentUser(locals);
-  return json({ profile, suggestedName: user ? displayName(user) : "" });
+  return json({ profile, suggestedName: user ? displayName(user) : "", lockedTopics });
 };
 
-/** Joins the Meet page or updates the attendee's answers. */
+/** Joins the Meet page or updates the attendee's answers. Their topics are set by their first save and can't change after it. */
 export const PUT: APIRoute = async ({ request, locals }) => {
   const userId = getUserId(locals);
   if (!userId) return json({ error: "Sign in to meet people." }, 401);
@@ -54,8 +54,12 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   const link = linkedin ? linkedinUrl(linkedin) : null;
   if (linkedin && !link) return json({ error: "That doesn't look like a LinkedIn profile. Try linkedin.com/in/yourname." }, 400);
 
+  const picked = [...new Set(topics)];
+  const locked = await lockTopics(env.DB, userId, picked);
+  if (locked.length !== picked.length || !picked.every((t) => locked.includes(t))) return json({ error: "Your topics were set when you first saved and can't be changed." }, 400);
+
   const [user, existing] = await Promise.all([currentUser(locals), getProfile(env.DB, userId)]);
-  const profile = { userId, name, title, topics: [...new Set(topics)], linkedin: link, imageUrl: user?.imageUrl ?? null };
+  const profile = { userId, name, title, topics: locked, linkedin: link, imageUrl: user?.imageUrl ?? null };
   await saveProfile(env.DB, profile);
   await logMeet(existing ? "match_update" : "match_join", userId, { topics: profile.topics.join(","), topic_count: profile.topics.length, linkedin: !!link });
   return json({ profile });

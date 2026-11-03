@@ -33,6 +33,7 @@
     "d3-force": "^3.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.548.0",
+    "qr-scanner": "^1.4.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-leaflet": "^5.0.0",

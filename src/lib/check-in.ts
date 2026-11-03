@@ -6,7 +6,7 @@
 // guest in, so real check-ins are kept here too.
 import { env, waitUntil } from "cloudflare:workers";
 import { z } from "zod";
-import { candidates, exactMatch, livestreamOnly, sharesName, words, type Guest } from "./guest-match";
+import { candidates, exactMatch, livestreamOnly, sharesName, ticketKey, words, type Guest } from "./guest-match";
 
 const LUMA = "https://public-api.luma.com";
 const LUMA_NEWEST_TIMEOUT_MS = 2000;
@@ -397,6 +397,31 @@ export async function search(query: string, single = true, exclude?: string): Pr
     if (newer !== d) found = await find(query, (d = newer), single, exclude);
   }
   return { ...d.freshness, match: found.match && d.show(found.match), options: found.options.map(d.show) };
+}
+
+/**
+ * The guest whose Luma ticket QR code was scanned, looked up in Luma itself so
+ * it's current. As with a search, nobody is checked in until the admin taps
+ * Check in.
+ */
+export async function scan(scanned: string): Promise<SearchResult> {
+  const key = ticketKey(scanned);
+  if (!key) throw new CheckInError("That isn't a Luma ticket. Scan the QR code on the guest's ticket, or search by name.");
+  const params = new URLSearchParams({ event_id: env.LUMA_EVENT_ID, id: key });
+  const [d, found] = await Promise.all([
+    openDesk(),
+    luma<LumaGuest | { guest: LumaGuest }>(`/v1/events/guests/get?${params}`).catch((err) => {
+      console.error("Couldn't look up a scanned ticket in Luma", err);
+      return null;
+    }),
+  ]);
+  if (!found) throw new CheckInError("Luma didn't find that ticket for this event. Try again, or search by name.");
+  const guest = toGuest("guest" in found ? found.guest : found);
+  if (livestreamOnly(guest)) throw new CheckInError(`${guest.name} has a livestream-only ticket, for watching online.`);
+  // Saved to the list too, in case they registered since the last refresh.
+  const list = await addNewest(d.list, [guest]);
+  const desk = list === d.list ? d : deskFrom(list, d.rows);
+  return { ...desk.freshness, match: desk.show(guest), options: [] };
 }
 
 /** Checks in a guest from the list. */

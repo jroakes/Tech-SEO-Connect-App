@@ -141,3 +141,20 @@ export function sharesName(query: string, guest: Guest): boolean {
 
 /** Whether every ticket is a livestream one: they watch online, not in the room. */
 export const livestreamOnly = (g: Guest) => g.tickets.length > 0 && g.tickets.every((t) => /livestream/i.test(t));
+
+/**
+ * The key in a Luma ticket's QR code, https://luma.com/check-in/evt-…?pk=…, or
+ * null if it isn't one. Guests' emailed tickets have a guest key (g-…); the
+ * guest list's CSV export has ticket keys. Luma looks up either.
+ */
+export function ticketKey(scanned: string): string | null {
+  let url: URL;
+  try {
+    url = new URL(scanned.trim());
+  } catch {
+    return null;
+  }
+  const lumaHost = ["luma.com", "lu.ma"].includes(url.hostname.replace(/^www\./, ""));
+  const key = url.searchParams.get("pk");
+  return lumaHost && /^\/check-in\/[^/]+\/?$/.test(url.pathname) && key ? key : null;
+}

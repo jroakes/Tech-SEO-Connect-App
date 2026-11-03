@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { candidates, exactMatch, livestreamOnly, matchScore, sharesName, words, type Guest } from "./guest-match";
+import { candidates, exactMatch, livestreamOnly, matchScore, sharesName, ticketKey, words, type Guest } from "./guest-match";
 
 const guest = (id: string, firstName: string, lastName: string, extra: Partial<Guest> = {}): Guest => ({
   id,
@@ -100,5 +100,21 @@ describe("livestreamOnly", () => {
     expect(livestreamOnly(guests[6])).toBe(true);
     expect(livestreamOnly(guests[7])).toBe(false);
     expect(livestreamOnly(guests[4])).toBe(false);
+  });
+});
+
+describe("ticketKey", () => {
+  it("reads the key from a Luma ticket's QR code", () => {
+    expect(ticketKey("https://luma.com/check-in/evt-abc123?pk=g-XyZ789")).toBe("g-XyZ789");
+    expect(ticketKey(" https://lu.ma/check-in/evt-abc123/?pk=tk42 ")).toBe("tk42");
+    expect(ticketKey("https://www.luma.com/check-in/evt-abc123?pk=g-1")).toBe("g-1");
+  });
+
+  it("is null for anything else", () => {
+    expect(ticketKey("https://luma.com/check-in/evt-abc123")).toBeNull();
+    expect(ticketKey("https://luma.com/evt-abc123?pk=g-1")).toBeNull();
+    expect(ticketKey("https://notluma.com/check-in/evt-abc123?pk=g-1")).toBeNull();
+    expect(ticketKey("g-XyZ789")).toBeNull();
+    expect(ticketKey("")).toBeNull();
   });
 });
