@@ -37,10 +37,8 @@ export interface GuestResult {
 }
 
 export interface SearchResult {
-  /** The guest, when it's clear who was meant. */
+  /** The guest, when it's clear who was meant. The admin still checks them in. */
   match: GuestResult | null;
-  /** Whether the search just checked the match in. */
-  checkedIn: boolean;
   /** Otherwise the closest guests, best first. Empty when nobody matches. */
   options: GuestResult[];
 }
@@ -237,11 +235,12 @@ async function judge(query: string, people: Guest[]): Promise<z.infer<typeof ran
 // What the page does ------------------------------------------------------------
 
 /**
- * Finds the guest that was typed. When it's obvious who, checks them in (if
- * they're going and not already in); otherwise returns the closest five.
- * With `auto` off it always returns the closest five, as after "Wrong person?".
+ * Finds the guest that was typed: the one guest when it's obvious who,
+ * otherwise the closest five. Nobody is checked in until the admin taps
+ * Check in. With `single` off it always returns the closest five, as after
+ * "Wrong person?".
  */
-export async function search(query: string, adminId: string, auto = true): Promise<SearchResult> {
+export async function search(query: string, single = true): Promise<SearchResult> {
   let d = await desk();
   let found = candidates(query, d.guests);
   // Nobody: they may have only just registered, so look at Luma's latest list.
@@ -249,9 +248,9 @@ export async function search(query: string, adminId: string, auto = true): Promi
     d = await desk(0);
     found = candidates(query, d.guests);
   }
-  if (!found.length) return { match: null, checkedIn: false, options: [] };
+  if (!found.length) return { match: null, options: [] };
 
-  let match = auto ? exactMatch(query, d.guests) : null;
+  let match = single ? exactMatch(query, d.guests) : null;
   let options: Guest[] = [];
   if (!match) {
     const scores = await judge(query, found.map((c) => c.guest));
@@ -261,21 +260,15 @@ export async function search(query: string, adminId: string, auto = true): Promi
         .sort((a, b) => b.score - a.score);
       options = [...new Set(ranked.map((m) => found[Number(m.id)].guest))].slice(0, OPTIONS);
       const best = ranked[0];
-      if (auto && best && scores.obvious === best.id && best.score >= OBVIOUS_SCORE) match = found[Number(best.id)].guest;
+      if (single && best && scores.obvious === best.id && best.score >= OBVIOUS_SCORE) match = found[Number(best.id)].guest;
     } else {
-      // Without the AI, spelling alone, and never sure enough to check anyone in.
+      // Without the AI, spelling alone, and never sure enough to pick one.
       options = found.filter((c) => c.score >= 0.85).slice(0, OPTIONS).map((c) => c.guest);
     }
   }
 
-  if (match) {
-    const shown = d.show(match);
-    if (!shown.checkedInAt && match.status === "approved" && !shown.livestreamOnly) {
-      return { match: { ...shown, checkedInAt: await record(match, adminId), checkedInHere: true }, checkedIn: true, options: [] };
-    }
-    return { match: shown, checkedIn: false, options: [] };
-  }
-  return { match: null, checkedIn: false, options: options.map(d.show) };
+  if (match) return { match: d.show(match), options: [] };
+  return { match: null, options: options.map(d.show) };
 }
 
 /** Checks in a guest from the list. */
@@ -301,9 +294,9 @@ export async function undoCheckIn(guestId: string): Promise<GuestResult | null> 
  * emails them their ticket).
  *
  * First it gets Luma's latest list, in case they registered since the last
- * look. If the email is registered, that guest is checked in instead. If a
- * guest has a similar name, nothing is added until the admin says it's
- * someone else (`newPerson`).
+ * look. If the email is registered, that guest is returned to check in
+ * instead. If a guest has a similar name, nothing is added until the admin
+ * says it's someone else (`newPerson`).
  */
 export async function addWalkIn(
   name: string,
@@ -313,11 +306,7 @@ export async function addWalkIn(
 ): Promise<{ guest: GuestResult; registered: boolean } | { similar: GuestResult[] }> {
   const d = await desk(WALK_IN_MAX_AGE_MS);
   const registered = d.guests.find((g) => g.email.toLowerCase() === email.toLowerCase());
-  if (registered) {
-    const shown = d.show(registered);
-    if (shown.checkedInAt || registered.status !== "approved") return { guest: shown, registered: true };
-    return { guest: { ...shown, checkedInAt: await record(registered, adminId), checkedInHere: true }, registered: true };
-  }
+  if (registered) return { guest: d.show(registered), registered: true };
   if (!newPerson) {
     const similar = candidates(name, d.guests).filter((c) => c.score >= SIMILAR_NAME);
     if (similar.length) return { similar: similar.slice(0, OPTIONS).map((c) => d.show(c.guest)) };

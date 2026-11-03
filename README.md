@@ -176,12 +176,13 @@ menu) is for the door. Type a full name, a last name or an email:
 - Likely guests are picked by spelling (`src/lib/guest-match.ts`), and Claude
   Sonnet 5.5, through OpenRouter, judges which of them was meant and orders
   them. An exact email or full name skips the AI.
-- If it's obvious who, they're checked in at once, unless they're already in,
-  not going (declined, waitlisted, invited) or have only a livestream ticket.
-  Otherwise the closest five are listed, each with **Check in**.
+- If it's obvious who, that one guest is shown; otherwise the closest five.
+  Nobody is checked in until you tap **Check in**. Guests who aren't going
+  (declined, waitlisted, invited) or have only a livestream ticket are
+  flagged.
 - If nobody matches, a walk-in gets a name and email. First the app gets
-  Luma's latest list: a registered email checks that guest in instead, and a
-  similar name is shown to confirm before anyone new is added.
+  Luma's latest list: a registered email shows that guest to check in
+  instead, and a similar name is shown to confirm before anyone new is added.
 - A check-in can be taken back: **Wrong person?** right after it (which then
   lists the other close guests), or **Undo check-in** when you search them.
 

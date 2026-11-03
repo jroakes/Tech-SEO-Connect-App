@@ -120,7 +120,6 @@ export default function CheckIn({ demo }: { demo: boolean }) {
     const result = await run("search", () => post<SearchResult>({ action: "search", query: typed }));
     if (!result) return;
     setShown({ ...result, query: typed });
-    if (result.checkedIn && result.match) next(result.match);
     // Nobody on the list: start a walk-in with what was typed.
     if (!result.match && !result.options.length) setWalkIn(walkInFrom(typed));
   };
@@ -131,7 +130,7 @@ export default function CheckIn({ demo }: { demo: boolean }) {
     if (walkIn?.similar?.some((g) => g.id === guest.id)) {
       // A walk-in turned out to be registered after all.
       setWalkIn(null);
-      setShown({ query: data.guest.name, match: data.guest, checkedIn: true, options: [] });
+      setShown({ query: data.guest.name, match: data.guest, options: [] });
     } else replace(data.guest);
     next(data.guest);
   };
@@ -140,13 +139,13 @@ export default function CheckIn({ demo }: { demo: boolean }) {
     const data = await run(guest.id, () => post<{ guest: GuestResult | null }>({ action: "undo", guestId: guest.id }));
     if (!data) return;
     setLastCheckIn(null);
-    // Checked in from the search: show who else it could have been, with the
-    // search back in the box to correct.
-    if (shown?.checkedIn && shown.match?.id === guest.id) {
+    // Just checked in as the search's one match: show who else it could have
+    // been, with the search back in the box to correct.
+    if (guest.id === lastCheckIn && shown?.match?.id === guest.id) {
       const query = shown.query;
       setQuery(query);
       input.current?.focus();
-      const result = await run("search", () => post<SearchResult>({ action: "search", query, auto: false }));
+      const result = await run("search", () => post<SearchResult>({ action: "search", query, single: false }));
       if (result) setShown({ ...result, query });
       if (result && !result.options.length) setWalkIn(walkInFrom(query));
       return;
@@ -163,9 +162,9 @@ export default function CheckIn({ demo }: { demo: boolean }) {
     if (!data) return;
     if ("similar" in data) return setWalkIn({ name, email, similar: data.similar });
     setWalkIn(null);
-    setShown({ query: data.guest.name, match: data.guest, checkedIn: !!data.guest.checkedInAt, options: [] });
+    setShown({ query: data.guest.name, match: data.guest, options: [] });
     setNotice(data.registered ? `${data.guest.email} is already registered, so that's who this is.` : null);
-    if (data.guest.checkedInAt) next(data.guest);
+    if (!data.registered) next(data.guest);
   };
 
   const row = (guest: GuestResult) => (
@@ -220,7 +219,7 @@ export default function CheckIn({ demo }: { demo: boolean }) {
       <div className="mt-6 space-y-3" aria-live="polite">
         {shown?.match && (
           <>
-            <h2 className="text-sm font-semibold text-muted-foreground">{shown.checkedIn ? "Checked in" : `For “${shown.query}”`}</h2>
+            <h2 className="text-sm font-semibold text-muted-foreground">For “{shown.query}”</h2>
             {notice && <p className="text-sm text-muted-foreground">{notice}</p>}
             <ul className="overflow-hidden rounded-md border border-border bg-card">{row(shown.match)}</ul>
           </>
