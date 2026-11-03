@@ -192,7 +192,7 @@ development instance. OpenRouter needs credit on its account.
 than real use) made 226 requests a second for 47 seconds with no errors;
 95% of pages answered within 0.25 seconds and every event was stored. Twenty
 check-in searches at once all answered (median 0.1 seconds, slowest 1.8). The
-account menu asks whether someone is an admin once per browser session, and
+account menu asks whether someone is an admin at most every two minutes, and
 the server remembers Clerk's answer for a minute, so busy pages don't run
 into Clerk's limits.
 
