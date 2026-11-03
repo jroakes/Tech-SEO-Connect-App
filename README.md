@@ -175,8 +175,8 @@ the repo (the `cloudflare-astro` branch) and your `.env`:
    site, so everything of this app's is named `tech-seo-connect-app`.
 5. **Deploy:** `npm run deploy`. It builds with the `PUBLIC_` keys from `.env`,
    and the first deploy to an account creates the Worker and the D1 database
-   (`tech-seo-connect-app`). The app is then at
-   `https://tech-seo-connect-app.<your-subdomain>.workers.dev`.
+   (`tech-seo-connect-app`). The app is then at `https://app.techseoconnect.com`
+   (see step 9).
 6. **Database:** `npm run db:migrate:remote` creates the tables.
 7. **Secrets:** `npm run secrets` uploads `CLERK_SECRET_KEY`,
    `OPENROUTER_API_KEY` and `LUMA_API_KEY` from `.env`. Run it again whenever
