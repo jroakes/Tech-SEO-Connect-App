@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Loader2, Users } from "lucide-react";
+import { ArrowLeft, Loader2, UserMinus, Users } from "lucide-react";
 import { SignInButton } from "@clerk/astro/react";
 import { Button } from "@/components/ui/button";
 import { ProfileForm } from "./meet/ProfileForm";
@@ -15,6 +15,7 @@ type State =
   | { status: "offline" }
   | { status: "signed-out" }
   | { status: "form"; profile: Profile | null; suggestedName: string; lockedTopics: string[] | null }
+  | { status: "left"; suggestedName: string; lockedTopics: string[] }
   | { status: "ready"; me: Profile; others: Profile[]; counts: TopicCount[] };
 
 /** Meet: pick your topics, then browse every topic and the people in it. */
@@ -44,6 +45,8 @@ export default function Matchmaking() {
       if (!res.ok) return setState({ status: "signed-out" });
       const data = (await res.json()) as { profile: Profile | null; suggestedName: string; lockedTopics: string[] | null };
       if (data.profile) await loadMatches();
+      // Topics kept without a profile: they joined once and left.
+      else if (data.lockedTopics) setState({ status: "left", suggestedName: data.suggestedName, lockedTopics: data.lockedTopics });
       else setState({ status: "form", profile: null, suggestedName: data.suggestedName, lockedTopics: data.lockedTopics });
     })();
   }, [auth.isLoaded, auth.isSignedIn]);
@@ -52,7 +55,7 @@ export default function Matchmaking() {
     if (!confirm("Leave Meet? Your answers will be deleted and other attendees won't see you. If you join again, your topics stay the same.")) return;
     await fetch("/api/profile", { method: "DELETE" });
     const me = state.status === "ready" ? state.me : null;
-    setState({ status: "form", profile: null, suggestedName: me?.name ?? "", lockedTopics: me?.topics ?? null });
+    setState({ status: "left", suggestedName: me?.name ?? "", lockedTopics: me?.topics ?? [] });
   };
 
   return (
@@ -87,6 +90,21 @@ export default function Matchmaking() {
               <Button className="min-h-11 min-w-32">Sign in</Button>
             </SignInButton>
           )}
+        </div>
+      )}
+
+      {state.status === "left" && (
+        <div className="rounded-md border border-border bg-card p-8 text-center" data-testid="panel-meet-left">
+          <UserMinus className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
+          <p className="font-semibold text-foreground">You've left Meet.</p>
+          <p className="mx-auto mb-5 mt-1 max-w-md text-muted-foreground">Your answers are deleted, and other attendees can't see you.</p>
+          <Button
+            className="min-h-11 min-w-32"
+            onClick={() => setState({ status: "form", profile: null, suggestedName: state.suggestedName, lockedTopics: state.lockedTopics })}
+            data-testid="button-rejoin-meet"
+          >
+            Rejoin
+          </Button>
         </div>
       )}
 
@@ -196,7 +214,7 @@ function Matches({ me, others, counts, onEdit, onLeave }: MatchesProps) {
         </div>
         <div className="flex shrink-0 gap-2">
           <Button variant="outline" className="min-h-11" onClick={onEdit} data-testid="button-edit-profile">
-            Edit my answers
+            Edit
           </Button>
           <Button variant="ghost" className="min-h-11 text-muted-foreground" onClick={onLeave}>
             Leave

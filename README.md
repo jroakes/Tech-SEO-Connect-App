@@ -28,7 +28,8 @@ check-in).
   and joining again (only the topic IDs are kept, in `meet_topics`), so
   nobody can cycle through the topics to see everyone on Meet. Answers are
   shown only to other attendees who join, and anyone can edit their name,
-  title and LinkedIn or leave. No intro emails.
+  title and LinkedIn or leave. After leaving, Meet says so and offers a
+  Rejoin button. No intro emails.
 - **Sponsors**.
 - **MCP server** at `/mcp` so attendees can add the conference to Claude or
   other AI tools. They sign in through Clerk, then can ask about talks,
