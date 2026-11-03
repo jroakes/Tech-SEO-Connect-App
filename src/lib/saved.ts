@@ -16,6 +16,55 @@ function readLocal(kind: SavedKind): Set<string> {
   }
 }
 
+// Whose account the device's list is a copy of, once it has synced. Until
+// then the list holds saves made while signed out.
+const accountKey = (kind: SavedKind) => `${STORAGE_KEYS[kind]}_account`;
+
+function readAccount(kind: SavedKind): string | null {
+  try {
+    return localStorage.getItem(accountKey(kind));
+  } catch {
+    return null;
+  }
+}
+
+function writeAccount(kind: SavedKind, userId: string | null) {
+  try {
+    if (userId) localStorage.setItem(accountKey(kind), userId);
+    else localStorage.removeItem(accountKey(kind));
+  } catch {
+    // Storage unavailable; the list isn't kept anyway.
+  }
+}
+
+// Taps made while signed in that the account doesn't have yet (id → saved),
+// say because the phone was offline. They're sent again on the next sync.
+const pendingKey = (kind: SavedKind) => `${STORAGE_KEYS[kind]}_pending`;
+
+function readPending(kind: SavedKind): Record<string, boolean> {
+  try {
+    return JSON.parse(localStorage.getItem(pendingKey(kind)) ?? "{}") as Record<string, boolean>;
+  } catch {
+    return {};
+  }
+}
+
+function writePending(kind: SavedKind, pending: Record<string, boolean>) {
+  try {
+    if (Object.keys(pending).length) localStorage.setItem(pendingKey(kind), JSON.stringify(pending));
+    else localStorage.removeItem(pendingKey(kind));
+  } catch {
+    // Storage unavailable; the list isn't kept anyway.
+  }
+}
+
+/** Drops the pending taps that were sent, unless they were tapped again since. */
+function settlePending(kind: SavedKind, sent: Record<string, boolean>) {
+  const pending = readPending(kind);
+  for (const [id, saved] of Object.entries(sent)) if (pending[id] === saved) delete pending[id];
+  writePending(kind, pending);
+}
+
 function writeLocal(kind: SavedKind, ids: Set<string>) {
   try {
     localStorage.setItem(STORAGE_KEYS[kind], JSON.stringify([...ids]));
@@ -41,7 +90,9 @@ async function postSaved(kind: SavedKind, change: { add?: string[]; remove?: str
 
 /**
  * Saved talks or places live on the device and, once signed in, in the
- * user's account. Signing in merges the device list into the account.
+ * user's account. Signing in merges the saves made while signed out into the
+ * account; after that the device keeps a copy of the account's list, which
+ * isn't merged again (that would undo removals made on another device).
  * `current` maps a saved ID to today's (a talk that moved day; see
  * currentSessionId).
  */
@@ -77,7 +128,11 @@ export function useSaved(kind: SavedKind, current: (id: string) => string = (id)
 
     if (!auth.isSignedIn) {
       // Signed out on this device: drop the account's list from it.
-      if (wasSignedIn.current) apply(new Set());
+      if (wasSignedIn.current || readAccount(kind)) {
+        apply(new Set());
+        writeAccount(kind, null);
+        writePending(kind, {});
+      }
       wasSignedIn.current = false;
       return;
     }
@@ -85,10 +140,17 @@ export function useSaved(kind: SavedKind, current: (id: string) => string = (id)
     wasSignedIn.current = true;
     let cancelled = false;
     tapsDuringSync.current = new Map();
-    postSaved(kind, { add: [...readLocal(kind)] }).then((ids) => {
+    // Only a list made while signed out is added, not a copy of an account's,
+    // along with taps the account doesn't have yet.
+    const pending = readPending(kind);
+    const add = [...(readAccount(kind) ? [] : readLocal(kind)), ...Object.keys(pending).filter((id) => pending[id])];
+    const remove = Object.keys(pending).filter((id) => !pending[id]);
+    const userId = auth.userId;
+    postSaved(kind, { add, remove }).then((ids) => {
       const taps = tapsDuringSync.current ?? new Map<string, boolean>();
       tapsDuringSync.current = null;
       if (!ids || cancelled) return;
+      settlePending(kind, pending);
       // The account's list, with any taps made meanwhile on top (they're on
       // their way to the account too).
       const next = new Set(ids.map(current));
@@ -97,12 +159,13 @@ export function useSaved(kind: SavedKind, current: (id: string) => string = (id)
         else next.delete(id);
       }
       apply(next);
+      writeAccount(kind, userId);
     });
     return () => {
       cancelled = true;
       tapsDuringSync.current = null;
     };
-  }, [auth.isLoaded, auth.isSignedIn, apply, kind]);
+  }, [auth.isLoaded, auth.isSignedIn, auth.userId, apply, kind]);
 
   const toggle = useCallback(
     (id: string): boolean => {
@@ -112,7 +175,10 @@ export function useSaved(kind: SavedKind, current: (id: string) => string = (id)
       else next.delete(id);
       apply(next);
       tapsDuringSync.current?.set(id, nowSaved);
-      if (auth.isSignedIn) postSaved(kind, nowSaved ? { add: [id] } : { remove: [id] });
+      if (auth.isSignedIn) {
+        writePending(kind, { ...readPending(kind), [id]: nowSaved });
+        postSaved(kind, nowSaved ? { add: [id] } : { remove: [id] }).then((ids) => ids && settlePending(kind, { [id]: nowSaved }));
+      }
       return nowSaved;
     },
     [apply, auth.isSignedIn, kind],

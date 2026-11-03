@@ -49,7 +49,8 @@ const tiles = data
       { label: "Page views", value: data.totals.pageViews },
       { label: "Signed-in attendees", value: data.totals.signedIn },
       { label: "Directions taps", value: data.totals.directions, note: `Google ${n(data.directionsByApp.google)} · Apple ${n(data.directionsByApp.apple)}` },
-      { label: "Saves", value: data.totals.talkSaves + data.totals.placeSaves, note: `${n(data.totals.talkSaves)} talks · ${n(data.totals.placeSaves)} places` },
+      // Every tap that saved something, so saving the same talk twice counts twice.
+      { label: "Save taps", value: data.totals.talkSaves + data.totals.placeSaves, note: `${n(data.totals.talkSaves)} talks · ${n(data.totals.placeSaves)} places` },
       { label: "AI assistant requests", value: data.totals.aiRequests, note: `Connector opened ${n(data.connector.opened)} · URL copied ${n(data.connector.copied)}` },
     ]
   : [];
@@ -239,7 +240,7 @@ const meetHalves = [meetTopics.slice(0, Math.ceil(meetTopics.length / 2)), meetT
             <div class="grid items-start gap-6 lg:grid-cols-2">
               <section class="rounded-md border border-border bg-card p-4">
                 <h2 class="mb-1 text-base font-semibold text-foreground">Places</h2>
-                <p class="mb-3 text-xs text-muted-foreground">Ranked by directions taps, then saves and views.</p>
+                <p class="mb-3 text-xs text-muted-foreground">Directions taps and views are for the selected range; saves are as of now. Ranked by directions, then saves and views.</p>
                 {data.places.length ? (
                   <table class="w-full text-left text-sm">
                     <thead>
@@ -258,7 +259,7 @@ const meetHalves = [meetTopics.slice(0, Math.ceil(meetTopics.length / 2)), meetT
                             <div class="text-xs text-muted-foreground">{p.category}</div>
                           </td>
                           <td class="py-2 text-right font-semibold tabular-nums text-foreground">{n(p.directions)}</td>
-                          <td class="py-2 text-right tabular-nums text-foreground">{n(Math.max(0, p.saves))}</td>
+                          <td class="py-2 text-right tabular-nums text-foreground">{n(p.saves)}</td>
                           <td class="py-2 text-right tabular-nums text-muted-foreground">{n(p.views)}</td>
                         </tr>
                       ))}
@@ -271,7 +272,7 @@ const meetHalves = [meetTopics.slice(0, Math.ceil(meetTopics.length / 2)), meetT
 
               <section class="rounded-md border border-border bg-card p-4">
                 <h2 class="mb-1 text-base font-semibold text-foreground">Most-saved talks</h2>
-                <p class="mb-3 text-xs text-muted-foreground">Saves in the app, minus un-saves.</p>
+                <p class="mb-3 text-xs text-muted-foreground">How many people have each talk saved now, whatever the range, in the app or through an AI assistant.</p>
                 {data.talks.length ? (
                   <ol class="space-y-3">
                     {data.talks.map((t) => (

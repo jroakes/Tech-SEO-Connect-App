@@ -14,6 +14,10 @@ check-in).
 - **My Conference**: tap the heart on a talk, hotel, restaurant, bar or
   anything else to save it. Saves stay on the device; signed-in attendees (via
   [Clerk](https://clerk.com)) keep them in their account across devices.
+  Signing in adds the saves made while signed out to the account; after that
+  each device keeps a copy of the account's list, so removing a save on one
+  device removes it everywhere. A tap the account didn't get (offline, say)
+  is sent again on the next sync.
 - **Places**: curated restaurants, bars, coffee, hotels and things to do, as a
   map (`/map`) or a list (`/locations`), with Google Maps and Apple Maps
   directions.
@@ -300,13 +304,19 @@ table either way; demo and real ones are kept apart.
 
 **Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
 page views (attendees', not organizers' on the admin pages), signed-in
-attendees, directions taps, saves and AI assistant use,
+attendees (not counting organizers' admin activity), directions taps, save
+taps and AI assistant use,
 page views over time, Meet (who's on it, joins, changed answers, leaves,
 topic opens and LinkedIn taps, by topic), check-in (checked in, walk-ins and
 the size of the guest list, whose share leaves out walk-ins; demo check-ins
 in demo mode), the places people
 go, the most-saved talks, and the AI assistant (requests by tool, and the
-searches and Meet topics people asked about). **Download every
+searches and Meet topics people asked about). Hours and days are Eastern,
+including across the change to and from daylight saving time. Saves on the
+talks and places lists are what's saved now, whatever the range: every
+signed-in attendee's list (`saved_sessions`, `saved_places`), plus what each
+device saved while signed out since it last signed in (from its `events`), so
+nothing counts twice. **Download every
 event** links there give the whole `events` table as CSV or JSON
 (`/api/admin/events?format=csv|json`, admins only) for another tool.
 

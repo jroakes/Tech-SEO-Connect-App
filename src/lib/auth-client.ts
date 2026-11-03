@@ -6,6 +6,7 @@ export interface AuthState {
   enabled: boolean;
   isLoaded: boolean;
   isSignedIn: boolean;
+  userId: string | null;
 }
 
 /**
@@ -13,9 +14,9 @@ export interface AuthState {
  * (no publishable key), everyone is treated as signed out.
  */
 export function useAuthState(): AuthState {
-  if (!clerkEnabled) return { enabled: false, isLoaded: true, isSignedIn: false };
+  if (!clerkEnabled) return { enabled: false, isLoaded: true, isSignedIn: false, userId: null };
   // clerkEnabled is a build-time constant, so the hook order never changes.
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { isLoaded, isSignedIn } = useAuth();
-  return { enabled: true, isLoaded, isSignedIn: Boolean(isSignedIn) };
+  const { isLoaded, isSignedIn, userId } = useAuth();
+  return { enabled: true, isLoaded, isSignedIn: Boolean(isSignedIn), userId: userId ?? null };
 }
