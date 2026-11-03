@@ -2,7 +2,8 @@
 
 The attendee companion app for Tech SEO Connect in Durham, NC, served at
 [app.techseoconnect.com](https://app.techseoconnect.com). It runs entirely on
-Cloudflare: one Worker built with Astro, a D1 database, and an hourly cron job.
+Cloudflare: one Worker built with Astro, a D1 database, Workers AI, and cron
+jobs (hourly for the schedule, every minute in conference week for check-in).
 
 ## What it does
 
@@ -112,7 +113,9 @@ MapTiler key, local development uses OpenStreetMap tiles.
 | `npm run db:migrate:local` / `db:migrate:remote` | Apply D1 migrations |
 
 To run the schedule sync locally, start `npx wrangler dev --test-scheduled`
-after a build, then open `http://localhost:8787/__scheduled`.
+after a build, then open
+`http://localhost:8787/cdn-cgi/handler/scheduled?cron=0+*+*+*+*` (or
+`?cron=*+*+1-7+11+*` for the check-in guest list).
 
 ## Deploying
 
@@ -171,17 +174,24 @@ logged as an `admin_action` event.
 menu) is for the door. Type a full name, a last name or an email:
 
 - The app keeps a copy of the Luma event's guest list (`LUMA_EVENT_ID`) in D1,
-  refreshed in the background every couple of minutes, because Luma sends 50
-  guests per request.
+  because Luma sends 50 guests per request (about 3 seconds for the whole
+  list). A cron refreshes it every minute in conference week (November 1-7),
+  and otherwise searches refresh it in the background once it's two minutes
+  old. The page shows when it last came from Luma.
 - Likely guests are picked by spelling (`src/lib/guest-match.ts`), and Claude
   Sonnet 5.5, through OpenRouter, judges which of them was meant and orders
-  them. An exact email or full name skips the AI.
-- If it's obvious who, that one guest is shown; otherwise the closest five.
-  Nobody is checked in until you tap **Check in**. Guests who aren't going
-  (declined, waitlisted, invited) or have only a livestream ticket are
-  flagged.
-- If nobody matches, a walk-in gets a name and email. First the app gets
-  Luma's latest list: a registered email shows that guest to check in
+  them (about 1.2 seconds). If OpenRouter is busy (new accounts have a low
+  rate limit) or doesn't answer in 3 seconds, Llama 3.3 70B on Workers AI
+  judges instead. An exact email or full name skips the AI.
+- If it's obvious who, that one guest is shown; otherwise everyone who might
+  be them, five at a time (**Show all**). A name several guests share, like
+  "john", or someone registered twice, always gets the list. Nobody is checked
+  in until you tap **Check in**. Guests who aren't going (declined,
+  waitlisted, invited) or have only a livestream ticket are flagged.
+- If nobody on the copy is close, the app checks Luma's 50 newest
+  registrations (about 0.15 seconds) before saying nobody matches.
+- A walk-in gets a name and email. First the app checks Luma's newest
+  registrations the same way: a registered email shows that guest to check in
   instead, and a similar name is shown to confirm before anyone new is added.
 - A check-in can be taken back: **Wrong person?** right after it (which then
   lists the other close guests), or **Undo check-in** when you search them.

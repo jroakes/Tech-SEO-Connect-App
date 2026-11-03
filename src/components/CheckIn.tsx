@@ -1,7 +1,7 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, Loader2, Search, Undo2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { GuestResult, SearchResult } from "@/lib/check-in";
+import type { Freshness, GuestResult, SearchResult, WalkInResult } from "@/lib/check-in";
 
 // Why a guest might not belong in the room, shown next to their name.
 const STATUS: Record<string, string> = {
@@ -14,12 +14,21 @@ const STATUS: Record<string, string> = {
 const time = (at: string) =>
   new Date(at).toLocaleString("en-US", { timeZone: "America/New_York", weekday: "short", hour: "numeric", minute: "2-digit" });
 
+const LISTED = 5; // guests listed before "Show all"
+
+// "just now", "4 min ago", or a time once it's been an hour.
+const ago = (at: number, now: number) => {
+  const min = Math.floor((now - at) / 60_000);
+  if (min < 1) return "just now";
+  if (min < 60) return `${min} min ago`;
+  return `at ${new Date(at).toLocaleString("en-US", { timeZone: "America/New_York", weekday: "short", hour: "numeric", minute: "2-digit" })}`;
+};
+
 const inputClass =
   "min-h-12 w-full rounded-md border border-input bg-background px-3 text-base text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-ring";
 
-type Shown = SearchResult & { query: string };
+type Shown = Pick<SearchResult, "match" | "options"> & { query: string };
 type WalkIn = { name: string; email: string; similar?: GuestResult[] };
-type WalkInReply = { guest: GuestResult; registered: boolean } | { similar: GuestResult[] };
 
 async function post<T>(body: object): Promise<T> {
   const res = await fetch("/api/admin/check-in", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
@@ -73,10 +82,26 @@ function GuestRow(props: { guest: GuestResult; justCheckedIn?: boolean; busy: bo
   );
 }
 
+/** When the guest list last came from Luma, kept current as the minutes pass. */
+function FreshnessLine({ syncedAt, guestCount }: Freshness) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(Date.now()), 15_000);
+    return () => clearInterval(timer);
+  }, []);
+  return (
+    <p className="mt-2 text-xs text-muted-foreground" data-testid="text-guest-list-freshness">
+      Guest list from Luma: {guestCount.toLocaleString("en-US")} guests, updated {ago(syncedAt, now)}
+    </p>
+  );
+}
+
 /** The check-in desk: type a name or email, check the guest in, or add a walk-in. */
-export default function CheckIn({ demo }: { demo: boolean }) {
+export default function CheckIn({ demo, freshness: initialFreshness }: { demo: boolean; freshness: Freshness | null }) {
   const [query, setQuery] = useState("");
   const [shown, setShown] = useState<Shown | null>(null);
+  const [showAll, setShowAll] = useState(false);
+  const [freshness, setFreshness] = useState(initialFreshness);
   // Who was checked in last, so a mistake is one tap to fix.
   const [lastCheckIn, setLastCheckIn] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -114,12 +139,16 @@ export default function CheckIn({ demo }: { demo: boolean }) {
     e.preventDefault();
     const typed = query.trim();
     if (!typed) return;
+    // Clear the last results at once, so they're never mistaken for these.
+    setShown(null);
+    setShowAll(false);
     setNotice(null);
     setWalkIn(null);
     setLastCheckIn(null);
     const result = await run("search", () => post<SearchResult>({ action: "search", query: typed }));
     if (!result) return;
-    setShown({ ...result, query: typed });
+    setFreshness({ syncedAt: result.syncedAt, guestCount: result.guestCount });
+    setShown({ match: result.match, options: result.options, query: typed });
     // Nobody on the list: start a walk-in with what was typed.
     if (!result.match && !result.options.length) setWalkIn(walkInFrom(typed));
   };
@@ -145,8 +174,9 @@ export default function CheckIn({ demo }: { demo: boolean }) {
       const query = shown.query;
       setQuery(query);
       input.current?.focus();
+      setShowAll(false);
       const result = await run("search", () => post<SearchResult>({ action: "search", query, single: false }));
-      if (result) setShown({ ...result, query });
+      if (result) setShown({ match: result.match, options: result.options, query });
       if (result && !result.options.length) setWalkIn(walkInFrom(query));
       return;
     }
@@ -158,8 +188,9 @@ export default function CheckIn({ demo }: { demo: boolean }) {
     e?.preventDefault();
     if (!walkIn) return;
     const { name, email } = walkIn;
-    const data = await run("walk_in", () => post<WalkInReply>({ action: "walk_in", name, email, newPerson }));
+    const data = await run("walk_in", () => post<WalkInResult>({ action: "walk_in", name, email, newPerson }));
     if (!data) return;
+    setFreshness({ syncedAt: data.syncedAt, guestCount: data.guestCount });
     if ("similar" in data) return setWalkIn({ name, email, similar: data.similar });
     setWalkIn(null);
     setShown({ query: data.guest.name, match: data.guest, options: [] });
@@ -209,6 +240,7 @@ export default function CheckIn({ demo }: { demo: boolean }) {
           Find
         </Button>
       </form>
+      {freshness && <FreshnessLine {...freshness} />}
 
       {error && (
         <p className="mt-4 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive" role="alert">
@@ -229,8 +261,16 @@ export default function CheckIn({ demo }: { demo: boolean }) {
           <>
             <h2 className="text-sm font-semibold text-muted-foreground">Who did you mean by “{shown.query}”?</h2>
             <ul className="divide-y divide-border overflow-hidden rounded-md border border-border bg-card" data-testid="list-guest-options">
-              {shown.options.map(row)}
+              {(showAll ? shown.options : shown.options.slice(0, LISTED)).map(row)}
             </ul>
+            {!showAll && shown.options.length > LISTED && (
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <Button variant="outline" className="min-h-11" onClick={() => setShowAll(true)} data-testid="button-show-all-guests">
+                  Show all {shown.options.length}
+                </Button>
+                <span className="text-sm text-muted-foreground">or type more of their name to narrow it down.</span>
+              </div>
+            )}
           </>
         )}
 

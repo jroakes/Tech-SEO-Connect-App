@@ -1,6 +1,7 @@
 import { handle } from "@astrojs/cloudflare/handler";
 import { mcpHandlerFor } from "./mcp/server";
 import { authenticateMcp, handleOAuthDiscovery, withCors } from "./lib/mcp-auth";
+import { refreshGuestList } from "./lib/check-in";
 import { syncSchedule } from "./lib/schedule-sync";
 
 export default {
@@ -18,7 +19,8 @@ export default {
     return handle(request, env, ctx);
   },
 
-  async scheduled(_controller, env, ctx) {
-    ctx.waitUntil(syncSchedule(env));
+  async scheduled(controller, env, ctx) {
+    if (controller.cron === "0 * * * *") ctx.waitUntil(syncSchedule(env));
+    else ctx.waitUntil(refreshGuestList());
   },
 } satisfies ExportedHandler<Env>;

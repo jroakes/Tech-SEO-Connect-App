@@ -45,6 +45,22 @@ export async function currentAdmin(locals: App.Locals): Promise<User | null> {
   return user && isAdmin(user) ? user : null;
 }
 
+const recentAdmins = new Map<string, number>(); // user ID → when Clerk last said they're an admin
+
+/**
+ * The signed-in admin's ID, trusting an answer from Clerk in the last minute,
+ * so a busy admin tool (check-in) doesn't wait on Clerk for every request.
+ */
+export async function recentAdmin(locals: App.Locals): Promise<{ id: string } | null> {
+  const userId = getUserId(locals);
+  if (!userId) return null;
+  if (Date.now() - (recentAdmins.get(userId) ?? 0) < 60_000) return { id: userId };
+  const admin = await currentAdmin(locals);
+  if (admin) recentAdmins.set(userId, Date.now());
+  else recentAdmins.delete(userId);
+  return admin;
+}
+
 export function displayName(user: User): string {
   return [user.firstName, user.lastName].filter(Boolean).join(" ") || user.username || user.emailAddresses[0]?.emailAddress || "Attendee";
 }

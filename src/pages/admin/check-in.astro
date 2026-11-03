@@ -1,6 +1,5 @@
 ---
 // Admin: checking guests in at the door, against the event's Luma guest list.
-import { waitUntil } from "cloudflare:workers";
 import Layout from "@/layouts/Layout.astro";
 import AdminHeader from "@/components/AdminHeader.astro";
 import AdminLocked from "@/components/AdminLocked.astro";
@@ -16,8 +15,8 @@ const signedIn = !!getUserId(Astro.locals);
 Astro.response.headers.set("Cache-Control", "no-store");
 if (!admin) Astro.response.status = signedIn ? 403 : 401;
 
-// Get Luma's latest guest list now if ours is old, so the first search is quick.
-if (admin) waitUntil(guestList().catch((err) => console.error("Couldn't load the Luma guest list", err)));
+// When the guest list last came from Luma, for the page to show.
+const list = admin ? await guestList().catch((err) => (console.error("Couldn't load the Luma guest list", err), null)) : null;
 ---
 
 <Layout title="Admin: Check-in" noindex>
@@ -28,7 +27,7 @@ if (admin) waitUntil(guestList().catch((err) => console.error("Couldn't load the
       ) : (
         <>
           <AdminHeader current="check-in" />
-          <CheckIn client:load demo={isDemo()} />
+          <CheckIn client:load demo={isDemo()} freshness={list && { syncedAt: list.syncedAt, guestCount: list.guests.length }} />
         </>
       )
     }

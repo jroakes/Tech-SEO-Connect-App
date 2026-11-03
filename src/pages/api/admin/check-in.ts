@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
 import { getUserId, json } from "@/lib/auth-server";
-import { currentAdmin } from "@/lib/clerk";
+import { recentAdmin } from "@/lib/clerk";
 import { addWalkIn, checkIn, CheckInError, isDemo, search, undoCheckIn } from "@/lib/check-in";
 
 export const prerender = false;
@@ -17,7 +17,7 @@ const requestSchema = z.discriminatedUnion("action", [
 
 /** The check-in desk: find a guest, check them in or undo it, or add a walk-in (admins only). */
 export const POST: APIRoute = async ({ request, locals }) => {
-  const admin = await currentAdmin(locals);
+  const admin = await recentAdmin(locals);
   if (!admin) return json({ error: "Only admins can check guests in." }, getUserId(locals) ? 403 : 401);
 
   let body: unknown;

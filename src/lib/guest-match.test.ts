@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { candidates, exactMatch, livestreamOnly, matchScore, words, type Guest } from "./guest-match";
+import { candidates, exactMatch, livestreamOnly, matchScore, sharesName, words, type Guest } from "./guest-match";
 
 const guest = (id: string, firstName: string, lastName: string, extra: Partial<Guest> = {}): Guest => ({
   id,
@@ -75,6 +75,14 @@ describe("candidates", () => {
 describe("matchScore", () => {
   it("counts a word from their email", () => {
     expect(matchScore("jubri", guests[3]).score).toBeGreaterThanOrEqual(0.9);
+  });
+});
+
+describe("sharesName", () => {
+  it("is true when every word typed is one of their names", () => {
+    expect(sharesName("smith", guests[0])).toBe(true);
+    expect(sharesName("Robert SMITH", guests[0])).toBe(true);
+    expect(sharesName("bob smith", guests[0])).toBe(false);
   });
 });
 

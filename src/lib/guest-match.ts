@@ -131,5 +131,12 @@ export function exactMatch(query: string, guests: Guest[]): Guest | null {
   return hits.length === 1 ? hits[0] : null;
 }
 
+/** Whether every word typed is one of the guest's names: "john" for John Murch. */
+export function sharesName(query: string, guest: Guest): boolean {
+  const typed = words(query);
+  const theirs = nameWords(guest);
+  return typed.length > 0 && typed.every((w) => theirs.includes(w));
+}
+
 /** Livestream-only guests are registered, but not for the room. */
 export const livestreamOnly = (g: Guest) => g.tickets.length > 0 && g.tickets.every((t) => /livestream/i.test(t));
