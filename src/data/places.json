@@ -1095,18 +1095,6 @@
     "address": "309 W Morgan St, Durham, NC 27701"
   },
   {
-    "id": "american-tobacco-trail-downtown-trailhead",
-    "name": "American Tobacco Trail (downtown trailhead)",
-    "category": "Things to do",
-    "lat": 35.990532,
-    "lng": -78.9062615,
-    "narrative": "The northern end of this 22-mile rail-trail sits across Morehead Avenue from the Bulls' ballpark, so a pre-session run or a head-clearing walk starts almost at the venue. The Durham stretch is a paved, ten-foot-wide greenway on a former railroad line, gentle enough for an easy out-and-back, and it's popular with local runners and cyclists.",
-    "googlePlaceId": "ChIJiaXidLnlrIkRblVmfeoPc34",
-    "address": "American Tobacco Trail, Durham, NC 27701",
-    "originalLat": 35.990513,
-    "originalLng": -78.9062474
-  },
-  {
     "id": "letters-community-bookshop",
     "name": "Letters Community Bookshop",
     "category": "Things to do",
