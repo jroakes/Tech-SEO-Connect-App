@@ -56,7 +56,7 @@ src/worker.ts          Worker entry: /mcp -> MCP server (after the sign-in check
                        and the check-in guest list (every 10 minutes, Nov 1-7)
 src/pages/             Astro pages and API routes
   schedule.astro       Rendered per request from D1
-  my-conference.astro  Rendered per request from D1 (/my-schedule redirects here)
+  my-conference.astro  Rendered per request from D1
   meet.astro           Meet people (rendered in the browser)
   admin/index.astro    Admins' users list, from Clerk
   admin/analytics.astro  Admins' analytics, rendered per request from D1
@@ -86,7 +86,8 @@ src/components/        React islands (map, lists, schedule) and the header
 src/data/              Conference details, bundled fallback schedule, places,
                        sponsors, Meet topics
 migrations/            D1 schema
-content/               Source files for places (KML export and narratives)
+content/               Source files for places (KML export, narratives, Google
+                       listings) and the yearly content update (PROCESS.md)
 ```
 
 **Data:**
@@ -339,7 +340,7 @@ npx wrangler d1 execute DB --remote --command \
   "SELECT json_extract(props,'$.place_name') AS place, COUNT(*) AS clicks FROM events WHERE type='map_button_click' GROUP BY place ORDER BY clicks DESC LIMIT 20"
 ```
 
-GA4 (`G-QRWD85BG5Z`) still receives `map_button_click`, `speaker_like` and
+GA4 (`G-QRWD85BG5Z`) also receives `map_button_click`, `speaker_like` and
 `place_like` events. Run `enableAnalyticsDebug()` in the browser console to log
 events as they fire.
 

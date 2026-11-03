@@ -6,8 +6,7 @@
 // requests are never cached.
 //
 // Bump VERSION whenever this file's caching rules change. The activate step
-// deletes every cache from older versions, including the 2025 app's
-// "techseo-connect-v1" caches on phones that installed it last year.
+// deletes every cache from older versions.
 
 const VERSION = "2026-3";
 const PAGE_CACHE = `tsc-pages-${VERSION}`;

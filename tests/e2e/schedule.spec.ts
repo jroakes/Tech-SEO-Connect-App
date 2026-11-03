@@ -44,8 +44,3 @@ test("shows a party's details line by line, with its links", async ({ page }) =>
   await expect(link).toHaveAttribute("target", "_blank");
   expect(await party.locator('[data-testid="text-session-description"] > span').count()).toBeGreaterThan(2);
 });
-
-test("/my-schedule goes to My Conference", async ({ page }) => {
-  await page.goto("/my-schedule");
-  await expect(page).toHaveURL(/\/my-conference$/);
-});

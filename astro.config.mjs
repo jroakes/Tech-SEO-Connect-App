@@ -26,7 +26,6 @@ export default defineConfig({
   integrations: [react(), ...(clerkEnabled && !fakeAuth ? [clerk()] : [])],
   redirects: {
     "/": "/schedule",
-    "/my-schedule": "/my-conference",
     "/analytics": "/admin/analytics",
   },
   // map.html rather than map/index.html, so /map is served without a

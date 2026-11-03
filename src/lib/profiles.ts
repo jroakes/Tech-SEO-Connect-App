@@ -1,4 +1,4 @@
-// Meet profiles in D1 (see migrations/0004_simpler_meet.sql).
+// Meet profiles in D1 (see migrations/0001_init.sql).
 import type { Profile } from "./matching";
 
 interface ProfileRow {
@@ -55,7 +55,7 @@ export async function deleteProfile(db: D1Database, userId: string): Promise<voi
   await db.prepare("DELETE FROM profiles WHERE user_id = ?").bind(userId).run();
 }
 
-/** The topics the attendee saved first, which they keep (see migrations/0006_locked_topics.sql), or null if they've never saved any. */
+/** The topics the attendee saved first, which they keep (the meet_topics table), or null if they've never saved any. */
 export async function getLockedTopics(db: D1Database, userId: string): Promise<string[] | null> {
   const row = await db.prepare("SELECT topics FROM meet_topics WHERE user_id = ?").bind(userId).first<{ topics: string }>();
   return row ? parseTopics(row.topics) : null;

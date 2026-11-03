@@ -10,7 +10,6 @@
     "preview": "astro build && wrangler dev",
     "check": "wrangler types && astro check",
     "deploy": "astro build && wrangler deploy",
-    "cf-typegen": "wrangler types",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
     "secrets": "grep -E '^(CLERK_SECRET_KEY|OPENROUTER_API_KEY|LUMA_API_KEY)=' .env | wrangler secret bulk",
