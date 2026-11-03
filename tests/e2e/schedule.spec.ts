@@ -1,5 +1,5 @@
 // The schedule, and saving talks to My Conference.
-import { expect, flushEvents, open, test } from "./fixtures";
+import { expect, flushEvents, gaEvents, open, test } from "./fixtures";
 
 test("shows each day's talks, with times and speakers", async ({ page }) => {
   await open(page, "/schedule");
@@ -22,6 +22,9 @@ test("saves a talk to My Conference and removes it there", async ({ page, events
   await expect(heart).toHaveAttribute("aria-pressed", "true");
   await flushEvents(page);
   expect(events.map((e) => e.type)).toContain("session_save");
+  // GA4 uses session_id for its own sessions, so the talk's ID goes as talk_id.
+  const { session_id, ...rest } = events.find((e) => e.type === "session_save")!.props!;
+  expect(await gaEvents(page)).toContainEqual({ name: "session_save", params: { ...rest, talk_id: session_id } });
 
   await open(page, "/my-conference");
   const saved = page.getByTestId("section-talks").locator('button[aria-pressed="true"]');

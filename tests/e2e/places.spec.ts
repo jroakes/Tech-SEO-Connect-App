@@ -1,5 +1,5 @@
 // Places: the list and the map, directions, and saving places.
-import { expect, flushEvents, open, test } from "./fixtures";
+import { expect, flushEvents, gaEvents, open, test } from "./fixtures";
 
 test("searches and filters the list", async ({ page }) => {
   await open(page, "/locations");
@@ -45,6 +45,10 @@ test("opens a place, gets directions and saves it", async ({ page, events, opene
   const types = events.map((e) => e.type);
   expect(types.filter((t) => t === "map_button_click")).toHaveLength(3);
   expect(types).toEqual(expect.arrayContaining(["place_view", "place_save"]));
+  // GA4 gets the same events, with the same params (it counts page views itself).
+  const ga = await gaEvents(page);
+  expect(ga.map((e) => e.name)).toEqual(types.filter((t) => t !== "page_view"));
+  expect(ga.map((e) => e.params)).toEqual(events.filter((e) => e.type !== "page_view").map((e) => e.props ?? {}));
 
   await open(page, "/my-conference");
   await expect(page.getByTestId("section-places")).toContainText(name);

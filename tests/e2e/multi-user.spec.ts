@@ -4,7 +4,7 @@
 // leaving and rejoining, and a blocked attendee being signed out).
 import QRCode from "qrcode";
 import type { Browser, Page, TestInfo } from "@playwright/test";
-import { expect, open, test } from "./fixtures";
+import { blockGa, expect, gaEvents, open, test } from "./fixtures";
 
 // The tests' D1 keeps accounts between runs, so each run makes new ones. An
 // account's ID says who it is (see tests/fake-auth/backend.ts).
@@ -15,6 +15,7 @@ const person = (kind: "user" | "admin", first: string, last: string) => ({ id: `
 async function signIn(browser: Browser, id: string, info: TestInfo): Promise<Page> {
   const { viewport, userAgent, deviceScaleFactor, isMobile, hasTouch, baseURL } = info.project.use;
   const context = await browser.newContext({ viewport, userAgent, deviceScaleFactor, isMobile, hasTouch, baseURL });
+  await blockGa(context);
   await context.addCookies([{ name: "tsc_test_user", value: id, domain: "localhost", path: "/" }]);
   await context.addInitScript(() => {
     try {
@@ -161,6 +162,8 @@ test("attendees find each other on Meet by shared topic, leave and rejoin, and a
     await expect(page.getByTestId("topic-circles")).toBeVisible();
   };
   await join(annPage, ["bigquery", "python"], `linkedin.com/in/ann-meet-${run}`);
+  // GA4 hears about it from the browser (the server logs it in the event log).
+  expect(await gaEvents(annPage)).toContainEqual({ name: "match_join", params: { topics: "bigquery,python", topic_count: 2, linkedin: true } });
   await join(beaPage, ["bigquery", "log-files"]);
   await join(cyPage, ["local"]);
 
@@ -185,6 +188,7 @@ test("attendees find each other on Meet by shared topic, leave and rejoin, and a
   annPage.once("dialog", (dialog) => dialog.accept());
   await annPage.getByRole("button", { name: "Leave" }).click();
   await expect(annPage.getByTestId("panel-meet-left")).toBeVisible();
+  expect((await gaEvents(annPage)).map((e) => e.name)).toContain("match_leave");
   group = await bigquery();
   await expect(group).not.toContainText(ann.name);
 

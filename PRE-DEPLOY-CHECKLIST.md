@@ -44,9 +44,10 @@ real guest list. Together, the two test suites check:
 - [ ] Sponsors' logos, the For AI bots dialog (on a small phone and over the
       map), redirects and the 404 page.
 - [ ] Admin pages and APIs are locked for visitors.
-- [ ] Every page logs its events, and the analytics numbers add up from the
-      event log alone: page views by Eastern day, saves, Meet, check-ins and
-      the guest list's size.
+- [ ] Every page logs its events and sends the same ones to GA4 (talk IDs as
+      `talk_id`), and the analytics numbers add up from the event log alone:
+      page views by Eastern day, saves, Meet, check-ins and the guest list's
+      size.
 - [ ] Check-in's name matching, the AI's judgment, newest registrations and
       walk-ins.
 - [ ] Every MCP tool.

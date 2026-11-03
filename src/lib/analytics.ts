@@ -48,25 +48,28 @@ if (typeof window !== "undefined") {
   window.disableAnalyticsDebug = () => setAnalyticsDebug(false);
 }
 
-/** Sends an event to GA4 through gtag.js (loaded in the layout). */
-export function pushToDataLayer(event: Record<string, unknown>) {
-  if (typeof window === "undefined") return;
+type EventProps = Record<string, string | number | boolean>;
 
-  const eventName = event.event as string;
-  const eventData = { ...event };
-  delete eventData.event;
-
-  window.gtag?.("event", eventName, eventData);
-
+/**
+ * Sends an event to GA4 through gtag.js (loaded in the layout), with the same
+ * name and props as in the event log. GA4 uses `session_id` for its own
+ * sessions, so a talk's ID goes as `talk_id`. Page views aren't sent: the tag
+ * sends its own.
+ */
+export function logToGa(type: string, props?: EventProps) {
+  if (typeof window === "undefined" || type === "page_view") return;
+  const { session_id, ...rest } = props ?? {};
+  const params = session_id === undefined ? rest : { ...rest, talk_id: session_id };
+  window.gtag?.("event", type, params);
   if (isAnalyticsDebugEnabled()) {
-    console.log("%c[GA4 Event]", "background: #3C4639; color: white; padding: 2px 6px; border-radius: 3px;", eventName, eventData);
+    console.log("%c[GA4 Event]", "background: #3C4639; color: white; padding: 2px 6px; border-radius: 3px;", type, params);
   }
 }
 
 // --- First-party event log ---------------------------------------------------
-// Events are queued and sent in batches to /api/events, which stores them in D1.
+// Events are queued and sent in batches to /api/events, which stores them in
+// D1, and each one goes to GA4 too.
 
-type EventProps = Record<string, string | number | boolean>;
 interface QueuedEvent {
   type: string;
   path: string;
@@ -113,6 +116,7 @@ if (typeof window !== "undefined") {
 export function logEvent(type: string, props?: EventProps) {
   if (typeof window === "undefined") return;
   queue.push({ type, path: location.pathname, props, ts: Date.now() });
+  logToGa(type, props);
   if (isAnalyticsDebugEnabled()) console.log("%c[App Event]", "background: #0DB47C; color: white; padding: 2px 6px; border-radius: 3px;", type, props ?? {});
   if (queue.length >= MAX_BATCH) flush();
   else flushTimer ??= setTimeout(flush, 5000);
@@ -121,12 +125,6 @@ export function logEvent(type: string, props?: EventProps) {
 // --- Named events --------------------------------------------------------------
 
 export function trackMapButtonClick(mapType: "google_maps" | "apple_maps", place: Place, source: "map" | "list" | "detail") {
-  pushToDataLayer({
-    event: "map_button_click",
-    map_type: mapType,
-    location_name: place.name,
-    location_category: place.category,
-  });
   logEvent("map_button_click", { map_type: mapType, place_id: place.id, place_name: place.name, category: place.category, source });
 }
 
@@ -135,13 +133,6 @@ export function trackPlaceView(place: Place, source: "map" | "list") {
 }
 
 export function trackSessionSave(session: Session, saved: boolean) {
-  if (saved) {
-    pushToDataLayer({
-      event: "speaker_like",
-      speaker_name: session.speaker || session.title,
-      conference_day: session.day,
-    });
-  }
   logEvent(saved ? "session_save" : "session_unsave", {
     session_id: session.id,
     title: session.title,
@@ -151,9 +142,6 @@ export function trackSessionSave(session: Session, saved: boolean) {
 }
 
 export function trackPlaceSave(place: Place, saved: boolean) {
-  if (saved) {
-    pushToDataLayer({ event: "place_like", location_name: place.name, location_category: place.category });
-  }
   logEvent(saved ? "place_save" : "place_unsave", { place_id: place.id, place_name: place.name, category: place.category });
 }
 

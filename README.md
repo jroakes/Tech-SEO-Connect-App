@@ -340,9 +340,15 @@ npx wrangler d1 execute DB --remote --command \
   "SELECT json_extract(props,'$.place_name') AS place, COUNT(*) AS clicks FROM events WHERE type='map_button_click' GROUP BY place ORDER BY clicks DESC LIMIT 20"
 ```
 
-GA4 (`G-QRWD85BG5Z`) also receives `map_button_click`, `speaker_like` and
-`place_like` events. Run `enableAnalyticsDebug()` in the browser console to log
-events as they fire.
+**GA4** (`G-QRWD85BG5Z`) gets every event the browser logs, with the same
+name and props (`logToGa` in `src/lib/analytics.ts`), except page views, which
+the tag sends itself. GA4 uses `session_id` for its own sessions, so a talk's
+ID goes as `talk_id`. Meet's joins, changes and leaves are logged by the
+server, so the browser sends them to GA4 once they've worked. Events only the
+server sees (MCP tool calls and saves, check-ins, the guest list's size, admin
+actions) aren't in GA4. Run `enableAnalyticsDebug()` in the browser console to
+log events as they fire. The browser tests block GA4, so test runs never reach
+it.
 
 ## Roadmap
 

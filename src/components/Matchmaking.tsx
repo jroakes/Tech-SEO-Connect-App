@@ -6,7 +6,7 @@ import { ProfileForm } from "./meet/ProfileForm";
 import { Avatar, PersonRow } from "./meet/PersonRow";
 import { TopicCircles, TopicCirclesKey } from "./meet/TopicCircles";
 import { useAuthState } from "@/lib/auth-client";
-import { logEvent } from "@/lib/analytics";
+import { logEvent, logToGa } from "@/lib/analytics";
 import { peopleIn, type Profile, type TopicCount } from "@/lib/matching";
 import { topicLabel } from "@/data/topics";
 
@@ -54,6 +54,8 @@ export default function Matchmaking() {
   const leave = async () => {
     if (!confirm("Leave Meet? Your answers will be deleted and other attendees won't see you. If you join again, your topics stay the same.")) return;
     await fetch("/api/profile", { method: "DELETE" });
+    // The server logs Meet's events; GA4 gets them from here.
+    logToGa("match_leave");
     const me = state.status === "ready" ? state.me : null;
     setState({ status: "left", suggestedName: me?.name ?? "", lockedTopics: me?.topics ?? [] });
   };
@@ -113,7 +115,8 @@ export default function Matchmaking() {
           initial={state.profile}
           suggestedName={state.suggestedName}
           lockedTopics={state.lockedTopics}
-          onSaved={async () => {
+          onSaved={async (profile) => {
+            logToGa(state.profile ? "match_update" : "match_join", { topics: profile.topics.join(","), topic_count: profile.topics.length, linkedin: !!profile.linkedin });
             await loadMatches();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
