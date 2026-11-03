@@ -16,7 +16,7 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "tech-seo-connect",
+      "database_name": "tech-seo-connect-app",
       "migrations_dir": "migrations"
     }
   ],
@@ -41,7 +41,10 @@
   },
   "observability": {
     "enabled": true
-  }
-  // Add at cutover, once the old app.techseoconnect.com DNS record is removed:
-  // "routes": [{ "pattern": "app.techseoconnect.com", "custom_domain": true }]
+  },
+  // The app's own address; the main site keeps techseoconnect.com and www.
+  // Clerk's production keys work only there, so there's no workers.dev address.
+  "routes": [{ "pattern": "app.techseoconnect.com", "custom_domain": true }],
+  "workers_dev": false,
+  "preview_urls": false
 }

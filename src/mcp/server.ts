@@ -74,7 +74,7 @@ function createServer(userId: string) {
   const log = (tool: string, props?: Record<string, unknown>) => logToolCall(userId, tool, props);
 
   const server = new McpServer(
-    { name: "tech-seo-connect", version: "1.0.0" },
+    { name: "tech-seo-connect-app", version: "1.0.0" },
     {
       instructions: `Information about the ${event.name} conference in ${event.city}, ${event.dateRange}: the schedule of talks and speakers, recommended restaurants, bars, coffee, hotels and things to do near the venue, and the sponsors. Use get_event_info for dates and venue, get_schedule or search_sessions for talks, find_places for local recommendations and list_sponsors for sponsors. The attendee is signed in: get_my_conference shows the talks and places they've saved (also in the app at ${event.appUrl}), and save_to_my_conference and remove_from_my_conference change it. Meet (${event.appUrl}/meet) matches attendees by the topics they're interested in: get_meet_topics shows how many people picked each topic, and find_people_to_meet lists the people who share this attendee's topics, with LinkedIn to message them and meet up. Meet works only once the attendee has joined it in the app.`,
     },

@@ -70,7 +70,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
   return new Response(stream, {
     headers: {
       "Content-Type": format === "csv" ? "text/csv; charset=utf-8" : "application/json; charset=utf-8",
-      "Content-Disposition": `attachment; filename="tech-seo-connect-events-${date}.${format}"`,
+      "Content-Disposition": `attachment; filename="tech-seo-connect-app-events-${date}.${format}"`,
       "Cache-Control": "no-store",
     },
   });

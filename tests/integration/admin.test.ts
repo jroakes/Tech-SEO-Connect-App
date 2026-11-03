@@ -39,7 +39,7 @@ describe("admin", () => {
 
     const csv = await call(exportEvents, { path: "/api/admin/events?format=csv", user: "admin1" });
     expect(csv.headers.get("Content-Type")).toMatch(/text\/csv/);
-    expect(csv.headers.get("Content-Disposition")).toMatch(/tech-seo-connect-events-\d{4}-\d{2}-\d{2}\.csv/);
+    expect(csv.headers.get("Content-Disposition")).toMatch(/tech-seo-connect-app-events-\d{4}-\d{2}-\d{2}\.csv/);
     const lines = (csv.data as string).trim().split("\r\n");
     expect(lines[0]).toBe("id,ts,type,anon_id,user_id,path,props");
     expect(lines).toHaveLength(3);

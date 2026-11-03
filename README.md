@@ -170,11 +170,12 @@ the repo (the `cloudflare-astro` branch) and your `.env`:
    Clerk account), `LUMA_EVENT_ID` (the conference's Luma event, which must
    belong to the calendar that `LUMA_API_KEY` comes from) and `CHECK_IN_DEMO`.
 4. **Sign in to Cloudflare:** `npx wrangler login`, as a user of the account
-   to deploy to. If that user is in more than one account, set
-   `CLOUDFLARE_ACCOUNT_ID` to the right one first.
+   to deploy to. `account_id` in `wrangler.jsonc` says which account that is:
+   production is Techseoconnect@gmail.com's Account, which also runs the main
+   site, so everything of this app's is named `tech-seo-connect-app`.
 5. **Deploy:** `npm run deploy`. It builds with the `PUBLIC_` keys from `.env`,
    and the first deploy to an account creates the Worker and the D1 database
-   (`tech-seo-connect`). The app is then at
+   (`tech-seo-connect-app`). The app is then at
    `https://tech-seo-connect-app.<your-subdomain>.workers.dev`.
 6. **Database:** `npm run db:migrate:remote` creates the tables.
 7. **Secrets:** `npm run secrets` uploads `CLERK_SECRET_KEY`,
@@ -185,11 +186,11 @@ the repo (the `cloudflare-astro` branch) and your `.env`:
    **OAuth applications**, then the **Settings** tab, and under **Client
    onboarding** turn on **Publish CIMD support** (with **Client admission** set
    to **Any compatible CIMD client**) and **Publish DCR support**.
-9. **Cutover:** remove the old `app.techseoconnect.com` DNS record, then
-   uncomment the `routes` entry in `wrangler.jsonc` and run `npm run deploy`
-   again. Cloudflare creates the DNS record and certificate. The
-   techseoconnect.com zone must be in the same Cloudflare account as the
-   Worker.
+9. **Domain:** the app is at `app.techseoconnect.com` (`routes` in
+   `wrangler.jsonc`), and Cloudflare makes its DNS record and certificate on
+   deploy. The techseoconnect.com zone must be in the same Cloudflare account,
+   with no other DNS record for `app`. There's no workers.dev address, since
+   Clerk's production keys work only on that domain.
 
 Nothing else needs setting up: Workers AI and the cron triggers come with the
 Worker. The schedule appears from the bundled copy until the hourly sync runs,
@@ -215,7 +216,7 @@ into Clerk's limits.
 **Moving the data** from another account is optional. Saved talks, Meet
 answers and check-ins belong to Clerk user IDs, so they only carry over if the
 same Clerk instance is used. To copy them, sign in to the old account and run
-`npx wrangler d1 export tech-seo-connect --remote --output=tsc.sql`; then, on
+`npx wrangler d1 export tech-seo-connect-app --remote --output=tsc.sql`; then, on
 the new account, run `npx wrangler d1 execute DB --remote --file=tsc.sql`
 instead of step 6.
 
