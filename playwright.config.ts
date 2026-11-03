@@ -4,7 +4,8 @@
 // locally with Wrangler, with the keys in .env, a local D1 of their own
 // (.wrangler/e2e, which starts empty so the bundled schedule shows) and a
 // stand-in for Luma with fictional guests (tests/e2e/fake-luma.mjs). They use
-// the installed Google Chrome, with a fresh profile.
+// the installed Google Chrome, with a fresh profile. --local-upstream keeps
+// requests on localhost rather than the Worker's route, app.techseoconnect.com.
 import { defineConfig, devices } from "@playwright/test";
 
 const PORT = 8788;
@@ -31,7 +32,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: `npx wrangler d1 migrations apply DB --local --persist-to .wrangler/e2e && FAKE_AUTH=1 npx astro build && npx wrangler dev --port ${PORT} --persist-to .wrangler/e2e --var LUMA_API_URL:http://127.0.0.1:${FAKE_LUMA_PORT} --var CHECK_IN_DEMO:true`,
+      command: `npx wrangler d1 migrations apply DB --local --persist-to .wrangler/e2e && FAKE_AUTH=1 npx astro build && npx wrangler dev --port ${PORT} --local-upstream localhost:${PORT} --persist-to .wrangler/e2e --var LUMA_API_URL:http://127.0.0.1:${FAKE_LUMA_PORT} --var CHECK_IN_DEMO:true`,
       url: `http://localhost:${PORT}/schedule`,
       timeout: 180_000,
       reuseExistingServer: !process.env.CI,
