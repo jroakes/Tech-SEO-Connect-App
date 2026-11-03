@@ -80,7 +80,8 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
   const count = async (sql: string, ...params: unknown[]) => (await one<{ n: number }>(sql, ...params))?.n ?? 0;
   const ofType = (type: string) => count("SELECT COUNT(*) AS n FROM events WHERE type = ? AND ts >= ?", type, since);
 
-  const [visitors, pageViews, signedIn, directions, talkSaves, placeSaves, aiRequests, opened, copied] = await Promise.all([
+  // The three sets of queries go to the database at once.
+  const totalsQuery = Promise.all([
     count(`SELECT COUNT(DISTINCT anon_id) AS n FROM events WHERE anon_id IS NOT NULL AND ${ATTENDEE_VIEW} AND ts >= ?`, since),
     count(`SELECT COUNT(*) AS n FROM events WHERE ${ATTENDEE_VIEW} AND ts >= ?`, since),
     count(
@@ -96,7 +97,7 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     ofType("mcp_url_copy"),
   ]);
 
-  const [hourRows, talks, places, pages, aiTools, searchRows, apps] = await Promise.all([
+  const listsQuery = Promise.all([
     // By UTC hour; they're put into Eastern hours and days below, which
     // handles the change to and from daylight saving time.
     all<{ hour: string; n: number }>(
@@ -138,15 +139,7 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     ),
   ]);
 
-  // "Solís" and "solis" are one search.
-  const searches = new Map<string, number>();
-  for (const { query, count } of searchRows) searches.set(fold(query), (searches.get(fold(query)) ?? 0) + count);
-  const aiSearches = [...searches]
-    .map(([query, count]) => ({ query, count }))
-    .sort((a, b) => b.count - a.count || a.query.localeCompare(b.query))
-    .slice(0, 8);
-
-  const [onMeet, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps, checkIns, guestList] = await Promise.all([
+  const meetQuery = Promise.all([
     // Who's on Meet now: everyone whose last Meet event is joining or changing
     // their answers, rather than leaving or being blocked or deleted by an admin.
     all<{ props: string }>(
@@ -182,6 +175,20 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     // The guest list's size, logged whenever a sync with Luma changes it.
     one<{ guests: number }>("SELECT json_extract(props, '$.guests') AS guests FROM events WHERE type = 'guest_list_sync' ORDER BY id DESC LIMIT 1"),
   ]);
+  const [
+    [visitors, pageViews, signedIn, directions, talkSaves, placeSaves, aiRequests, opened, copied],
+    [hourRows, talks, places, pages, aiTools, searchRows, apps],
+    [onMeet, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps, checkIns, guestList],
+  ] = await Promise.all([totalsQuery, listsQuery, meetQuery]);
+
+  // "Solís" and "solis" are one search.
+  const searches = new Map<string, number>();
+  for (const { query, count } of searchRows) searches.set(fold(query), (searches.get(fold(query)) ?? 0) + count);
+  const aiSearches = [...searches]
+    .map(([query, count]) => ({ query, count }))
+    .sort((a, b) => b.count - a.count || a.query.localeCompare(b.query))
+    .slice(0, 8);
+
   const meetAnswers = onMeet.map((r) => JSON.parse(r.props ?? "{}") as { topics?: string; linkedin?: boolean });
   const picked = tally(meetAnswers.flatMap((a) => (a.topics ? a.topics.split(",") : [])));
   const meetTopics = TOPICS.map(({ id, label }) => {
