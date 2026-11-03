@@ -30,7 +30,7 @@ const guest = (id: string, first: string, last: string, extra: Partial<LumaGuest
 let luma: LumaGuest[]; // oldest registration first
 // Ticket QR code keys: guest keys (g-…) from emailed tickets, ticket keys from the CSV export.
 let byKey: Record<string, LumaGuest>;
-const calls = { all: 0, newest: 0, ai: 0 };
+const calls = { all: 0, newest: 0, ai: 0, added: [] as unknown[] };
 // The stand-in AI: everyone who has a typed word in their name scores 90; one
 // such candidate is "obvious".
 type Judge = (typed: string, candidates: { id: string; name: string }[]) => { matches: { id: string; score: number }[]; obvious: string | null };
@@ -68,11 +68,18 @@ beforeEach(() => {
     "g-newkey": guest("g-new", "Nia", "Fresh"),
   };
   calls.all = calls.newest = calls.ai = 0;
+  calls.added = [];
   judge = usualJudge;
   aiDown = false;
   vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
     const url = new URL(input instanceof Request ? input.url : String(input));
     if (url.hostname === "public-api.luma.com") {
+      if (url.pathname === "/v1/events/guests/add") {
+        const body = JSON.parse(String(init?.body));
+        expect(body.event_id).toBe("evt-test");
+        calls.added.push(...body.guests);
+        return json({ skipped: [] });
+      }
       expect(url.searchParams.get("event_id")).toBe("evt-test");
       if (url.pathname === "/v1/events/guests/get") {
         const found = byKey[url.searchParams.get("id")!];
@@ -262,6 +269,42 @@ describe("check-in", () => {
       expect(await refused("Ann Lee")).toMatch(/^That isn't a Luma ticket/);
       expect(await refused(ticket("g-nobody"))).toMatch(/^Luma didn't find that ticket/);
       expect(await refused(ticket("g-livekey"))).toBe("Lara Stream has a livestream-only ticket, for watching online.");
+    });
+  });
+
+  describe("the live switch", () => {
+    it("starts from CHECK_IN_DEMO, and turns live check-in on and off for every desk", async () => {
+      expect((await search("ann lee")).demo).toBe(true);
+      const on = await desk({ action: "set_live", live: true });
+      expect(on.data).toEqual({ demo: false });
+      // Another admin's desk sees it on its next answer, and its check-ins are real.
+      const checked = await desk({ action: "check_in", guestId: "g-ann" }, "admin2");
+      expect(checked.data.demo).toBe(false);
+      expect(await rows(env.DB, "SELECT guest_id, demo FROM check_ins")).toEqual([{ guest_id: "g-ann", demo: 0 }]);
+      expect((await desk({ action: "set_live", live: false })).data).toEqual({ demo: true });
+      // The demo desk doesn't show the real check-in.
+      expect((await search("ann lee")).match).toMatchObject({ id: "g-ann", checkedInAt: null });
+      const modes = await rows(env.DB, "SELECT user_id, props FROM events WHERE type = 'check_in_mode' ORDER BY id");
+      expect(modes).toEqual([
+        { user_id: "admin1", props: JSON.stringify({ demo: false }) },
+        { user_id: "admin1", props: JSON.stringify({ demo: true }) },
+      ]);
+    });
+
+    it("adds a live walk-in to Luma, but not if the switch changed since the admin looked", async () => {
+      await desk({ action: "set_live", live: true });
+      const stale = await desk({ action: "walk_in", name: "Late Comer", email: "late@example.com", live: false });
+      expect(stale.status).toBe(400);
+      expect(stale.data).toMatchObject({ demo: false, error: expect.stringContaining("just turned live check-in on") });
+      expect(calls.added).toEqual([]);
+
+      const added = await desk({ action: "walk_in", name: "Late Comer", email: "late@example.com", live: true });
+      expect(added.data).toMatchObject({ registered: false, demo: false, guest: { name: "Late Comer", checkedInHere: true } });
+      expect(calls.added).toEqual([{ email: "late@example.com", name: "Late Comer" }]);
+    });
+
+    it("is for admins only", async () => {
+      expect((await desk({ action: "set_live", live: true }, "attendee")).status).toBe(403);
     });
   });
 

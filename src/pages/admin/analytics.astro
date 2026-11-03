@@ -20,7 +20,7 @@ if (!admin) Astro.response.status = signedIn ? 403 : 401;
 
 const requested = Astro.url.searchParams.get("range");
 const range: Range = RANGES.some((r) => r.value === requested) ? (requested as Range) : "7d";
-const demo = isDemo();
+const demo = admin ? await isDemo() : true;
 const data = admin ? await getInsights(env.DB, range, demo) : null;
 
 const n = (value: number) => value.toLocaleString("en-US");

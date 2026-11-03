@@ -1,6 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "tech-seo-connect-app",
+  // Production: Techseoconnect@gmail.com's Account, which also runs the main
+  // site (the tech-seo-connect Worker on techseoconnect.com and www).
+  "account_id": "cba872330be0ac765a1538c1dd71607b",
   // Custom entry: routes /mcp to the MCP server, everything else to Astro,
   // and runs the schedule sync and the check-in guest list on the crons below.
   "main": "./src/worker.ts",
@@ -27,13 +30,14 @@
   "vars": {
     // The main site's homepage carries the schedule (see src/lib/schedule-parse.ts).
     "SCHEDULE_SOURCE_URL": "https://www.techseoconnect.com/",
-    // Who can see /analytics: comma-separated, verified Clerk email addresses.
-    "ORGANIZER_EMAILS": "jroakes@gmail.com",
-    // Guest check-in (/admin/check-in): the conference's Luma event, and demo
-    // mode, where check-ins and walk-ins are saved only in this app and
-    // nothing is sent to Luma. Set it to "false" to add walk-ins to Luma.
+    // Organizers, who are always admins: comma-separated, verified Clerk email addresses.
+    "ORGANIZER_EMAILS": "jroakes@gmail.com,matthewgkay@gmail.com,patrickstox@gmail.com",
+    // Guest check-in (/admin/check-in): the conference's Luma event, and
+    // whether it starts in demo mode, where check-ins and walk-ins are saved
+    // only in this app and nothing is sent to Luma. The desk's live switch
+    // changes it for every desk.
     "LUMA_EVENT_ID": "evt-MaWa34aN1dC2Qal",
-    "CHECK_IN_DEMO": "true"
+    "CHECK_IN_DEMO": "false"
   },
   "observability": {
     "enabled": true

@@ -1,0 +1,77 @@
+---
+// The app's terms of service.
+import Layout from "@/layouts/Layout.astro";
+import { event } from "@/data/event";
+
+export const prerender = true;
+
+const updated = "November 3, 2026";
+const mail = `mailto:${event.contactEmail}`;
+---
+
+<Layout title="Terms of Service" description={`The terms for using the ${event.name} conference app.`}>
+  <article class="prose prose-sm mx-auto max-w-3xl px-4 py-8 text-foreground sm:prose-base prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-primary" data-testid="page-terms">
+    <h1>Terms of Service</h1>
+    <p class="text-muted-foreground">Last updated {updated}</p>
+
+    <p>
+      These terms cover the {event.name} conference app at <a href={event.appUrl}>app.techseoconnect.com</a> ("the app"), run by {event.name} ("we"). By using
+      the app you agree to them. How the app uses your information is in the <a href="/privacy">Privacy Policy</a>.
+    </p>
+
+    <h2>The app</h2>
+    <p>
+      The app is a free companion for the {event.name} conference in {event.city}, {event.dateRange}: the schedule, places to eat, drink and stay nearby, sponsors,
+      a list of the talks and places you've saved, and Meet, for finding attendees who share your interests. The schedule, times and places can change; if
+      something matters, check it with the conference or the place itself. Listing a place isn't an endorsement of it.
+    </p>
+
+    <h2>Your account</h2>
+    <p>
+      You can sign in with Google or your email address. Keep your account to yourself, and give your real name. You're responsible for what's done with your
+      account, including by an AI assistant you connect to it.
+    </p>
+
+    <h2>Meet</h2>
+    <p>
+      Meet is for attendees to find each other and meet up at the conference. If you join, the name, title, topics, LinkedIn link and profile photo you share are
+      shown to other attendees on Meet, and you allow us to store and show them for that purpose. Your topics can't be changed once saved. When you use Meet:
+    </p>
+    <ul>
+      <li>Contact people only to meet up or follow up about the conference.</li>
+      <li>Don't collect, copy, export or sell other attendees' details, or use them for marketing or sales outreach.</li>
+      <li>Don't spam, harass or impersonate anyone.</li>
+    </ul>
+    <p>The conference's code of conduct applies in the app as it does at the event.</p>
+
+    <h2>AI assistants</h2>
+    <p>
+      If you connect an AI assistant to the app, it acts for you: it can read the schedule, places and sponsors, change your saved talks and places, and, if you've
+      joined Meet, see the attendees who share your topics. The same rules apply to what it does. The assistant's provider has its own terms.
+    </p>
+
+    <h2>Other services</h2>
+    <p>
+      The app links to other services, such as Google Maps, Apple Maps, LinkedIn, Luma and sponsors' websites. Their own terms apply when you use them, and we're
+      not responsible for them.
+    </p>
+
+    <h2>Ending access</h2>
+    <p>
+      We can remove Meet answers, and block or delete accounts, that break these terms or the code of conduct. You can stop using the app at any time and ask us to
+      delete your account.
+    </p>
+
+    <h2>No warranty</h2>
+    <p>
+      The app is provided as it is, without warranties of any kind. We may change it, or stop running it, at any time. To the extent the law allows, we aren't
+      liable for any loss that comes from using the app or relying on what it shows.
+    </p>
+
+    <h2>Changes</h2>
+    <p>If these terms change, we'll update them here and change the date at the top. Using the app after a change means you accept it.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about these terms: <a href={mail}>{event.contactEmail}</a>.</p>
+  </article>
+</Layout>

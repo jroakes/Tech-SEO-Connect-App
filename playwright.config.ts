@@ -31,7 +31,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: `npx wrangler d1 migrations apply DB --local --persist-to .wrangler/e2e && FAKE_AUTH=1 npx astro build && npx wrangler dev --port ${PORT} --persist-to .wrangler/e2e --var LUMA_API_URL:http://127.0.0.1:${FAKE_LUMA_PORT}`,
+      command: `npx wrangler d1 migrations apply DB --local --persist-to .wrangler/e2e && FAKE_AUTH=1 npx astro build && npx wrangler dev --port ${PORT} --persist-to .wrangler/e2e --var LUMA_API_URL:http://127.0.0.1:${FAKE_LUMA_PORT} --var CHECK_IN_DEMO:true`,
       url: `http://localhost:${PORT}/schedule`,
       timeout: 180_000,
       reuseExistingServer: !process.env.CI,

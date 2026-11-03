@@ -40,9 +40,11 @@ const inputClass =
 type Shown = Pick<SearchResult, "match" | "options"> & { query: string; scanned?: boolean };
 type WalkIn = { name: string; email: string; similar?: GuestResult[] };
 
-async function post<T>(body: object): Promise<T> {
+/** Calls the desk's API. Every answer says whether the desk is in demo mode, which `onDemo` hears. */
+async function post<T>(body: object, onDemo: (demo: boolean) => void): Promise<T> {
   const res = await fetch("/api/admin/check-in", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-  const data = (await res.json().catch(() => ({}))) as T & { error?: string };
+  const data = (await res.json().catch(() => ({}))) as T & { error?: string; demo?: boolean };
+  if (typeof data.demo === "boolean") onDemo(data.demo);
   if (!res.ok) throw new Error(data.error ?? "That didn't work. Please try again.");
   return data;
 }
@@ -111,7 +113,11 @@ function FreshnessLine({ syncedAt, guestCount }: Freshness) {
 }
 
 /** The check-in desk: type a name or email or scan a ticket, check the guest in, or add a walk-in. */
-export default function CheckIn({ demo, freshness: initialFreshness }: { demo: boolean; freshness: Freshness | null }) {
+export default function CheckIn({ demo: initialDemo, freshness: initialFreshness }: { demo: boolean; freshness: Freshness | null }) {
+  // Demo mode, from the live switch: the same for every desk, so it's kept up
+  // to date from every answer.
+  const [demo, setDemo] = useState(initialDemo);
+  const call = <T,>(body: object) => post<T>(body, setDemo);
   const [query, setQuery] = useState("");
   const [shown, setShown] = useState<Shown | null>(null);
   const [showAll, setShowAll] = useState(false);
@@ -149,6 +155,16 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
     }
   };
 
+  const toggleLive = async () => {
+    const live = demo;
+    const sure = confirm(
+      live
+        ? "Turn on live check-in for every desk? Check-ins will count for real, and walk-ins will be added to Luma, which emails them a ticket."
+        : "Turn off live check-in for every desk? Check-ins and walk-ins will be saved in this app only.",
+    );
+    if (sure) await run("mode", () => call({ action: "set_live", live }));
+  };
+
   const walkInFrom = (typed: string): WalkIn => (typed.includes("@") ? { name: "", email: typed } : { name: typed, email: "" });
 
   // Clear the last results at once, so they're never mistaken for the next.
@@ -167,7 +183,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
     if (!typed || busy) return;
     setScanning(false);
     clear();
-    const result = await run("search", () => post<SearchResult>({ action: "search", query: typed }));
+    const result = await run("search", () => call<SearchResult>({ action: "search", query: typed }));
     if (!result) return;
     setFreshness({ syncedAt: result.syncedAt, guestCount: result.guestCount });
     setShown({ match: result.match, options: result.options, query: typed });
@@ -184,7 +200,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
   // The guest on the scanned ticket, shown to check in like a search's one match.
   const scanned = async (code: string) => {
     setScanning(false);
-    const result = await run("scan", () => post<SearchResult>({ action: "scan", code }));
+    const result = await run("scan", () => call<SearchResult>({ action: "scan", code }));
     if (!result?.match) return;
     setFreshness({ syncedAt: result.syncedAt, guestCount: result.guestCount });
     setShown({ match: result.match, options: [], query: "", scanned: true });
@@ -192,7 +208,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
 
   const checkIn = async (guest: GuestResult) => {
     const typed = query.trim();
-    const data = await run(guest.id, () => post<{ guest: GuestResult }>({ action: "check_in", guestId: guest.id }));
+    const data = await run(guest.id, () => call<{ guest: GuestResult }>({ action: "check_in", guestId: guest.id }));
     if (!data) return;
     if (walkIn?.similar?.some((g) => g.id === guest.id)) {
       // A walk-in turned out to be registered after all.
@@ -203,7 +219,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
   };
 
   const undo = async (guest: GuestResult) => {
-    const data = await run(guest.id, () => post<{ guest: GuestResult | null }>({ action: "undo", guestId: guest.id }));
+    const data = await run(guest.id, () => call<{ guest: GuestResult | null }>({ action: "undo", guestId: guest.id }));
     if (!data) return;
     setLastCheckIn(null);
     // Just checked in as the search's one match: show who else it could have
@@ -214,7 +230,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
       setShowAll(false);
       setQuery(typed);
       input.current?.focus();
-      const result = await run("search", () => post<SearchResult>({ action: "search", query: typed, single: false, exclude: guest.id }));
+      const result = await run("search", () => call<SearchResult>({ action: "search", query: typed, single: false, exclude: guest.id }));
       if (result) setShown({ match: result.match, options: result.options, query: typed });
       if (result && !result.options.length) setWalkIn(walkInFrom(typed));
       return;
@@ -228,7 +244,7 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
     if (!walkIn) return;
     const { name, email } = walkIn;
     const typed = query.trim();
-    const data = await run("walk_in", () => post<WalkInResult>({ action: "walk_in", name, email, newPerson }));
+    const data = await run("walk_in", () => call<WalkInResult>({ action: "walk_in", name, email, newPerson, live: !demo }));
     if (!data) return;
     setFreshness({ syncedAt: data.syncedAt, guestCount: data.guestCount });
     if ("similar" in data) return setWalkIn({ name, email, similar: data.similar });
@@ -253,11 +269,38 @@ export default function CheckIn({ demo, freshness: initialFreshness }: { demo: b
 
   return (
     <div className="max-w-3xl">
-      {demo && (
-        <p className="mb-4 rounded-md border border-border bg-muted/50 px-4 py-3 text-sm text-foreground" data-testid="text-demo-mode">
-          <span className="font-semibold">Demo mode.</span> Check-ins and walk-ins are saved in this app only. Nothing is sent to Luma.
+      <div
+        className={`mb-4 flex items-start justify-between gap-4 rounded-md border px-4 py-3 ${demo ? "border-border bg-muted/50" : "border-primary/50 bg-primary/5"}`}
+        data-testid="panel-check-in-mode"
+      >
+        <p className="text-sm text-foreground" data-testid={demo ? "text-demo-mode" : "text-live-mode"}>
+          {demo ? (
+            <>
+              <span className="font-semibold">Demo mode.</span> Check-ins and walk-ins are saved in this app only. Nothing is sent to Luma.
+            </>
+          ) : (
+            <>
+              <span className="font-semibold">Live check-in.</span> Check-ins count for real, and walk-ins are added to Luma, which emails them a ticket.
+            </>
+          )}
+          <span className="mt-1 block text-xs text-muted-foreground">The switch is the same for every check-in desk.</span>
         </p>
-      )}
+        <label className="flex min-h-11 shrink-0 cursor-pointer items-center gap-2 text-sm font-medium text-foreground">
+          Live
+          <button
+            type="button"
+            role="switch"
+            aria-checked={!demo}
+            aria-label="Live check-in"
+            disabled={busy !== null}
+            onClick={toggleLive}
+            className={`relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors disabled:opacity-50 ${demo ? "bg-input" : "bg-primary"}`}
+            data-testid="switch-live-check-in"
+          >
+            <span className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${demo ? "translate-x-1" : "translate-x-6"}`} />
+          </button>
+        </label>
+      </div>
 
       <form onSubmit={find} className="flex gap-2" role="search">
         <input

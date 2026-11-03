@@ -110,9 +110,28 @@ test("two admins at the check-in desk: name search, check in, undo, and a ticket
     return row;
   };
 
-  // Ada finds Ann by name and checks her in.
+  // Demo mode, unless an earlier run left the live switch on (the tests' D1 keeps it).
+  const live = (page: Page) => page.getByTestId("switch-live-check-in");
+  const flip = async (page: Page) => {
+    page.once("dialog", (dialog) => dialog.accept());
+    await live(page).click();
+  };
   await open(ada, "/admin/check-in");
+  if ((await live(ada).getAttribute("aria-checked")) === "true") await flip(ada);
   await expect(ada.getByTestId("text-demo-mode")).toBeVisible();
+
+  // Ada turns live check-in on; Max's desk shows it on its next answer, and Ada turns it off again.
+  await flip(ada);
+  await expect(ada.getByTestId("text-live-mode")).toBeVisible();
+  await expect(live(ada)).toHaveAttribute("aria-checked", "true");
+  await open(max, "/admin/check-in");
+  await expect(max.getByTestId("text-live-mode")).toBeVisible();
+  await flip(ada);
+  await expect(ada.getByTestId("text-demo-mode")).toBeVisible();
+  await find(max, "Dev Patel");
+  await expect(max.getByTestId("text-demo-mode")).toBeVisible();
+
+  // Ada finds Ann by name and checks her in.
   await find(ada, "Ann Lee");
   const ann = await fresh(ada, "g-ann");
   await ann.getByTestId("button-check-in-g-ann").click();

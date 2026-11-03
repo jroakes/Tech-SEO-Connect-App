@@ -74,6 +74,13 @@ const fullTitle = title ? `${title} | ${event.name}` : `${event.name} | ${event.
       <main>
         <slot />
       </main>
+      <footer class="border-t border-border">
+        <div class="mx-auto flex max-w-screen-xl flex-wrap items-center gap-x-5 gap-y-1 px-4 py-5 text-xs text-muted-foreground">
+          <span>© 2026 {event.name}</span>
+          <a href="/privacy" class="hover:text-foreground hover:underline" data-testid="link-privacy">Privacy Policy</a>
+          <a href="/terms" class="hover:text-foreground hover:underline" data-testid="link-terms">Terms of Service</a>
+        </div>
+      </footer>
     </div>
 
     <script is:inline>

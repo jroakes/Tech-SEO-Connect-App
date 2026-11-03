@@ -1,0 +1,108 @@
+---
+// The app's privacy policy. Keep it in step with what the app collects: see
+// the event types in the README and the tables in migrations/0001_init.sql.
+import Layout from "@/layouts/Layout.astro";
+import { event } from "@/data/event";
+
+export const prerender = true;
+
+const updated = "November 3, 2026";
+const mail = `mailto:${event.contactEmail}`;
+---
+
+<Layout title="Privacy Policy" description={`How the ${event.name} conference app uses your information.`}>
+  <article class="prose prose-sm mx-auto max-w-3xl px-4 py-8 text-foreground sm:prose-base prose-headings:text-foreground prose-p:text-foreground prose-li:text-foreground prose-strong:text-foreground prose-a:text-primary" data-testid="page-privacy">
+    <h1>Privacy Policy</h1>
+    <p class="text-muted-foreground">Last updated {updated}</p>
+
+    <p>
+      This policy covers the {event.name} conference app at <a href={event.appUrl}>app.techseoconnect.com</a> ("the app"), run by {event.name} ("we").
+      It explains what the app collects, why, who it's shared with, and the choices you have. The conference website, <a href={event.website}>techseoconnect.com</a>,
+      and ticketing through Luma have their own policies.
+    </p>
+
+    <h2>What the app collects</h2>
+
+    <h3>If you sign in</h3>
+    <p>
+      Sign-in is optional and is handled by Clerk, with Google or your email address. We receive your name, email address, profile photo and when you signed up
+      and last signed in. You can use the schedule, places and sponsors without signing in.
+    </p>
+
+    <h3>Saved talks and places</h3>
+    <p>
+      Talks and places you save with the heart are kept in your browser. If you're signed in, they're also kept with your account, so they're on every device you
+      sign in on.
+    </p>
+
+    <h3>Meet</h3>
+    <p>
+      Meet is optional. If you join, you give a name, a title, up to three topics and, if you like, a link to your LinkedIn profile. Your answers and your profile
+      photo are shown to other signed-in attendees who have joined Meet, so people who share your topics can find you and message you on LinkedIn. Your topics can't
+      be changed once saved. If you leave Meet, your answers are deleted and no longer shown; we keep only which topics you picked, so they stay the same if you
+      join again.
+    </p>
+
+    <h3>How the app is used</h3>
+    <p>
+      The app keeps a log of what happens in it, so the organizers can see which talks and places are popular and how the app is used: the pages you open and the
+      things you tap (saving, directions, opening a place or a Meet topic, tapping a LinkedIn link), with the time, a random ID kept in your browser to tell devices
+      apart, and your account ID if you're signed in. The same taps, and the pages you open, are also sent to Google Analytics, which uses cookies to count visits.
+      See <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener">how Google uses this information</a>.
+    </p>
+
+    <h3>Check-in at the door</h3>
+    <p>
+      To check you in, organizers find you on the conference's Luma guest list (your name, email address and ticket) by name, by email or by scanning the QR code on
+      your ticket, and the app records when you were checked in and by whom. To find the right guest, what the organizer typed and the names and email addresses of
+      likely matches are sent to an AI service (Anthropic's Claude through OpenRouter, or Cloudflare Workers AI). If you
+      register at the door, your name and email are added to the event in Luma, which emails you a ticket.
+    </p>
+
+    <h3>AI assistants</h3>
+    <p>
+      You can connect an AI assistant, such as Claude or ChatGPT, to the app. Once you sign in through the assistant, it can read the schedule, places and sponsors,
+      read and change your saved talks and places, and, if you've joined Meet, see your topics and the attendees who share them. We log which of the app's tools the
+      assistant used and what it searched for. What you type into the assistant is covered by its own provider's policy.
+    </p>
+
+    <h2>Who it's shared with</h2>
+    <p>We don't sell your information. It's shared only with the services that run the app, for that purpose:</p>
+    <ul>
+      <li><strong>Cloudflare</strong> hosts the app and its database, and runs Workers AI.</li>
+      <li><strong>Clerk</strong> handles sign-in and keeps your account.</li>
+      <li><strong>Luma</strong> holds the conference's registrations and tickets.</li>
+      <li><strong>Google</strong> provides Google Analytics and the app's fonts.</li>
+      <li><strong>OpenRouter</strong> and <strong>Anthropic</strong> match names at the check-in desk.</li>
+      <li><strong>MapTiler</strong> provides the map, from OpenStreetMap data.</li>
+    </ul>
+    <p>
+      The conference organizers can see the list of accounts (names, email addresses, when people joined and last signed in, how many talks and places they've saved
+      and whether they're on Meet), check-ins, and the app's usage. Directions open in Google Maps or Apple Maps, and LinkedIn links open LinkedIn; those services
+      have their own policies.
+    </p>
+
+    <h2>How long it's kept</h2>
+    <p>
+      We keep this information through the conference and may use the usage log, without your account details, to plan future events. You can ask us to delete your
+      account at any time: we delete it with your saved talks and places and your Meet answers, and remove your account ID from the usage log.
+    </p>
+
+    <h2>Your choices</h2>
+    <ul>
+      <li>Use the app without signing in.</li>
+      <li>Leave Meet whenever you like, from the Meet page.</li>
+      <li>Block or clear cookies and site data in your browser.</li>
+      <li>Email us to see, correct or delete your information.</li>
+    </ul>
+
+    <h2>Children</h2>
+    <p>The app is for conference attendees and isn't meant for children under 16.</p>
+
+    <h2>Changes</h2>
+    <p>If this policy changes, we'll update it here and change the date at the top.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about this policy or your information: <a href={mail}>{event.contactEmail}</a>.</p>
+  </article>
+</Layout>

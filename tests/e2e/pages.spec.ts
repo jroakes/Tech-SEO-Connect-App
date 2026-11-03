@@ -11,6 +11,16 @@ test("shows every sponsor's logo", async ({ page }) => {
   }
 });
 
+test("every page links to the privacy policy and terms of service", async ({ page }) => {
+  await open(page, "/schedule");
+  await page.getByTestId("link-privacy").click();
+  await expect(page).toHaveURL(/\/privacy$/);
+  await expect(page.getByRole("heading", { name: "Privacy Policy", level: 1 })).toBeVisible();
+  await page.getByTestId("link-terms").click();
+  await expect(page).toHaveURL(/\/terms$/);
+  await expect(page.getByRole("heading", { name: "Terms of Service", level: 1 })).toBeVisible();
+});
+
 test("Meet asks visitors to sign in", async ({ page }) => {
   await open(page, "/meet");
   await expect(page.getByTestId("panel-meet-sign-in")).toBeVisible();
