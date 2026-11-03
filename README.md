@@ -66,6 +66,8 @@ src/lib/mcp-auth.ts    MCP sign-in: OAuth discovery and Clerk token checks
 src/lib/insights.ts    Queries behind the analytics page
 src/lib/matching.ts    Topic counts, people by topic and LinkedIn links (pure, tested)
 src/lib/check-in.ts    Luma guest list, the AI's judgment of matches, check-ins
+tests/integration/     API, MCP, cron and analytics tests in workerd (npm test)
+tests/e2e/             Browser tests (npm run test:e2e)
 src/lib/guest-match.ts Likely guests for a typed name or email (pure, tested)
 src/lib/topic-layout.ts  Where the Meet topic circles go (d3-force)
 src/lib/clerk.ts       Clerk Backend API client and who's an admin
@@ -112,7 +114,8 @@ check-in can't search.
 | `npm run dev` | Astro dev server running in workerd, with local D1 |
 | `npm run build` | Generate Worker types and build to `dist/` |
 | `npm run preview` | Build, then serve the built Worker locally with Wrangler |
-| `npm test` | Unit tests (schedule parser, Meet matching, check-in guest matching) |
+| `npm test` | Unit and integration tests (see Testing) |
+| `npm run test:e2e` | Browser tests (see Testing) |
 | `npm run check` | Type-check Astro and TypeScript files |
 | `npm run import:places` | Rebuild `src/data/places.json` from `content/` |
 | `npm run db:migrate:local` / `db:migrate:remote` | Apply D1 migrations |
@@ -123,6 +126,16 @@ To run the schedule sync locally, start `npx wrangler dev --test-scheduled`
 after a build, then open
 `http://localhost:8787/cdn-cgi/handler/scheduled?cron=0+*+*+*+*` (or
 `?cron=*/10+*+1-7+11+*` for the check-in guest list).
+
+## Testing
+
+| Command | What it runs |
+|---|---|
+| `npm test` | **Unit tests** (`src/**/*.test.ts`): the schedule parser, Meet matching and check-in's name matching. **Integration tests** (`tests/integration`), run inside workerd (Cloudflare's runtime) against a local D1 database, with Clerk, Luma and the AI stubbed: the schedule sync from the main site, My Conference saves, the event log, Meet (joining, answers, leaving, who sees whom), check-in (search, the AI, livestream filtering, newest registrations, check in and undo, walk-ins), admin (the event export, who's an admin), the analytics numbers, and every MCP tool. About 2 seconds. |
+| `npm run test:e2e` | **Browser tests** (`tests/e2e`), on a phone and a desktop: the schedule, saving talks and places and removing them in My Conference, searching and filtering places, directions, the map's pins, every sponsor's logo, the For AI bots dialog, locked admin pages and APIs, redirects, the 404 page, and that each page logs its events. They build the app and run it with Wrangler on port 8788, in the installed Google Chrome with a fresh profile. About 30 seconds after the build. |
+| `npm run test:all` | Both. |
+
+Pages that need a real Clerk sign-in (Meet, admin, analytics and check-in once signed in) can't be clicked through in the browser tests; their APIs are covered by the integration tests.
 
 ## Deploying
 
