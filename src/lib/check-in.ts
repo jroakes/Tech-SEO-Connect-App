@@ -6,6 +6,7 @@
 // guest in, so real check-ins are kept here too.
 import { env, waitUntil } from "cloudflare:workers";
 import { z } from "zod";
+import { insertEvents } from "./db";
 import { candidates, exactMatch, livestreamOnly, sharesName, ticketKey, words, type Guest } from "./guest-match";
 
 const LUMA = "https://public-api.luma.com";
@@ -131,6 +132,19 @@ interface GuestList {
   syncedAt: number;
 }
 
+// Check-ins, undos and the guest list's size go in the event log, which the
+// analytics page reads. A failed log never fails the check-in.
+const log = (type: string, props: Record<string, unknown>, userId: string | null = null) =>
+  insertEvents(env.DB, [{ type, ts: Date.now(), userId, path: "/admin/check-in", props }]).catch((err) => console.error(`Couldn't log ${type}`, err));
+
+/** Logs how many guests are on the list when that's changed since it was last logged. */
+async function logGuestCount(count: number) {
+  const last = await env.DB.prepare("SELECT json_extract(props, '$.guests') AS n FROM events WHERE type = 'guest_list_sync' ORDER BY id DESC LIMIT 1")
+    .first<{ n: number }>()
+    .catch(() => null);
+  if (last?.n !== count) await log("guest_list_sync", { guests: count });
+}
+
 let syncing: Promise<GuestList> | null = null;
 
 /**
@@ -146,6 +160,7 @@ export function refreshGuestList(): Promise<GuestList> {
       )
         .bind(env.LUMA_EVENT_ID, JSON.stringify(guests), syncedAt)
         .run();
+      await logGuestCount(guests.length);
       return { guests, syncedAt };
     })
     .finally(() => {
@@ -192,9 +207,10 @@ async function addNewest(list: GuestList, newest: Guest[]): Promise<GuestList> {
   if (!changed.length) return list;
   for (const g of changed) byId.set(g.id, g);
   const guests = [...byId.values()];
-  await env.DB.prepare("UPDATE guest_list SET guests = ? WHERE event_id = ? AND synced_at = ?")
+  const { meta } = await env.DB.prepare("UPDATE guest_list SET guests = ? WHERE event_id = ? AND synced_at = ?")
     .bind(JSON.stringify(guests), env.LUMA_EVENT_ID, list.syncedAt)
     .run();
+  if (meta.changes) await logGuestCount(guests.length);
   return { guests, syncedAt: list.syncedAt };
 }
 
@@ -265,12 +281,13 @@ async function withNewest(d: Desk): Promise<Desk> {
 
 /** Saves a check-in (once) and returns when it happened. */
 async function record(guest: Pick<Guest, "id" | "name" | "email">, adminId: string, walkIn = false): Promise<string> {
-  const [, saved] = await env.DB.batch<{ checked_in_at: string }>([
+  const [inserted, saved] = await env.DB.batch<{ checked_in_at: string }>([
     env.DB.prepare(
       "INSERT INTO check_ins (guest_id, demo, name, email, walk_in, checked_in_by) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (guest_id, demo) DO NOTHING",
     ).bind(guest.id, demoFlag(), guest.name, guest.email || null, walkIn ? 1 : 0, adminId),
     env.DB.prepare("SELECT checked_in_at FROM check_ins WHERE guest_id = ? AND demo = ?").bind(guest.id, demoFlag()),
   ]);
+  if (inserted.meta.changes) await log("check_in", { guest_id: guest.id, demo: isDemo(), walk_in: walkIn }, adminId);
   return saved.results[0].checked_in_at;
 }
 
@@ -442,14 +459,17 @@ export async function checkIn(guestId: string, adminId: string): Promise<GuestRe
  * Takes back a check-in made here (one made in Luma stays). A walk-in's record
  * here goes too; in live mode Luma keeps their registration.
  */
-export async function undoCheckIn(guestId: string): Promise<GuestResult | null> {
+export async function undoCheckIn(guestId: string, adminId: string): Promise<GuestResult | null> {
   const d = await openDesk();
   const email = d.guests.find((g) => g.id === guestId)?.email.toLowerCase() ?? "";
   // A walk-in's check-in is saved under its walkin- ID, even once Luma lists them.
   const undone = (r: CheckInRow) => r.guest_id === guestId || (r.walk_in === 1 && !!email && r.email?.toLowerCase() === email);
-  await env.DB.prepare("DELETE FROM check_ins WHERE demo = ? AND (guest_id = ? OR (walk_in = 1 AND ? != '' AND lower(email) = ?))")
+  const { results: removed } = await env.DB.prepare(
+    "DELETE FROM check_ins WHERE demo = ? AND (guest_id = ? OR (walk_in = 1 AND ? != '' AND lower(email) = ?)) RETURNING guest_id, walk_in",
+  )
     .bind(demoFlag(), guestId, email, email)
-    .run();
+    .all<{ guest_id: string; walk_in: number }>();
+  for (const r of removed) await log("check_in_undo", { guest_id: r.guest_id, demo: isDemo(), walk_in: r.walk_in === 1 }, adminId);
   const after = deskFrom(d.list, d.rows.filter((r) => !undone(r)));
   const guest = after.guests.find((g) => g.id === guestId);
   return guest ? after.show(guest) : null;

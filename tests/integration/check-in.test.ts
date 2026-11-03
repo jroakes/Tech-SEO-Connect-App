@@ -2,6 +2,7 @@
 import { env } from "cloudflare:workers";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST } from "@/pages/api/admin/check-in";
+import { refreshGuestList } from "@/lib/check-in";
 import { call, rows } from "./helpers";
 
 vi.mock("@/lib/clerk", () => import("./fake-clerk"));
@@ -97,6 +98,14 @@ beforeEach(() => {
 const desk = (body: Record<string, unknown>, user = "admin1") => call(POST, { method: "POST", user, body });
 const search = async (query: string, single?: boolean) => (await desk({ action: "search", query, ...(single === false ? { single } : {}) })).data;
 const names = (list: { name: string }[]) => list.map((g) => g.name);
+// What the desk logged for the analytics page.
+const logged = () => rows(env.DB, "SELECT type, user_id, path, props FROM events WHERE type LIKE 'check_in%' ORDER BY id");
+const checkInEvent = (type: string, guestId: string, walkIn = false) => ({
+  type,
+  user_id: "admin1",
+  path: "/admin/check-in",
+  props: JSON.stringify({ guest_id: guestId, demo: true, walk_in: walkIn }),
+});
 
 describe("check-in", () => {
   it("is for admins only", async () => {
@@ -183,10 +192,24 @@ describe("check-in", () => {
     expect(again.data.guest.checkedInAt).toBe(first.data.guest.checkedInAt);
     expect(await rows(env.DB, "SELECT guest_id, demo, checked_in_by FROM check_ins")).toEqual([{ guest_id: "g-ann", demo: 1, checked_in_by: "admin1" }]);
     expect((await search("ann lee")).match.checkedInAt).toBe(first.data.guest.checkedInAt);
+    expect(await logged()).toEqual([checkInEvent("check_in", "g-ann")]);
 
     const undone = await desk({ action: "undo", guestId: "g-ann" });
     expect(undone.data.guest).toMatchObject({ checkedInAt: null, checkedInHere: false });
     expect(await rows(env.DB, "SELECT * FROM check_ins")).toEqual([]);
+    expect(await logged()).toEqual([checkInEvent("check_in", "g-ann"), checkInEvent("check_in_undo", "g-ann")]);
+  });
+
+  it("logs the guest list's size when a sync changes it", async () => {
+    await search("ann lee"); // the first search fetches the list
+    const sizes = async () => (await rows<{ guests: number }>(env.DB, "SELECT json_extract(props, '$.guests') AS guests FROM events WHERE type = 'guest_list_sync' ORDER BY id")).map((r) => r.guests);
+    const [size] = await sizes();
+    expect(size).toBeGreaterThan(10);
+    await refreshGuestList();
+    expect(await sizes()).toEqual([size]);
+    luma.push(guest("g-late", "Late", "Comer"));
+    await refreshGuestList();
+    expect(await sizes()).toEqual([size, size + 1]);
   });
 
   it("refuses a guest who isn't on the list", async () => {
@@ -252,6 +275,8 @@ describe("check-in", () => {
       // Undo removes a demo walk-in altogether.
       expect((await desk({ action: "undo", guestId: added.data.guest.id })).data.guest).toBeNull();
       expect((await search("walk in")).match).toBeNull();
+      const id = added.data.guest.id;
+      expect(await logged()).toEqual([checkInEvent("check_in", id, true), checkInEvent("check_in_undo", id, true)]);
     });
 
     it("shows the registered guest for an email already on the list", async () => {

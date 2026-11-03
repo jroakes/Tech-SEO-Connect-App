@@ -312,8 +312,12 @@ the size of the guest list, whose share leaves out walk-ins; demo check-ins
 in demo mode), the places people
 go, the most-saved talks, and the AI assistant (requests by tool, and the
 searches and Meet topics people asked about). Hours and days are Eastern,
-including across the change to and from daylight saving time. Saves are
-`session_save` and `place_save` events in the range. **Download every
+including across the change to and from daylight saving time. Every number
+comes from the `events` table, the app's event log, so it can be worked out
+again from the download: saves are `session_save` and `place_save` events,
+who's on Meet now is everyone whose last Meet event is a join or a change of
+answers (not a leave, or an admin's block or delete), and check-ins are each
+guest's last check-in event unless it was undone. **Download every
 event** links there give the whole `events` table as CSV or JSON
 (`/api/admin/events?format=csv|json`, admins only) for another tool.
 
@@ -322,8 +326,11 @@ signed in), `path` and JSON `props`. Event types: `page_view`, `place_view`,
 `map_button_click`, `session_save`, `session_unsave`, `place_save`,
 `place_unsave`, `mcp_modal_open`, `mcp_url_copy`, `mcp_tool_call`,
 `match_join`, `match_update`, `match_leave` (logged by the server when someone
-joins Meet, changes their answers or leaves), `match_topic_open`,
-`match_linkedin_click`, `admin_action`. For example:
+joins Meet, changes their answers or leaves, with their topics and whether
+they gave a LinkedIn), `match_topic_open`, `match_linkedin_click`,
+`admin_action`, `check_in` and `check_in_undo` (logged by the check-in desk,
+with `guest_id`, `demo` and `walk_in`), and `guest_list_sync` (the guest
+list's size, logged when a sync with Luma changes it). For example:
 
 ```bash
 npx wrangler d1 execute DB --remote --command \

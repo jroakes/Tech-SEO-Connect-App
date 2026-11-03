@@ -1,6 +1,6 @@
-// Queries for the organizers' analytics page (src/pages/admin/analytics.astro),
-// over the events table, the saved talks and places, Meet profiles and
-// check-ins.
+// Queries for the organizers' analytics page (src/pages/admin/analytics.astro).
+// Every number comes from the events table, the app's event log, so it can be
+// worked out again from the event download (/api/admin/events).
 import { TOPICS } from "../data/topics";
 import { fold } from "./utils";
 
@@ -59,6 +59,12 @@ const NOT_ADMIN = "(path IS NULL OR path NOT LIKE '/admin%')";
 // Page views by attendees.
 const ATTENDEE_VIEW = `type = 'page_view' AND ${NOT_ADMIN}`;
 
+const tally = (items: string[]) => {
+  const counts = new Map<string, number>();
+  for (const item of items) counts.set(item, (counts.get(item) ?? 0) + 1);
+  return counts;
+};
+
 // The conference's local date and hour of a moment, e.g. "2026-11-05" and "9 AM".
 const localDate = (d: Date) => d.toLocaleDateString("en-CA", { timeZone: TIME_ZONE });
 const localHour = (d: Date) => d.toLocaleTimeString("en-US", { timeZone: TIME_ZONE, hour: "numeric" });
@@ -79,9 +85,7 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     count(`SELECT COUNT(*) AS n FROM events WHERE ${ATTENDEE_VIEW} AND ts >= ?`, since),
     count(
       `SELECT COUNT(DISTINCT user_id) AS n FROM (
-         SELECT user_id FROM events WHERE user_id IS NOT NULL AND type != 'admin_action' AND ${NOT_ADMIN} AND ts >= ?1
-         UNION SELECT user_id FROM saved_sessions WHERE created_at >= ?1
-         UNION SELECT user_id FROM saved_places WHERE created_at >= ?1)`,
+         SELECT user_id FROM events WHERE user_id IS NOT NULL AND type != 'admin_action' AND ${NOT_ADMIN} AND ts >= ?)`,
       since,
     ),
     ofType("map_button_click"),
@@ -142,9 +146,18 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     .sort((a, b) => b.count - a.count || a.query.localeCompare(b.query))
     .slice(0, 8);
 
-  const [meetPeople, picked, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps, checkedIn, walkIns, guests] = await Promise.all([
-    one<{ people: number; withLinkedin: number }>("SELECT COUNT(*) AS people, COALESCE(SUM(linkedin IS NOT NULL), 0) AS withLinkedin FROM profiles"),
-    all<{ topic: string; n: number }>("SELECT value AS topic, COUNT(*) AS n FROM profiles, json_each(profiles.topics) GROUP BY value"),
+  const [onMeet, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps, checkIns, guestList] = await Promise.all([
+    // Who's on Meet now: everyone whose last Meet event is joining or changing
+    // their answers, rather than leaving or being blocked or deleted by an admin.
+    all<{ props: string }>(
+      `SELECT props FROM (
+         SELECT type, props, ROW_NUMBER() OVER (PARTITION BY who ORDER BY id DESC) AS n FROM (
+           SELECT user_id AS who, id, type, props FROM events WHERE type IN ('match_join', 'match_update', 'match_leave') AND user_id IS NOT NULL
+           UNION ALL
+           SELECT json_extract(props, '$.target_user_id'), id, 'removed', NULL FROM events
+           WHERE type = 'admin_action' AND json_extract(props, '$.action') IN ('block', 'delete')))
+       WHERE n = 1 AND type IN ('match_join', 'match_update')`,
+    ),
     all<{ topic: string; opens: number; taps: number }>(
       `SELECT json_extract(props, '$.topic') AS topic, SUM(type = 'match_topic_open') AS opens, SUM(type = 'match_linkedin_click') AS taps
        FROM events WHERE type IN ('match_topic_open', 'match_linkedin_click') AND ts >= ? GROUP BY topic`,
@@ -155,13 +168,25 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     ofType("match_leave"),
     ofType("match_topic_open"),
     ofType("match_linkedin_click"),
-    count("SELECT COUNT(*) AS n FROM check_ins WHERE demo = ? AND checked_in_at >= ?", demo ? 1 : 0, since),
-    count("SELECT COUNT(*) AS n FROM check_ins WHERE demo = ? AND walk_in = 1 AND checked_in_at >= ?", demo ? 1 : 0, since),
-    count("SELECT json_array_length(guests) AS n FROM guest_list"),
+    // Guests checked in during the range: each guest's last check-in event,
+    // unless it was undone. Demo and real check-ins are kept apart.
+    all<{ walk_in: number }>(
+      `SELECT walk_in FROM (
+         SELECT type, ts, json_extract(props, '$.walk_in') AS walk_in,
+           ROW_NUMBER() OVER (PARTITION BY json_extract(props, '$.guest_id') ORDER BY id DESC) AS n
+         FROM events WHERE type IN ('check_in', 'check_in_undo') AND json_extract(props, '$.demo') = ?)
+       WHERE n = 1 AND type = 'check_in' AND ts >= ?`,
+      demo ? 1 : 0,
+      since,
+    ),
+    // The guest list's size, logged whenever a sync with Luma changes it.
+    one<{ guests: number }>("SELECT json_extract(props, '$.guests') AS guests FROM events WHERE type = 'guest_list_sync' ORDER BY id DESC LIMIT 1"),
   ]);
+  const meetAnswers = onMeet.map((r) => JSON.parse(r.props ?? "{}") as { topics?: string; linkedin?: boolean });
+  const picked = tally(meetAnswers.flatMap((a) => (a.topics ? a.topics.split(",") : [])));
   const meetTopics = TOPICS.map(({ id, label }) => {
     const activity = meetActivity.find((a) => a.topic === id);
-    return { topic: id, label, people: picked.find((p) => p.topic === id)?.n ?? 0, opens: activity?.opens ?? 0, taps: activity?.taps ?? 0 };
+    return { topic: id, label, people: picked.get(id) ?? 0, opens: activity?.opens ?? 0, taps: activity?.taps ?? 0 };
   })
     .filter((t) => t.people || t.opens || t.taps)
     .sort((a, b) => b.people - a.people || b.opens - a.opens || a.label.localeCompare(b.label));
@@ -181,8 +206,8 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     },
     connector: { opened, copied },
     meet: {
-      people: meetPeople?.people ?? 0,
-      withLinkedin: meetPeople?.withLinkedin ?? 0,
+      people: meetAnswers.length,
+      withLinkedin: meetAnswers.filter((a) => a.linkedin).length,
       joins,
       updates,
       leaves,
@@ -190,7 +215,7 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
       linkedinTaps,
       topics: meetTopics,
     },
-    checkIn: { checkedIn, walkIns, guests },
+    checkIn: { checkedIn: checkIns.length, walkIns: checkIns.filter((c) => c.walk_in).length, guests: guestList?.guests ?? 0 },
   };
 }
 

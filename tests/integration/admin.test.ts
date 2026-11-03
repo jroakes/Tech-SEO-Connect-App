@@ -68,7 +68,11 @@ describe("analytics", () => {
       event("session_unsave", { session_id: "t1", title: "Logs", speaker: "Ann" }),
       event("mcp_tool_call", { tool: "search_sessions", query: "Crawl" }, server("ann")),
       event("mcp_tool_call", { tool: "find_people_to_meet", topic: "BigQuery" }, server("ann")),
-      event("match_join", { topics: "bigquery" }, server("ann")),
+      event("match_join", { topics: "bigquery", topic_count: 1, linkedin: true }, server("ann")),
+      // Bob joins and is then blocked; Cy joins and leaves. Neither is on Meet now.
+      event("match_join", { topics: "bigquery,python", topic_count: 2, linkedin: false }, server("bob")),
+      event("match_join", { topics: "python", topic_count: 1, linkedin: false }, server("cy")),
+      event("match_leave", undefined, server("cy")),
       event("match_topic_open", { topic: "bigquery" }),
       event("match_linkedin_click", { topic: "bigquery" }),
       event("page_view", undefined, { anonId: "old", ts: now - 10 * 86_400_000 }),
@@ -79,15 +83,22 @@ describe("analytics", () => {
       event("mcp_tool_call", { tool: "search_sessions", query: "solis" }, server("ann")),
     ]);
 
-    await env.DB.batch([
-      env.DB.prepare("INSERT INTO profiles (user_id, name, topics, linkedin) VALUES ('ann', 'Ann', '[\"bigquery\"]', 'https://www.linkedin.com/in/ann')"),
-      env.DB.prepare("INSERT INTO check_ins (guest_id, demo, name, walk_in) VALUES ('g1', 1, 'A', 0), ('walkin-1', 1, 'B', 1), ('g2', 0, 'C', 0)"),
-      env.DB.prepare("INSERT INTO guest_list (event_id, guests, synced_at) VALUES ('evt-test', '[{},{},{},{}]', 0)"),
+    // The check-in desk's events: g3's check-in was undone.
+    const desk = (type: string, guestId: string, demo: boolean, walkIn = false) =>
+      event(type, { guest_id: guestId, demo, walk_in: walkIn }, { ...server("admin1"), path: "/admin/check-in" });
+    await insertEvents(env.DB, [
+      desk("check_in", "g1", true),
+      desk("check_in", "walkin-1", true, true),
+      desk("check_in", "g3", true),
+      desk("check_in_undo", "g3", true),
+      desk("check_in", "g2", false),
+      event("guest_list_sync", { guests: 3 }, { anonId: undefined, path: "/admin/check-in" }),
+      event("guest_list_sync", { guests: 4 }, { anonId: undefined, path: "/admin/check-in" }),
     ]);
 
     const week = await getInsights(env.DB, "7d", true);
-    // The organizer isn't a signed-in attendee.
-    expect(week.totals).toMatchObject({ visitors: 2, pageViews: 3, signedIn: 1, directions: 2, talkSaves: 2, placeSaves: 1, aiRequests: 4 });
+    // Ann, Bob and Cy; the organizer at the admin pages and check-in desk isn't an attendee.
+    expect(week.totals).toMatchObject({ visitors: 2, pageViews: 3, signedIn: 3, directions: 2, talkSaves: 2, placeSaves: 1, aiRequests: 4 });
     expect(week.directionsByApp).toEqual({ google: 1, apple: 1 });
     // Every save counts; un-saves aren't taken off.
     expect(week.talks).toEqual([{ title: "Logs", speaker: "Ann", saves: 2 }]);
@@ -102,7 +113,7 @@ describe("analytics", () => {
       { query: "bigquery", count: 1 },
       { query: "crawl", count: 1 },
     ]);
-    expect(week.meet).toMatchObject({ people: 1, withLinkedin: 1, joins: 1, topicOpens: 1, linkedinTaps: 1 });
+    expect(week.meet).toMatchObject({ people: 1, withLinkedin: 1, joins: 3, leaves: 1, topicOpens: 1, linkedinTaps: 1 });
     expect(week.meet.topics).toEqual([{ topic: "bigquery", label: "BigQuery", people: 1, opens: 1, taps: 1 }]);
     expect(week.checkIn).toEqual({ checkedIn: 2, walkIns: 1, guests: 4 });
 

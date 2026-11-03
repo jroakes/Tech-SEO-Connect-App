@@ -41,7 +41,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (req.action === "search") return json(await search(req.query, req.single ?? true, req.exclude));
     if (req.action === "scan") return json(await scan(req.code));
     if (req.action === "check_in") return json({ guest: await checkIn(req.guestId, admin.id) });
-    if (req.action === "undo") return json({ guest: await undoCheckIn(req.guestId) });
+    if (req.action === "undo") return json({ guest: await undoCheckIn(req.guestId, admin.id) });
     return json(await addWalkIn(req.name, req.email.toLowerCase(), admin.id, req.newPerson ?? false));
   } catch (err) {
     if (err instanceof CheckInError) return json({ error: err.message }, 400);
