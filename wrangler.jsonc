@@ -21,8 +21,8 @@
   "ai": { "binding": "AI" },
   "triggers": {
     // Hourly schedule sync from the main site, and in conference week
-    // (November 1-7) the Luma guest list for check-in every minute.
-    "crons": ["0 * * * *", "* * 1-7 11 *"]
+    // (November 1-7) the Luma guest list for check-in every 10 minutes.
+    "crons": ["0 * * * *", "*/10 * 1-7 11 *"]
   },
   "vars": {
     // The main site's homepage carries the schedule (see src/lib/schedule-parse.ts).

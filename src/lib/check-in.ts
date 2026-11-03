@@ -1,5 +1,5 @@
 // Guest check-in at the door: the event's Luma guest list (copied into D1 and
-// refreshed every minute in conference week), the AI that judges which guest
+// refreshed every 10 minutes in conference week), the AI that judges which guest
 // was meant, and the check-ins themselves.
 // In demo mode (CHECK_IN_DEMO, the default) check-ins and walk-ins are saved
 // only in this app, and nothing is sent to Luma. Luma's API can't check a
@@ -17,7 +17,7 @@ const AI_MODEL = "anthropic/claude-sonnet-5.5";
 const AI_TIMEOUT_MS = 3000;
 const BACKUP_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 const BACKUP_TIMEOUT_MS = 5000;
-const STALE_MS = 2 * 60_000; // a backup for the cron: refresh in the background once the list is this old
+const STALE_MS = 10 * 60_000; // a backup for the cron: refresh in the background once the list is this old
 const SIMILAR_NAME = 0.9; // a walk-in's name this close to a guest's might be the same person
 const SIMILAR_SHOWN = 5;
 const MIN_AI_SCORE = 40; // below this, the AI doesn't think it's them
@@ -120,7 +120,7 @@ let syncing: Promise<GuestList> | null = null;
 
 /**
  * Fetches the whole list from Luma (about 3 seconds for 400 guests) and saves
- * it. The cron in worker.ts runs this every minute in conference week.
+ * it. The cron in worker.ts runs this every 10 minutes in conference week.
  */
 export function refreshGuestList(): Promise<GuestList> {
   syncing ??= fetchAllGuests()

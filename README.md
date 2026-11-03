@@ -3,7 +3,8 @@
 The attendee companion app for Tech SEO Connect in Durham, NC, served at
 [app.techseoconnect.com](https://app.techseoconnect.com). It runs entirely on
 Cloudflare: one Worker built with Astro, a D1 database, Workers AI, and cron
-jobs (hourly for the schedule, every minute in conference week for check-in).
+jobs (hourly for the schedule, every 10 minutes in conference week for
+check-in).
 
 ## What it does
 
@@ -115,7 +116,7 @@ MapTiler key, local development uses OpenStreetMap tiles.
 To run the schedule sync locally, start `npx wrangler dev --test-scheduled`
 after a build, then open
 `http://localhost:8787/cdn-cgi/handler/scheduled?cron=0+*+*+*+*` (or
-`?cron=*+*+1-7+11+*` for the check-in guest list).
+`?cron=*/10+*+1-7+11+*` for the check-in guest list).
 
 ## Deploying
 
@@ -175,9 +176,10 @@ menu) is for the door. Type a full name, a last name or an email:
 
 - The app keeps a copy of the Luma event's guest list (`LUMA_EVENT_ID`) in D1,
   because Luma sends 50 guests per request (about 3 seconds for the whole
-  list). A cron refreshes it every minute in conference week (November 1-7),
-  and otherwise searches refresh it in the background once it's two minutes
-  old. The page shows when it last came from Luma.
+  list). A cron refreshes it every 10 minutes in conference week (November
+  1-7), and otherwise searches refresh it in the background once it's 10
+  minutes old. New registrations in between are caught by the newest-50
+  check below. The page shows when it last came from Luma.
 - Likely guests are picked by spelling (`src/lib/guest-match.ts`), and Claude
   Sonnet 5.5, through OpenRouter, judges which of them was meant and orders
   them (about 1.2 seconds). If OpenRouter is busy (new accounts have a low
