@@ -10,6 +10,8 @@ import { insertEvents } from "./db";
 import { candidates, exactMatch, livestreamOnly, sharesName, ticketKey, words, type Guest } from "./guest-match";
 
 const LUMA = "https://public-api.luma.com";
+// The browser tests point this at a stand-in with fictional guests (tests/e2e/fake-luma.mjs).
+const lumaUrl = () => (env as { LUMA_API_URL?: string }).LUMA_API_URL || LUMA;
 const LUMA_NEWEST_TIMEOUT_MS = 2000;
 // The AI that judges matches: Claude Sonnet 5.5 through OpenRouter, right on all
 // our tests with real guest names, in a steady 1.1-1.4 seconds. If OpenRouter
@@ -97,7 +99,7 @@ function toGuest(g: LumaGuest): Guest {
 const inTheRoom = (g: Guest) => !livestreamOnly(g);
 
 async function luma<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const res = await fetch(`${LUMA}${path}`, { ...init, headers: { "x-luma-api-key": env.LUMA_API_KEY, "Content-Type": "application/json" } });
+  const res = await fetch(`${lumaUrl()}${path}`, { ...init, headers: { "x-luma-api-key": env.LUMA_API_KEY, "Content-Type": "application/json" } });
   if (!res.ok) throw new Error(`Luma ${path.split("?")[0]} answered ${res.status}: ${(await res.text()).slice(0, 200)}`);
   return res.json() as Promise<T>;
 }

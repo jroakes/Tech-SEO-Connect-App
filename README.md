@@ -149,12 +149,14 @@ after a build, then open
 | Command | What it runs |
 |---|---|
 | `npm test` | **Unit tests** (`src/**/*.test.ts`): the schedule parser, Meet matching and check-in's name matching. **Integration tests** (`tests/integration`), run inside workerd (Cloudflare's runtime) against a local D1 database, with Clerk, Luma and the AI stubbed: the schedule sync from the main site, My Conference saves, the event log, Meet (joining, answers, locked topics, leaving, who sees whom), check-in (search, the AI, livestream filtering, newest registrations, scanned tickets, check in and undo, walk-ins), admin (the event export, who's an admin), the analytics numbers, and every MCP tool. About 2 seconds. |
-| `npm run test:e2e` | **Browser tests** (`tests/e2e`), on a phone and a desktop: the schedule, saving talks and places and removing them in My Conference, searching and filtering places, directions, the map's pins, every sponsor's logo, the For AI bots dialog, locked admin pages and APIs, redirects, the 404 page, and that each page logs its events. They build the app and run it with Wrangler on port 8788 with a local D1 of their own (`.wrangler/e2e`), in the installed Google Chrome with a fresh profile. About 30 seconds after the build. |
+| `npm run test:e2e` | **Browser tests** (`tests/e2e`), on a phone and a desktop: the schedule, saving talks and places and removing them in My Conference, searching and filtering places, directions, the map's pins, every sponsor's logo, the For AI bots dialog, locked admin pages and APIs, redirects, the 404 page, and that each page logs its events. Several people at once, as fake accounts: an admin making someone an admin, two admins at the check-in desk (name and email search, a ticket's QR code through the camera, undo), Meet (finding each other by topic, leaving and rejoining, a blocked attendee), and one attendee's saves on two devices. They build the app with fake accounts in place of Clerk (`FAKE_AUTH=1`, `tests/fake-auth`; a test signs in by setting the `tsc_test_user` cookie, and it works only on localhost) and run it with Wrangler on port 8788 with a local D1 of their own (`.wrangler/e2e`) and a stand-in for Luma with fictional guests (`tests/e2e/fake-luma.mjs`, port 8799), in the installed Google Chrome with a fresh profile. About 30 seconds after the build. |
 | `npm run test:all` | Both. |
 
-Pages that need a real Clerk sign-in (Meet, admin, analytics and check-in once signed in) can't be clicked through in the browser tests; their APIs are covered by the integration tests.
+Real Clerk sign-in and the real Luma guest list are checked by hand on the live site; see [PRE-DEPLOY-CHECKLIST.md](PRE-DEPLOY-CHECKLIST.md).
 
 ## Deploying
+
+Before every deploy, go through [PRE-DEPLOY-CHECKLIST.md](PRE-DEPLOY-CHECKLIST.md).
 
 To deploy to a Cloudflare account, new or existing, from a fresh download of
 the repo (the `cloudflare-astro` branch) and your `.env`:

@@ -51,13 +51,15 @@ const adminChecks = new Map<string, { admin: boolean; at: number }>(); // user I
  * Whether the signed-in user is an admin, trusting Clerk's answer from the
  * last minute, so requests that come often (the account menu on every page,
  * check-in) don't each wait on Clerk. Its API allows 100 requests per 10
- * seconds on a development instance and 1,000 in production.
+ * seconds on a development instance and 1,000 in production. `recheckNo`
+ * asks Clerk again when the last answer was no, so someone just made an admin
+ * isn't turned away.
  */
-export async function isRecentAdmin(locals: App.Locals): Promise<boolean> {
+export async function isRecentAdmin(locals: App.Locals, recheckNo = false): Promise<boolean> {
   const userId = getUserId(locals);
   if (!userId) return false;
   const known = adminChecks.get(userId);
-  if (known && Date.now() - known.at < 60_000) return known.admin;
+  if (known && Date.now() - known.at < 60_000 && (known.admin || !recheckNo)) return known.admin;
   const user = await currentUser(locals);
   if (!user) return false; // Clerk didn't answer: ask again next time
   const admin = isAdmin(user);
@@ -65,9 +67,12 @@ export async function isRecentAdmin(locals: App.Locals): Promise<boolean> {
   return admin;
 }
 
-/** The signed-in admin's ID, from `isRecentAdmin`, or null. */
+/**
+ * The signed-in admin's ID, for the check-in desk, or null. Someone made an
+ * admin at the door can check guests in right away.
+ */
 export async function recentAdmin(locals: App.Locals): Promise<{ id: string } | null> {
-  return (await isRecentAdmin(locals)) ? { id: getUserId(locals)! } : null;
+  return (await isRecentAdmin(locals, true)) ? { id: getUserId(locals)! } : null;
 }
 
 export function displayName(user: User): string {
