@@ -1,10 +1,7 @@
 // Queries for the organizers' analytics page (src/pages/admin/analytics.astro),
 // over the events table, the saved talks and places, Meet profiles and
 // check-ins.
-import placesData from "../data/places.json";
 import { TOPICS } from "../data/topics";
-import { getSchedule } from "./db";
-import { currentSessionId } from "./sessions";
 import { fold } from "./utils";
 
 export type Range = "24h" | "7d" | "all";
@@ -62,40 +59,6 @@ const NOT_ADMIN = "(path IS NULL OR path NOT LIKE '/admin%')";
 // Page views by attendees.
 const ATTENDEE_VIEW = `type = 'page_view' AND ${NOT_ADMIN}`;
 
-/**
- * How many people have each talk (or place) saved right now: every signed-in
- * attendee's list, plus what each device saved while signed out since it was
- * last signed in. Saves made before signing in are merged into the account,
- * so they're counted there and not again from the device's events. A page
- * that couldn't store its saves (anon ID "no-storage") kept them only while
- * it was open.
- */
-async function savedNow(db: D1Database, kind: "session" | "place"): Promise<string[]> {
-  const table = kind === "session" ? "saved_sessions" : "saved_places";
-  const column = kind === "session" ? "session_id" : "place_id";
-  const { results } = await db
-    .prepare(
-      `SELECT ${column} AS id FROM ${table}
-       UNION ALL
-       SELECT id FROM (
-         SELECT json_extract(e.props, '$.${column}') AS id, SUM(CASE e.type WHEN '${kind}_save' THEN 1 ELSE -1 END) AS net
-         FROM events e
-         LEFT JOIN (SELECT anon_id, MAX(ts) AS last_in FROM events WHERE user_id IS NOT NULL AND anon_id IS NOT NULL GROUP BY anon_id) s
-           ON s.anon_id = e.anon_id
-         WHERE e.type IN ('${kind}_save', '${kind}_unsave') AND e.user_id IS NULL AND e.anon_id IS NOT NULL AND e.anon_id != 'no-storage'
-           AND (s.last_in IS NULL OR e.ts > s.last_in)
-         GROUP BY e.anon_id, json_extract(e.props, '$.${column}') HAVING net > 0)`,
-    )
-    .all<{ id: string }>();
-  return results.map((r) => r.id);
-}
-
-const tally = (ids: string[]) => {
-  const counts = new Map<string, number>();
-  for (const id of ids) counts.set(id, (counts.get(id) ?? 0) + 1);
-  return counts;
-};
-
 // The conference's local date and hour of a moment, e.g. "2026-11-05" and "9 AM".
 const localDate = (d: Date) => d.toLocaleDateString("en-CA", { timeZone: TIME_ZONE });
 const localHour = (d: Date) => d.toLocaleTimeString("en-US", { timeZone: TIME_ZONE, hour: "numeric" });
@@ -129,26 +92,24 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     ofType("mcp_url_copy"),
   ]);
 
-  const [hourRows, savedTalkIds, savedPlaceIds, schedule, talkNames, placeRows, pages, aiTools, searchRows, apps] = await Promise.all([
+  const [hourRows, talks, places, pages, aiTools, searchRows, apps] = await Promise.all([
     // By UTC hour; they're put into Eastern hours and days below, which
     // handles the change to and from daylight saving time.
     all<{ hour: string; n: number }>(
       `SELECT strftime('%Y-%m-%dT%H', ts) AS hour, COUNT(*) AS n FROM events WHERE ${ATTENDEE_VIEW} AND ts >= ? GROUP BY hour ORDER BY hour`,
       since,
     ),
-    savedNow(db, "session"),
-    savedNow(db, "place"),
-    getSchedule(db),
-    // Titles for saved talks that are no longer in the schedule.
-    all<{ id: string; title: string; speaker: string | null }>(
-      `SELECT json_extract(props, '$.session_id') AS id, json_extract(props, '$.title') AS title, json_extract(props, '$.speaker') AS speaker
-       FROM events WHERE type IN ('session_save', 'session_unsave') GROUP BY json_extract(props, '$.session_id')`,
+    all<{ title: string; speaker: string | null; saves: number }>(
+      `SELECT json_extract(props, '$.title') AS title, json_extract(props, '$.speaker') AS speaker, COUNT(*) AS saves
+       FROM events WHERE type = 'session_save' AND ts >= ?
+       GROUP BY json_extract(props, '$.session_id') ORDER BY saves DESC, title LIMIT 10`,
+      since,
     ),
-    // Every place with activity, named as it was then (for places no longer listed).
-    all<{ id: string; name: string; category: string; views: number; directions: number }>(
-      `SELECT json_extract(props, '$.place_id') AS id, json_extract(props, '$.place_name') AS name, json_extract(props, '$.category') AS category,
-         SUM(type = 'place_view' AND ts >= ?1) AS views, SUM(type = 'map_button_click' AND ts >= ?1) AS directions
-       FROM events WHERE type IN ('place_view', 'map_button_click', 'place_save', 'place_unsave') GROUP BY json_extract(props, '$.place_id')`,
+    all<{ name: string; category: string; views: number; directions: number; saves: number }>(
+      `SELECT json_extract(props, '$.place_name') AS name, json_extract(props, '$.category') AS category,
+         SUM(type = 'place_view') AS views, SUM(type = 'map_button_click') AS directions, SUM(type = 'place_save') AS saves
+       FROM events WHERE type IN ('place_view', 'map_button_click', 'place_save') AND ts >= ?
+       GROUP BY json_extract(props, '$.place_id') ORDER BY directions DESC, saves DESC, views DESC LIMIT 12`,
       since,
     ),
     all<{ path: string; views: number }>(
@@ -180,36 +141,6 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     .map(([query, count]) => ({ query, count }))
     .sort((a, b) => b.count - a.count || a.query.localeCompare(b.query))
     .slice(0, 8);
-
-  // Saved now, whatever the range. A device's saves of a talk that has since
-  // moved day count under its new ID, as the accounts' saves do.
-  const talkCounts = tally(savedTalkIds.map((id) => currentSessionId(id, schedule)));
-  const talks = [...talkCounts]
-    .map(([id, saves]) => {
-      const session = schedule.find((s) => s.id === id);
-      const named = talkNames.find((t) => t.id === id);
-      return { title: session?.title ?? named?.title ?? id, speaker: session?.speaker ?? named?.speaker ?? null, saves };
-    })
-    .sort((a, b) => b.saves - a.saves || a.title.localeCompare(b.title))
-    .slice(0, 10);
-
-  // Directions and views in the range, and saves now.
-  const placeSavesNow = tally(savedPlaceIds);
-  const places = [...new Set([...placeRows.map((p) => p.id), ...placeSavesNow.keys()])]
-    .map((id) => {
-      const row = placeRows.find((p) => p.id === id);
-      const listed = placesData.find((p) => p.id === id);
-      return {
-        name: listed?.name ?? row?.name ?? id,
-        category: listed?.category ?? row?.category ?? "",
-        views: row?.views ?? 0,
-        directions: row?.directions ?? 0,
-        saves: placeSavesNow.get(id) ?? 0,
-      };
-    })
-    .filter((p) => p.views || p.directions || p.saves)
-    .sort((a, b) => b.directions - a.directions || b.saves - a.saves || b.views - a.views || a.name.localeCompare(b.name))
-    .slice(0, 12);
 
   const [meetPeople, picked, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps, checkedIn, walkIns, guests] = await Promise.all([
     one<{ people: number; withLinkedin: number }>("SELECT COUNT(*) AS people, COALESCE(SUM(linkedin IS NOT NULL), 0) AS withLinkedin FROM profiles"),
