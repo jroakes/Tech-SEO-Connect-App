@@ -26,6 +26,28 @@ test("the For AI bots button shows the MCP server's URL", async ({ page, events 
   expect(events.map((e) => e.type)).toContain("mcp_modal_open");
 });
 
+test("the For AI bots dialog fits a small phone and sits above the map", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await open(page, "/map");
+  await expect(page.locator(".leaflet-marker-icon").first()).toBeVisible({ timeout: 15_000 });
+  await page.getByTestId("button-ai-bots").click();
+  const dialog = page.getByTestId("dialog-ai-bots");
+  // Inside the screen, and nothing (like the map) on top of it.
+  const clear = () =>
+    dialog.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      const points = [r.left + 12, r.left + r.width / 2, r.right - 12].flatMap((x) =>
+        [r.top + 12, r.top + r.height / 2, r.bottom - 12].map((y) => document.elementFromPoint(x, y)),
+      );
+      return r.top >= 0 && r.bottom <= innerHeight && points.every((p) => el.contains(p));
+    });
+  await expect.poll(clear).toBe(true);
+  // The rest scrolls into view.
+  const last = dialog.getByText("What's on my schedule Thursday?");
+  await last.scrollIntoViewIfNeeded();
+  await expect(last).toBeInViewport();
+});
+
 for (const path of ["/admin", "/admin/analytics", "/admin/check-in"]) {
   test(`${path} is locked for visitors`, async ({ page }) => {
     const res = await page.goto(path);

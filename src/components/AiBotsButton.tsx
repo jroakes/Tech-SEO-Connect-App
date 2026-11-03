@@ -81,7 +81,11 @@ export default function AiBotsButton() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-lg" data-testid="dialog-ai-bots">
+      {/* No taller than the screen, scrolling inside, so it all fits on a phone. */}
+      <DialogContent
+        className="max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] overflow-y-auto overscroll-contain sm:max-w-lg"
+        data-testid="dialog-ai-bots"
+      >
         <DialogHeader className="text-left sm:text-left">
           <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
             <Bot className="h-5 w-5" />

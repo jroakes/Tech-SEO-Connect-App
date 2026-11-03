@@ -150,7 +150,8 @@ export default function MapView({ places }: MapViewProps) {
         </Select>
       </PlacesHeader>
 
-      <div className="flex-1 relative" data-testid="map-container">
+      {/* isolate keeps Leaflet's layers (z-index 400–1000) under the header and dialogs. */}
+      <div className="flex-1 relative isolate" data-testid="map-container">
         <MapContainer
           center={event.mapCenter}
           zoom={14}
