@@ -24,6 +24,7 @@ const BACKUP_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 const BACKUP_TIMEOUT_MS = 5000;
 const AI_MAX_TOKENS = 800; // room to score every candidate
 const STALE_MS = 15 * 60_000; // a backup for the 10-minute cron: refresh in the background if it's missed
+const WALK_IN_TICKET = "General Admission"; // Luma's default ticket for this event is Livestream
 const SIMILAR_NAME = 0.9; // a walk-in's name this close to a guest's might be the same person
 const SIMILAR_SHOWN = 5;
 const MIN_AI_SCORE = 40; // below this, the AI doesn't think it's them
@@ -243,11 +244,18 @@ interface CheckInRow {
   checked_in_at: string;
 }
 
+interface WalkInRow {
+  guest_id: string;
+  name: string;
+  email: string;
+}
+
 interface Desk {
   /** Demo mode, as it was when the desk was opened for this request. */
   demo: boolean;
   list: GuestList;
   rows: CheckInRow[];
+  added: WalkInRow[];
   /** Luma's guests plus walk-ins. */
   guests: Guest[];
   show: (g: Guest) => GuestResult;
@@ -255,14 +263,14 @@ interface Desk {
 }
 
 /** Everyone who can be checked in, and how to show each. */
-function deskFrom(list: GuestList, rows: CheckInRow[], demo: boolean): Desk {
+function deskFrom(list: GuestList, rows: CheckInRow[], added: WalkInRow[], demo: boolean): Desk {
   const byId = new Map(rows.map((r) => [r.guest_id, r]));
   // A walk-in who's since shown up in Luma's list (live mode) is the same person.
   const byEmail = new Map(rows.filter((r) => r.walk_in && r.email).map((r) => [r.email!.toLowerCase(), r]));
   const lumaEmails = new Set(list.guests.map((g) => g.email.toLowerCase()));
-  const walkIns: Guest[] = rows
-    .filter((r) => r.walk_in && !(r.email && lumaEmails.has(r.email.toLowerCase())))
-    .map((r) => ({ id: r.guest_id, name: r.name, otherName: null, firstName: null, lastName: null, email: r.email ?? "", status: "approved", tickets: ["Walk-in"], lumaCheckedInAt: null }));
+  const walkIns: Guest[] = added
+    .filter((w) => !lumaEmails.has(w.email.toLowerCase()))
+    .map((w) => ({ id: w.guest_id, name: w.name, otherName: null, firstName: null, lastName: null, email: w.email, status: "approved", tickets: ["Walk-in"], lumaCheckedInAt: null }));
 
   const show = (g: Guest): GuestResult => {
     const here = byId.get(g.id) ?? byEmail.get(g.email.toLowerCase());
@@ -278,25 +286,26 @@ function deskFrom(list: GuestList, rows: CheckInRow[], demo: boolean): Desk {
       walkIn: g.id.startsWith("walkin-"),
     };
   };
-  return { demo, list, rows, guests: [...list.guests, ...walkIns], show, freshness: { syncedAt: list.syncedAt, guestCount: list.guests.length } };
+  return { demo, list, rows, added, guests: [...list.guests, ...walkIns], show, freshness: { syncedAt: list.syncedAt, guestCount: list.guests.length } };
 }
 
 /** The desk from the saved list. With `newest`, Luma's newest registrations are added too. */
 async function openDesk(newest = false): Promise<Desk> {
   const demo = await isDemo();
-  const [list, { results: rows }, latest] = await Promise.all([
+  const [list, { results: rows }, { results: added }, latest] = await Promise.all([
     guestList(),
     env.DB.prepare("SELECT guest_id, name, email, walk_in, checked_in_at FROM check_ins WHERE demo = ?").bind(demo ? 1 : 0).all<CheckInRow>(),
+    env.DB.prepare("SELECT guest_id, name, email FROM walk_ins WHERE demo = ?").bind(demo ? 1 : 0).all<WalkInRow>(),
     newest ? fetchNewestGuests() : null,
   ]);
-  return deskFrom(latest ? await addNewest(list, latest) : list, rows, demo);
+  return deskFrom(latest ? await addNewest(list, latest) : list, rows, added, demo);
 }
 
 /** The same desk with Luma's newest registrations added, or the same desk if there are none new. */
 async function withNewest(d: Desk): Promise<Desk> {
   const latest = await fetchNewestGuests();
   const list = latest ? await addNewest(d.list, latest) : d.list;
-  return list === d.list ? d : deskFrom(list, d.rows, d.demo);
+  return list === d.list ? d : deskFrom(list, d.rows, d.added, d.demo);
 }
 
 /** Saves a check-in (once) and returns when it happened. */
@@ -458,7 +467,7 @@ export async function scan(scanned: string): Promise<SearchResult> {
   if (livestreamOnly(guest)) throw new CheckInError(`${guest.name} has a livestream-only ticket, for watching online.`);
   // Saved to the list too, in case they registered since the last refresh.
   const list = await addNewest(d.list, [guest]);
-  const desk = list === d.list ? d : deskFrom(list, d.rows, d.demo);
+  const desk = list === d.list ? d : deskFrom(list, d.rows, d.added, d.demo);
   return { ...desk.freshness, match: desk.show(guest), options: [] };
 }
 
@@ -473,12 +482,12 @@ export async function checkIn(guestId: string, adminId: string): Promise<GuestRe
   }
   if (!guest) throw new CheckInError("That guest isn't on the list any more.");
   const shown = d.show(guest);
-  return shown.checkedInAt ? shown : { ...shown, checkedInAt: await record(guest, adminId, d.demo), checkedInHere: true };
+  return shown.checkedInAt ? shown : { ...shown, checkedInAt: await record(guest, adminId, d.demo, shown.walkIn), checkedInHere: true };
 }
 
 /**
- * Takes back a check-in made here (one made in Luma stays). A walk-in's record
- * here goes too; in live mode Luma keeps their registration.
+ * Takes back a check-in made here (one made in Luma stays). A walk-in stays on
+ * the desk, not checked in, and in live mode Luma keeps their registration.
  */
 export async function undoCheckIn(guestId: string, adminId: string): Promise<GuestResult | null> {
   const d = await openDesk();
@@ -491,15 +500,15 @@ export async function undoCheckIn(guestId: string, adminId: string): Promise<Gue
     .bind(d.demo ? 1 : 0, guestId, email, email)
     .all<{ guest_id: string; walk_in: number }>();
   for (const r of removed) await log("check_in_undo", { guest_id: r.guest_id, demo: d.demo, walk_in: r.walk_in === 1 }, adminId);
-  const after = deskFrom(d.list, d.rows.filter((r) => !undone(r)), d.demo);
+  const after = deskFrom(d.list, d.rows.filter((r) => !undone(r)), d.added, d.demo);
   const guest = after.guests.find((g) => g.id === guestId);
   return guest ? after.show(guest) : null;
 }
 
 /**
  * Someone who isn't on the list: gives them a ticket and checks them in. In
- * demo mode they're saved only here; otherwise Luma adds them as going with
- * the event's default ticket type (and emails them their ticket).
+ * demo mode they're saved only here; otherwise Luma adds them as going with a
+ * General Admission ticket (and emails it to them).
  *
  * First it checks Luma's newest registrations, in case they registered since
  * the last refresh. If the email is registered, that guest is returned to
@@ -519,13 +528,18 @@ export async function addWalkIn(name: string, email: string, adminId: string, ne
   }
 
   if (!d.demo) {
+    const { entries } = await luma<{ entries: { id: string; name: string }[] }>(`/v1/events/ticket-types/list?${new URLSearchParams({ event_id: env.LUMA_EVENT_ID })}`);
+    const ticket = entries.find((t) => t.name === WALK_IN_TICKET);
+    // Luma would otherwise give them the default ticket, and livestream guests aren't on the desk.
+    if (!ticket) throw new CheckInError(`This event has no ${WALK_IN_TICKET} ticket in Luma, so ${name} wasn't added.`);
     const { skipped } = await luma<{ skipped: { email: string }[] }>("/v1/events/guests/add", {
       method: "POST",
-      body: JSON.stringify({ event_id: env.LUMA_EVENT_ID, guests: [{ email, name }] }),
+      body: JSON.stringify({ event_id: env.LUMA_EVENT_ID, guests: [{ email, name }], ticket: { event_ticket_type_id: ticket.id } }),
     });
     if (skipped.length) throw new CheckInError(`Luma won't add ${email}: they've unsubscribed from the calendar, or were removed or blocked.`);
   }
   const guest: Guest = { id: `walkin-${crypto.randomUUID()}`, name, otherName: null, firstName: null, lastName: null, email, status: "approved", tickets: ["Walk-in"], lumaCheckedInAt: null };
+  await env.DB.prepare("INSERT INTO walk_ins (guest_id, demo, name, email) VALUES (?, ?, ?, ?)").bind(guest.id, d.demo ? 1 : 0, name, email).run();
   const checkedInAt = await record(guest, adminId, d.demo, true);
   return { ...d.freshness, guest: { ...d.show(guest), checkedInAt, checkedInHere: true }, registered: false };
 }

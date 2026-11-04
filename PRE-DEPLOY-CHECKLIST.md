@@ -29,6 +29,8 @@ real guest list. Together, the two test suites check:
       checked in and undoes it, and the first sees the undo.
 - [ ] Scanning a ticket's Luma QR code with the camera finds the guest, who's
       checked in and then undone. A livestream-only ticket is refused.
+- [ ] A walk-in added at the desk is checked in. **Wrong person?** takes back
+      only the check-in, and searching for them finds them to check in again.
 - [ ] Meet: three attendees join with their topics. People who share a topic
       see each other, and people who don't share one don't. Topics can't be
       changed once saved. Someone who leaves disappears for the others and gets
@@ -92,6 +94,9 @@ don't.
 - [ ] Meet opens for a signed-in attendee (not the Sign in panel).
 - [ ] Check-in desk: the demo-mode note shows (unless going live). Search a
       real guest's name, scan a real Luma ticket with a phone, then undo both.
+- [ ] In live mode, once, add a walk-in with an email of your own: Luma shows a
+      General Admission ticket with nothing to pay. **Wrong person?** leaves
+      them on the desk, not checked in, and a search finds them.
 - [ ] The Analytics page loads, and the guest list's size is there within 10
       minutes of a deploy in conference week.
 - [ ] The For AI bots dialog shows the MCP URL; in conference week, connect it

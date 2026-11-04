@@ -30,7 +30,12 @@ const guest = (id: string, first: string, last: string, extra: Partial<LumaGuest
 let luma: LumaGuest[]; // oldest registration first
 // Ticket QR code keys: guest keys (g-…) from emailed tickets, ticket keys from the CSV export.
 let byKey: Record<string, LumaGuest>;
-const calls = { all: 0, newest: 0, ai: 0, added: [] as unknown[] };
+const calls = { all: 0, newest: 0, ai: 0, added: [] as unknown[], ticket: null as unknown };
+const LUMA_TICKET_TYPES = [
+  { id: "ttype-stream", name: "Livestream" },
+  { id: "ttype-ga", name: "General Admission" },
+];
+let ticketTypes = LUMA_TICKET_TYPES;
 // The stand-in AI: everyone who has a typed word in their name scores 90; one
 // such candidate is "obvious".
 type Judge = (typed: string, candidates: { id: string; name: string }[]) => { matches: { id: string; score: number }[]; obvious: string | null };
@@ -69,6 +74,8 @@ beforeEach(() => {
   };
   calls.all = calls.newest = calls.ai = 0;
   calls.added = [];
+  calls.ticket = null;
+  ticketTypes = LUMA_TICKET_TYPES;
   judge = usualJudge;
   aiDown = false;
   vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
@@ -78,9 +85,11 @@ beforeEach(() => {
         const body = JSON.parse(String(init?.body));
         expect(body.event_id).toBe("evt-test");
         calls.added.push(...body.guests);
+        calls.ticket = body.ticket;
         return json({ skipped: [] });
       }
       expect(url.searchParams.get("event_id")).toBe("evt-test");
+      if (url.pathname === "/v1/events/ticket-types/list") return json({ entries: ticketTypes });
       if (url.pathname === "/v1/events/guests/get") {
         const found = byKey[url.searchParams.get("id")!];
         return found ? json(found) : json({ message: "Guest not found" }, 404);
@@ -301,6 +310,31 @@ describe("check-in", () => {
       const added = await desk({ action: "walk_in", name: "Late Comer", email: "late@example.com", live: true });
       expect(added.data).toMatchObject({ registered: false, demo: false, guest: { name: "Late Comer", checkedInHere: true } });
       expect(calls.added).toEqual([{ email: "late@example.com", name: "Late Comer" }]);
+      expect(calls.ticket).toEqual({ event_ticket_type_id: "ttype-ga" });
+    });
+
+    it("won't add a live walk-in without a General Admission ticket, rather than Luma's default", async () => {
+      await desk({ action: "set_live", live: true });
+      ticketTypes = [{ id: "ttype-stream", name: "Livestream" }];
+      const result = await desk({ action: "walk_in", name: "Late Comer", email: "late@example.com", live: true });
+      expect(result.status).toBe(400);
+      expect(result.data.error).toContain("General Admission");
+      expect(calls.added).toEqual([]);
+      expect(await rows(env.DB, "SELECT * FROM walk_ins")).toEqual([]);
+    });
+
+    it("keeps a live walk-in on the desk after Wrong person?, and they're one person once Luma lists them", async () => {
+      await desk({ action: "set_live", live: true });
+      const added = await desk({ action: "walk_in", name: "Late Comer", email: "late@example.com", live: true });
+      const undone = await desk({ action: "undo", guestId: added.data.guest.id });
+      expect(undone.data.guest).toMatchObject({ name: "Late Comer", checkedInAt: null, checkedInHere: false });
+      expect((await search("late comer")).match).toMatchObject({ id: added.data.guest.id, checkedInAt: null });
+
+      luma.push(guest("g-late", "Late", "Comer", { user_email: "late@example.com" }));
+      await refreshGuestList();
+      const found = await search("late comer");
+      expect(found.match).toMatchObject({ id: "g-late", tickets: ["General Admission"], checkedInAt: null });
+      expect(found.options).toEqual([]);
     });
 
     it("is for admins only", async () => {
@@ -315,11 +349,12 @@ describe("check-in", () => {
       expect(added.data.guest.checkedInAt).toBeTruthy();
       expect((await search("walk in")).match).toMatchObject({ name: "Walk In", checkedInHere: true });
 
-      // Undo removes a demo walk-in altogether.
-      expect((await desk({ action: "undo", guestId: added.data.guest.id })).data.guest).toBeNull();
-      expect((await search("walk in")).match).toBeNull();
+      // Undo takes back the check-in, and they stay on the desk to check in again.
       const id = added.data.guest.id;
-      expect(await logged()).toEqual([checkInEvent("check_in", id, true), checkInEvent("check_in_undo", id, true)]);
+      expect((await desk({ action: "undo", guestId: id })).data.guest).toMatchObject({ id, checkedInAt: null, checkedInHere: false });
+      expect((await search("walk in")).match).toMatchObject({ id, checkedInAt: null });
+      expect((await desk({ action: "check_in", guestId: id })).data.guest).toMatchObject({ id, checkedInHere: true });
+      expect(await logged()).toEqual([checkInEvent("check_in", id, true), checkInEvent("check_in_undo", id, true), checkInEvent("check_in", id, true)]);
     });
 
     it("shows the registered guest for an email already on the list", async () => {

@@ -223,8 +223,9 @@ export default function CheckIn({ demo: initialDemo, freshness: initialFreshness
     if (!data) return;
     setLastCheckIn(null);
     // Just checked in as the search's one match: show who else it could have
-    // been, with the search back in the box to correct.
-    if (guest.id === lastCheckIn && shown?.match?.id === guest.id && !shown.scanned) {
+    // been, with the search back in the box to correct. (A walk-in was added,
+    // not matched, so they just go back to not checked in.)
+    if (guest.id === lastCheckIn && shown?.match?.id === guest.id && !shown.scanned && !guest.walkIn) {
       const typed = shown.query;
       setShown(null);
       setShowAll(false);

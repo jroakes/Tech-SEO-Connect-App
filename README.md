@@ -314,15 +314,19 @@ camera:
   instead, and a similar name is shown to confirm before anyone new is added.
 - A check-in can be taken back: **Wrong person?** right after it (which then
   lists the other close guests, without the one just taken back), or **Undo
-  check-in** when you search them.
+  check-in** when you search them. A walk-in was added rather than matched, so
+  **Wrong person?** only takes back their check-in: they stay on the desk, in
+  the `walk_ins` table, ready to check in.
 
 `CHECK_IN_DEMO` in `wrangler.jsonc` is `"true"` for now: check-ins and walk-ins
 are saved only in this app, and nothing is sent to Luma. With `"false"`,
-walk-ins are added to Luma as going, with the event's default ticket type (so
-check that it's the in-person one), and Luma emails them a ticket. Undoing a
-walk-in's check-in doesn't remove them from Luma. Luma's API can read
-check-ins but can't make them, so check-ins stay in this app's `check_ins`
-table either way; demo and real ones are kept apart.
+walk-ins are added to Luma as going, with a General Admission ticket (found by
+that name in the event's ticket types; the event's default is Livestream, so a
+walk-in isn't added if the event has no General Admission ticket), and Luma
+emails them a ticket. Once Luma lists a walk-in, the desk shows Luma's guest in
+their place. Undoing a walk-in's check-in doesn't remove them from Luma. Luma's
+API can read check-ins but can't make them, so check-ins stay in this app's
+`check_ins` table either way; demo and real ones are kept apart.
 
 **Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
 page views (attendees', not organizers' on the admin pages), signed-in

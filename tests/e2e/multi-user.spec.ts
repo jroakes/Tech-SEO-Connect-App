@@ -175,6 +175,25 @@ test("two admins at the check-in desk: name search, check in, undo, and a ticket
   await showToCamera(ada, "https://luma.com/check-in/evt-test?pk=g-larakey");
   await ada.getByTestId("button-scan-ticket").click();
   await expect(ada.getByText(/livestream-only ticket/)).toBeVisible();
+
+  // Wanda isn't on the list, so Ada adds her at the door, which checks her in.
+  // A name unlike earlier runs' walk-ins (the tests' D1 keeps them).
+  const letters = () => Math.random().toString(36).slice(2, 10).replace(/\d/g, "x");
+  const wanda = `${letters()} ${letters()}`;
+  await find(ada, wanda);
+  await ada.getByTestId("input-walk-in-email").fill(`wanda-${run}@example.test`);
+  await ada.getByTestId("button-add-walk-in").click();
+  const walkIn = ada.locator('[data-testid^="row-guest-walkin-"]');
+  await expect(walkIn).toContainText("Checked in");
+
+  // Wrong person? takes back only the check-in: she's still there to check in.
+  await walkIn.getByRole("button", { name: "Wrong person?" }).click();
+  await expect(walkIn.getByRole("button", { name: "Check in" })).toBeVisible();
+
+  // Searching for her again finds her, and she can be checked in.
+  await find(ada, wanda);
+  await walkIn.getByRole("button", { name: "Check in" }).click();
+  await expect(walkIn).toContainText("Checked in");
 });
 
 test("attendees find each other on Meet by shared topic, leave and rejoin, and a blocked one is signed out", async ({ browser }, info) => {
