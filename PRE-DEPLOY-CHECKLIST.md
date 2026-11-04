@@ -74,9 +74,11 @@ real guest list. Together, the two test suites check:
 
 - [ ] `npm run secrets` after any change to `CLERK_SECRET_KEY`,
       `OPENROUTER_API_KEY` or `LUMA_API_KEY` in `.env`.
-- [ ] `wrangler.jsonc` vars: `ORGANIZER_EMAILS`, `LUMA_EVENT_ID`, and
+- [ ] `wrangler.jsonc` vars: `ORGANIZER_EMAILS`, `LUMA_EVENT_ID`,
       `CHECK_IN_DEMO` (`"true"` saves check-ins only in the app; set it to
-      `"false"` only when the desk should go live).
+      `"false"` only when the desk should go live), and `CLERK_JWT_KEY` (the
+      Clerk instance's public key; replace it if the Clerk instance changes or
+      Clerk rotates its keys, or every sign-in on the server fails).
 
 ## 5. On the live site, after deploying
 

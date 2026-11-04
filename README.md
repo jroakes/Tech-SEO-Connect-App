@@ -10,7 +10,10 @@ check-in).
 
 - **Schedule** synced every hour from the schedule on
   [www.techseoconnect.com](https://www.techseoconnect.com/), with each
-  party's details and links. During the conference it opens on today.
+  party's details and links. During the conference it opens on today. The
+  server keeps its copy of the page for five minutes, so a change shows within
+  five minutes of the sync. A phone that's opened the page before shows its
+  saved copy first and refreshes it, so there the change shows a visit later.
 - **My Conference**: tap the heart on a talk, hotel, restaurant, bar or
   anything else to save it. Saves stay on the device; signed-in attendees (via
   [Clerk](https://clerk.com)) keep them in their account across devices.
@@ -171,7 +174,13 @@ the repo (the `cloudflare-astro` branch) and your `.env`:
 3. **Settings:** check the `vars` in `wrangler.jsonc`: `ORGANIZER_EMAILS` (the
    organizers, who are always admins; each email must be verified in their
    Clerk account), `LUMA_EVENT_ID` (the conference's Luma event, which must
-   belong to the calendar that `LUMA_API_KEY` comes from) and `CHECK_IN_DEMO`.
+   belong to the calendar that `LUMA_API_KEY` comes from), `CHECK_IN_DEMO`,
+   and `CLERK_JWT_KEY`, the Clerk instance's public key, so the server checks
+   sign-ins without first fetching it from Clerk. For a different Clerk
+   instance, replace it with that instance's key from
+   `https://<its Frontend API domain>/.well-known/jwks.json` (as PEM), or
+   remove it to have it fetched. If Clerk ever rotates its keys, every
+   sign-in on the server fails until it's replaced.
 4. **Sign in to Cloudflare:** `npx wrangler login`, as a user of the account
    to deploy to. `account_id` in `wrangler.jsonc` says which account that is:
    production is Techseoconnect@gmail.com's Account, which also runs the main
