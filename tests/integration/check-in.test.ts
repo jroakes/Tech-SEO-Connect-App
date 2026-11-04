@@ -30,10 +30,11 @@ const guest = (id: string, first: string, last: string, extra: Partial<LumaGuest
 let luma: LumaGuest[]; // oldest registration first
 // Ticket QR code keys: guest keys (g-…) from emailed tickets, ticket keys from the CSV export.
 let byKey: Record<string, LumaGuest>;
-const calls = { all: 0, newest: 0, ai: 0, added: [] as unknown[], ticket: null as unknown };
+const calls = { all: 0, newest: 0, ai: 0, added: [] as unknown[], ticket: null as unknown, approval: null as unknown };
 const LUMA_TICKET_TYPES = [
-  { id: "ttype-stream", name: "Livestream" },
-  { id: "ttype-ga", name: "General Admission" },
+  { id: "ttype-ga", name: "General Admission", is_hidden: false },
+  { id: "ttype-stream", name: "Livestream", is_hidden: false },
+  { id: "ttype-free", name: "Free", is_hidden: true },
 ];
 let ticketTypes = LUMA_TICKET_TYPES;
 // The stand-in AI: everyone who has a typed word in their name scores 90; one
@@ -74,7 +75,7 @@ beforeEach(() => {
   };
   calls.all = calls.newest = calls.ai = 0;
   calls.added = [];
-  calls.ticket = null;
+  calls.ticket = calls.approval = null;
   ticketTypes = LUMA_TICKET_TYPES;
   judge = usualJudge;
   aiDown = false;
@@ -86,10 +87,11 @@ beforeEach(() => {
         expect(body.event_id).toBe("evt-test");
         calls.added.push(...body.guests);
         calls.ticket = body.ticket;
+        calls.approval = body.approval_status;
         return json({ skipped: [] });
       }
       expect(url.searchParams.get("event_id")).toBe("evt-test");
-      if (url.pathname === "/v1/events/ticket-types/list") return json({ entries: ticketTypes });
+      if (url.pathname === "/v1/events/ticket-types/list") return json({ entries: ticketTypes.filter((t) => !t.is_hidden || url.searchParams.get("include_hidden")) });
       if (url.pathname === "/v1/events/guests/get") {
         const found = byKey[url.searchParams.get("id")!];
         return found ? json(found) : json({ message: "Guest not found" }, 404);
@@ -310,15 +312,16 @@ describe("check-in", () => {
       const added = await desk({ action: "walk_in", name: "Late Comer", email: "late@example.com", live: true });
       expect(added.data).toMatchObject({ registered: false, demo: false, guest: { name: "Late Comer", checkedInHere: true } });
       expect(calls.added).toEqual([{ email: "late@example.com", name: "Late Comer" }]);
-      expect(calls.ticket).toEqual({ event_ticket_type_id: "ttype-ga" });
+      expect(calls.ticket).toEqual({ event_ticket_type_id: "ttype-free" });
+      expect(calls.approval).toBe("approved");
     });
 
-    it("won't add a live walk-in without a General Admission ticket, rather than Luma's default", async () => {
+    it("won't add a live walk-in without a Free ticket, rather than Luma's default", async () => {
       await desk({ action: "set_live", live: true });
-      ticketTypes = [{ id: "ttype-stream", name: "Livestream" }];
+      ticketTypes = LUMA_TICKET_TYPES.filter((t) => t.name !== "Free");
       const result = await desk({ action: "walk_in", name: "Late Comer", email: "late@example.com", live: true });
       expect(result.status).toBe(400);
-      expect(result.data.error).toContain("General Admission");
+      expect(result.data.error).toContain("no Free ticket");
       expect(calls.added).toEqual([]);
       expect(await rows(env.DB, "SELECT * FROM walk_ins")).toEqual([]);
     });
@@ -330,10 +333,10 @@ describe("check-in", () => {
       expect(undone.data.guest).toMatchObject({ name: "Late Comer", checkedInAt: null, checkedInHere: false });
       expect((await search("late comer")).match).toMatchObject({ id: added.data.guest.id, checkedInAt: null });
 
-      luma.push(guest("g-late", "Late", "Comer", { user_email: "late@example.com" }));
+      luma.push(guest("g-late", "Late", "Comer", { user_email: "late@example.com", event_tickets: [{ name: "Free", checked_in_at: null }] }));
       await refreshGuestList();
       const found = await search("late comer");
-      expect(found.match).toMatchObject({ id: "g-late", tickets: ["General Admission"], checkedInAt: null });
+      expect(found.match).toMatchObject({ id: "g-late", tickets: ["Free"], checkedInAt: null });
       expect(found.options).toEqual([]);
     });
 

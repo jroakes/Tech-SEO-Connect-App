@@ -320,13 +320,16 @@ camera:
 
 `CHECK_IN_DEMO` in `wrangler.jsonc` is `"true"` for now: check-ins and walk-ins
 are saved only in this app, and nothing is sent to Luma. With `"false"`,
-walk-ins are added to Luma as going, with a General Admission ticket (found by
-that name in the event's ticket types; the event's default is Livestream, so a
-walk-in isn't added if the event has no General Admission ticket), and Luma
+walk-ins are added to Luma as going, with a Free ticket (found by that name
+among the event's ticket types, hidden ones included; the event's default is
+Livestream, so a walk-in isn't added if the event has no Free ticket), and Luma
 emails them a ticket. Once Luma lists a walk-in, the desk shows Luma's guest in
-their place. Undoing a walk-in's check-in doesn't remove them from Luma. Luma's
-API can read check-ins but can't make them, so check-ins stay in this app's
-`check_ins` table either way; demo and real ones are kept apart.
+their place. Undoing a walk-in's check-in doesn't remove them from Luma.
+
+Luma's API can read check-ins but can't make them, so check-ins made here never
+show in Luma, in either mode. They stay in this app's `check_ins` table, with
+demo and real ones kept apart: search a guest on the desk to see theirs, and
+**Analytics** has the totals. The desk does show check-ins made in Luma.
 
 **Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
 page views (attendees', not organizers' on the admin pages), signed-in

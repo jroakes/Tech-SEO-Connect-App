@@ -94,9 +94,9 @@ don't.
 - [ ] Meet opens for a signed-in attendee (not the Sign in panel).
 - [ ] Check-in desk: the demo-mode note shows (unless going live). Search a
       real guest's name, scan a real Luma ticket with a phone, then undo both.
-- [ ] In live mode, once, add a walk-in with an email of your own: Luma shows a
-      General Admission ticket with nothing to pay. **Wrong person?** leaves
-      them on the desk, not checked in, and a search finds them.
+- [ ] In live mode, once, add a walk-in with an email of your own: Luma shows
+      them as Going with a Free ticket. **Wrong person?** leaves them on the
+      desk, not checked in, and a search finds them.
 - [ ] The Analytics page loads, and the guest list's size is there within 10
       minutes of a deploy in conference week.
 - [ ] The For AI bots dialog shows the MCP URL; in conference week, connect it

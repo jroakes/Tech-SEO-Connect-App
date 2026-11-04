@@ -24,7 +24,9 @@ const BACKUP_MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 const BACKUP_TIMEOUT_MS = 5000;
 const AI_MAX_TOKENS = 800; // room to score every candidate
 const STALE_MS = 15 * 60_000; // a backup for the 10-minute cron: refresh in the background if it's missed
-const WALK_IN_TICKET = "General Admission"; // Luma's default ticket for this event is Livestream
+// Luma's default ticket for this event is Livestream. Free is hidden and needs
+// approval, so it's looked up with the hidden types and the guest added approved.
+const WALK_IN_TICKET = "Free";
 const SIMILAR_NAME = 0.9; // a walk-in's name this close to a guest's might be the same person
 const SIMILAR_SHOWN = 5;
 const MIN_AI_SCORE = 40; // below this, the AI doesn't think it's them
@@ -508,7 +510,7 @@ export async function undoCheckIn(guestId: string, adminId: string): Promise<Gue
 /**
  * Someone who isn't on the list: gives them a ticket and checks them in. In
  * demo mode they're saved only here; otherwise Luma adds them as going with a
- * General Admission ticket (and emails it to them).
+ * Free ticket (and emails it to them).
  *
  * First it checks Luma's newest registrations, in case they registered since
  * the last refresh. If the email is registered, that guest is returned to
@@ -528,13 +530,13 @@ export async function addWalkIn(name: string, email: string, adminId: string, ne
   }
 
   if (!d.demo) {
-    const { entries } = await luma<{ entries: { id: string; name: string }[] }>(`/v1/events/ticket-types/list?${new URLSearchParams({ event_id: env.LUMA_EVENT_ID })}`);
+    const { entries } = await luma<{ entries: { id: string; name: string }[] }>(`/v1/events/ticket-types/list?${new URLSearchParams({ event_id: env.LUMA_EVENT_ID, include_hidden: "true" })}`);
     const ticket = entries.find((t) => t.name === WALK_IN_TICKET);
     // Luma would otherwise give them the default ticket, and livestream guests aren't on the desk.
     if (!ticket) throw new CheckInError(`This event has no ${WALK_IN_TICKET} ticket in Luma, so ${name} wasn't added.`);
     const { skipped } = await luma<{ skipped: { email: string }[] }>("/v1/events/guests/add", {
       method: "POST",
-      body: JSON.stringify({ event_id: env.LUMA_EVENT_ID, guests: [{ email, name }], ticket: { event_ticket_type_id: ticket.id } }),
+      body: JSON.stringify({ event_id: env.LUMA_EVENT_ID, guests: [{ email, name }], ticket: { event_ticket_type_id: ticket.id }, approval_status: "approved" }),
     });
     if (skipped.length) throw new CheckInError(`Luma won't add ${email}: they've unsubscribed from the calendar, or were removed or blocked.`);
   }
