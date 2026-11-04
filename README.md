@@ -282,9 +282,6 @@ menu) is for the door:
   again: the form says so and shows their tickets. Each walk-up is logged as a
   `walk_up` event, with no name or email.
 
-The `guest_list`, `check_ins`, `walk_ins` and `settings` tables are left from
-an earlier check-in desk built into the app. Nothing reads them.
-
 **Analytics** (`/admin/analytics`; `/analytics` redirects there): visitors,
 page views (attendees', not organizers' on the admin pages), signed-in
 attendees (not counting organizers' admin activity), directions taps, saves
