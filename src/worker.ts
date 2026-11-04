@@ -1,7 +1,6 @@
 import { handle } from "@astrojs/cloudflare/handler";
 import { mcpHandlerFor } from "./mcp/server";
 import { authenticateMcp, handleOAuthDiscovery, withCors } from "./lib/mcp-auth";
-import { refreshGuestList } from "./lib/check-in";
 import { syncSchedule } from "./lib/schedule-sync";
 
 // The pages built from the synced schedule are the same for everyone, so each
@@ -51,6 +50,5 @@ export default {
   async scheduled(controller, env, ctx) {
     // The crons in wrangler.jsonc.
     if (controller.cron === "0 * * * *") ctx.waitUntil(syncSchedule(env));
-    if (controller.cron === "*/10 * 1-7 11 *") ctx.waitUntil(refreshGuestList());
   },
 } satisfies ExportedHandler<Env>;

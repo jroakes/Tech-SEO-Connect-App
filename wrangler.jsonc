@@ -5,7 +5,7 @@
   // site (the tech-seo-connect Worker on techseoconnect.com and www).
   "account_id": "cba872330be0ac765a1538c1dd71607b",
   // Custom entry: routes /mcp to the MCP server, everything else to Astro,
-  // and runs the schedule sync and the check-in guest list on the crons below.
+  // and runs the schedule sync on the cron below.
   "main": "./src/worker.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -20,24 +20,18 @@
       "migrations_dir": "migrations"
     }
   ],
-  // Workers AI, which judges guest matches at check-in (src/lib/check-in.ts).
-  "ai": { "binding": "AI" },
   "triggers": {
-    // Hourly schedule sync from the main site, and in conference week
-    // (November 1-7) the Luma guest list for check-in every 10 minutes.
-    "crons": ["0 * * * *", "*/10 * 1-7 11 *"]
+    // Hourly schedule sync from the main site.
+    "crons": ["0 * * * *"]
   },
   "vars": {
     // The main site's homepage carries the schedule (see src/lib/schedule-parse.ts).
     "SCHEDULE_SOURCE_URL": "https://www.techseoconnect.com/",
     // Organizers, who are always admins: comma-separated, verified Clerk email addresses.
     "ORGANIZER_EMAILS": "jroakes@gmail.com,matthewgkay@gmail.com,patrickstox@gmail.com",
-    // Guest check-in (/admin/check-in): the conference's Luma event, and
-    // whether it starts in demo mode, where check-ins and walk-ins are saved
-    // only in this app and nothing is sent to Luma. The desk's live switch
-    // changes it for every desk.
+    // The conference's Luma event: /admin/check-in links to its check-in page
+    // and adds walk-ups to it.
     "LUMA_EVENT_ID": "evt-MaWa34aN1dC2Qal",
-    "CHECK_IN_DEMO": "false",
     // The production Clerk instance's public key, so sign-ins are checked
     // without first fetching it from Clerk. It's public, from
     // https://clerk.app.techseoconnect.com/.well-known/jwks.json; if Clerk

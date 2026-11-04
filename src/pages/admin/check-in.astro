@@ -1,11 +1,13 @@
 ---
-// Admin: checking guests in at the door, against the event's Luma guest list.
+// Admin: the door. Guests are checked in on Luma's own check-in page; this
+// links to it and adds walk-ups.
+import { env } from "cloudflare:workers";
+import { ExternalLink } from "lucide-react";
 import Layout from "@/layouts/Layout.astro";
 import AdminHeader from "@/components/AdminHeader.astro";
 import AdminLocked from "@/components/AdminLocked.astro";
-import CheckIn from "@/components/CheckIn";
+import WalkUpForm from "@/components/WalkUpForm";
 import { getUserId } from "@/lib/auth-server";
-import { isDemo, listFreshness } from "@/lib/check-in";
 import { currentAdmin } from "@/lib/clerk";
 
 export const prerender = false;
@@ -16,12 +18,6 @@ const admin = import.meta.env.PUBLIC_CLERK_ENABLED ? await currentAdmin(Astro.lo
 const signedIn = !!getUserId(Astro.locals);
 Astro.response.headers.set("Cache-Control", "no-store");
 if (!admin) Astro.response.status = signedIn ? 403 : 401;
-
-// When the guest list last came from Luma, for the page to show, and demo
-// mode: the desk's live switch, or CHECK_IN_DEMO until it's been used.
-const [freshness, demo] = admin
-  ? await Promise.all([listFreshness().catch((err) => (console.error("Couldn't load the Luma guest list", err), null)), isDemo()])
-  : [null, true];
 ---
 
 <Layout title="Admin: Check-in" noindex>
@@ -32,7 +28,25 @@ const [freshness, demo] = admin
       ) : (
         <>
           <AdminHeader current="check-in" />
-          <CheckIn client:load demo={demo} freshness={freshness} />
+          <div class="grid max-w-xl gap-4">
+            <section class="space-y-3 rounded-md border border-border bg-card p-4" data-testid="section-luma-check-in">
+              <div>
+                <h2 class="font-semibold text-foreground">Check in guests</h2>
+                <p class="text-sm text-muted-foreground">Guests are checked in on Luma. Sign in there with an account that can check guests in for this event.</p>
+              </div>
+              <a
+                href={`https://luma.com/check-in/${env.LUMA_EVENT_ID}`}
+                target="_blank"
+                rel="noopener"
+                class="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-md bg-primary px-5 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
+                data-testid="link-luma-check-in"
+              >
+                Open Luma check-in
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            </section>
+            <WalkUpForm client:load />
+          </div>
         </>
       )
     }

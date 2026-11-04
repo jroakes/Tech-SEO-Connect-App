@@ -53,10 +53,8 @@ const mail = `mailto:${event.contactEmail}`;
 
     <h3>Check-in at the door</h3>
     <p>
-      To check you in, organizers find you on the conference's Luma guest list (your name, email address and ticket) by name, by email or by scanning the QR code on
-      your ticket, and the app records when you were checked in and by whom. To find the right guest, what the organizer typed and the names and email addresses of
-      likely matches are sent to an AI service (Anthropic's Claude through OpenRouter, or Cloudflare Workers AI). If you
-      register at the door, your name and email are added to the event in Luma, which emails you a ticket.
+      Organizers check you in on Luma, with your ticket's QR code or from the conference's Luma guest list. If you register at the door, an organizer enters your
+      name and email in the app, which adds you to the event in Luma, and Luma emails you a ticket.
     </p>
 
     <h3>AI assistants</h3>
@@ -69,16 +67,15 @@ const mail = `mailto:${event.contactEmail}`;
     <h2>Who it's shared with</h2>
     <p>We don't sell your information. It's shared only with the services that run the app, for that purpose:</p>
     <ul>
-      <li><strong>Cloudflare</strong> hosts the app and its database, and runs Workers AI.</li>
+      <li><strong>Cloudflare</strong> hosts the app and its database.</li>
       <li><strong>Clerk</strong> handles sign-in and keeps your account.</li>
-      <li><strong>Luma</strong> holds the conference's registrations and tickets.</li>
+      <li><strong>Luma</strong> holds the conference's registrations, tickets and check-ins.</li>
       <li><strong>Google</strong> provides Google Analytics and the app's fonts.</li>
-      <li><strong>OpenRouter</strong> and <strong>Anthropic</strong> match names at the check-in desk.</li>
       <li><strong>MapTiler</strong> provides the map, from OpenStreetMap data.</li>
     </ul>
     <p>
       The conference organizers can see the list of accounts (names, email addresses, when people joined and last signed in, how many talks and places they've saved
-      and whether they're on Meet), check-ins, and the app's usage. Directions open in Google Maps or Apple Maps, and LinkedIn links open LinkedIn; those services
+      and whether they're on Meet), and the app's usage. Directions open in Google Maps or Apple Maps, and LinkedIn links open LinkedIn; those services
       have their own policies.
     </p>
 

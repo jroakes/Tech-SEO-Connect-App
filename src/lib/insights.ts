@@ -44,13 +44,6 @@ export interface Insights {
     /** Topics anyone picked or opened: picked now, and opens and LinkedIn taps in the range. */
     topics: { topic: string; label: string; people: number; opens: number; taps: number }[];
   };
-  checkIn: {
-    /** Check-ins in the range (demo ones in demo mode). */
-    checkedIn: number;
-    walkIns: number;
-    /** On the guest list now. */
-    guests: number;
-  };
 }
 
 const TIME_ZONE = "America/New_York";
@@ -70,8 +63,7 @@ const localDate = (d: Date) => d.toLocaleDateString("en-CA", { timeZone: TIME_ZO
 const localHour = (d: Date) => d.toLocaleTimeString("en-US", { timeZone: TIME_ZONE, hour: "numeric" });
 const localDay = (d: Date) => d.toLocaleDateString("en-US", { timeZone: TIME_ZONE, weekday: "short", month: "short", day: "numeric" });
 
-/** `demo`: count demo check-ins (CHECK_IN_DEMO) rather than real ones. */
-export async function getInsights(db: D1Database, range: Range, demo: boolean, now = new Date()): Promise<Insights> {
+export async function getInsights(db: D1Database, range: Range, now = new Date()): Promise<Insights> {
   const since = range === "all" ? "0000" : new Date(now.getTime() - (range === "24h" ? 24 : 7 * 24) * 3_600_000).toISOString();
   const unit = range === "24h" ? "hour" : "day";
 
@@ -161,24 +153,11 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
     ofType("match_leave"),
     ofType("match_topic_open"),
     ofType("match_linkedin_click"),
-    // Guests checked in during the range: each guest's last check-in event,
-    // unless it was undone. Demo and real check-ins are kept apart.
-    all<{ walk_in: number }>(
-      `SELECT walk_in FROM (
-         SELECT type, ts, json_extract(props, '$.walk_in') AS walk_in,
-           ROW_NUMBER() OVER (PARTITION BY json_extract(props, '$.guest_id') ORDER BY id DESC) AS n
-         FROM events WHERE type IN ('check_in', 'check_in_undo') AND json_extract(props, '$.demo') = ?)
-       WHERE n = 1 AND type = 'check_in' AND ts >= ?`,
-      demo ? 1 : 0,
-      since,
-    ),
-    // The guest list's size, logged whenever a sync with Luma changes it.
-    one<{ guests: number }>("SELECT json_extract(props, '$.guests') AS guests FROM events WHERE type = 'guest_list_sync' ORDER BY id DESC LIMIT 1"),
   ]);
   const [
     [visitors, pageViews, signedIn, directions, talkSaves, placeSaves, aiRequests, opened, copied],
     [hourRows, talks, places, pages, aiTools, searchRows, apps],
-    [onMeet, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps, checkIns, guestList],
+    [onMeet, meetActivity, joins, updates, leaves, topicOpens, linkedinTaps],
   ] = await Promise.all([totalsQuery, listsQuery, meetQuery]);
 
   // "Solís" and "solis" are one search.
@@ -222,7 +201,6 @@ export async function getInsights(db: D1Database, range: Range, demo: boolean, n
       linkedinTaps,
       topics: meetTopics,
     },
-    checkIn: { checkedIn: checkIns.length, walkIns: checkIns.filter((c) => c.walk_in).length, guests: guestList?.guests ?? 0 },
   };
 }
 

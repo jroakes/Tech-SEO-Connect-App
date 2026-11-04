@@ -45,41 +45,6 @@ export async function currentAdmin(locals: App.Locals): Promise<User | null> {
   return user && isAdmin(user) ? user : null;
 }
 
-const adminChecks = new Map<string, { admin: boolean; at: number }>(); // user ID → Clerk's last answer
-
-/**
- * Whether the signed-in user is an admin, trusting Clerk's answer from the
- * last minute, so the check-in desk's searches and check-ins don't each wait
- * on Clerk (the admin pages ask Clerk every time). Its API allows 100
- * requests per 10 seconds on a development instance and 1,000 in production.
- * `recheckNo` asks Clerk again when the last answer was no, so someone just
- * made an admin isn't turned away.
- */
-export async function isRecentAdmin(locals: App.Locals, recheckNo = false): Promise<boolean> {
-  const userId = getUserId(locals);
-  if (!userId) return false;
-  const known = adminChecks.get(userId);
-  if (known && Date.now() - known.at < 60_000 && (known.admin || !recheckNo)) return known.admin;
-  const user = await currentUser(locals);
-  if (!user) return false; // Clerk didn't answer: ask again next time
-  const admin = isAdmin(user);
-  adminChecks.set(userId, { admin, at: Date.now() });
-  return admin;
-}
-
-/** Forgets Clerk's last answer for a user whose admin rights just changed, so this server asks again. */
-export function forgetAdminCheck(userId: string): void {
-  adminChecks.delete(userId);
-}
-
-/**
- * The signed-in admin's ID, for the check-in desk, or null. Someone made an
- * admin at the door can check guests in right away.
- */
-export async function recentAdmin(locals: App.Locals): Promise<{ id: string } | null> {
-  return (await isRecentAdmin(locals, true)) ? { id: getUserId(locals)! } : null;
-}
-
 export function displayName(user: User): string {
   return [user.firstName, user.lastName].filter(Boolean).join(" ") || user.username || user.emailAddresses[0]?.emailAddress || "Attendee";
 }

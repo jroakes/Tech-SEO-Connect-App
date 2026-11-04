@@ -35,6 +35,3 @@ export const currentAdmin = async (locals: App.Locals) => {
   const user = await currentUser(locals);
   return user && isAdmin(user) ? user : null;
 };
-export const isRecentAdmin = async (locals: App.Locals) => !!(await currentAdmin(locals));
-export const forgetAdminCheck = () => {};
-export const recentAdmin = async (locals: App.Locals) => ((await isRecentAdmin(locals)) ? { id: getUserId(locals)! } : null);

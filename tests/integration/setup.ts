@@ -3,7 +3,7 @@ import { applyD1Migrations } from "cloudflare:test";
 import { env } from "cloudflare:workers";
 import { afterEach, beforeEach, vi } from "vitest";
 
-const TABLES = ["sessions", "sync_runs", "saved_sessions", "saved_places", "events", "profiles", "meet_topics", "guest_list", "check_ins", "walk_ins", "settings"];
+const TABLES = ["sessions", "sync_runs", "saved_sessions", "saved_places", "events", "profiles", "meet_topics"];
 
 await applyD1Migrations(env.DB, env.TEST_MIGRATIONS);
 

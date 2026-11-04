@@ -67,7 +67,7 @@ for (const path of ["/admin", "/admin/analytics", "/admin/check-in"]) {
 }
 
 test("admin APIs refuse visitors", async ({ request }) => {
-  expect((await request.post("/api/admin/check-in", { data: { action: "search", query: "x" } })).status()).toBe(401);
+  expect((await request.post("/api/admin/walk-ups", { data: { name: "X", email: "x@example.test" } })).status()).toBe(401);
   expect((await request.get("/api/admin/events")).status()).toBe(401);
   expect((await request.post("/api/admin/users", { data: {} })).status()).toBe(403);
   expect((await request.get("/api/matches")).status()).toBe(401);

@@ -84,21 +84,8 @@ describe("analytics", () => {
       event("mcp_tool_call", { tool: "search_sessions", query: "solis" }, server("ann")),
     ]);
 
-    // The check-in desk's events: g3's check-in was undone.
-    const desk = (type: string, guestId: string, demo: boolean, walkIn = false) =>
-      event(type, { guest_id: guestId, demo, walk_in: walkIn }, { ...server("admin1"), path: "/admin/check-in" });
-    await insertEvents(env.DB, [
-      desk("check_in", "g1", true),
-      desk("check_in", "walkin-1", true, true),
-      desk("check_in", "g3", true),
-      desk("check_in_undo", "g3", true),
-      desk("check_in", "g2", false),
-      event("guest_list_sync", { guests: 3 }, { anonId: undefined, path: "/admin/check-in" }),
-      event("guest_list_sync", { guests: 4 }, { anonId: undefined, path: "/admin/check-in" }),
-    ]);
-
-    const week = await getInsights(env.DB, "7d", true);
-    // Ann, Bob and Cy; the organizer at the admin pages and check-in desk isn't an attendee.
+    const week = await getInsights(env.DB, "7d");
+    // Ann, Bob and Cy; the organizer at the admin pages isn't an attendee.
     expect(week.totals).toMatchObject({ visitors: 2, pageViews: 3, signedIn: 3, directions: 2, talkSaves: 2, placeSaves: 1, aiRequests: 4 });
     expect(week.directionsByApp).toEqual({ google: 1, apple: 1 });
     // Every save counts; un-saves aren't taken off.
@@ -116,10 +103,8 @@ describe("analytics", () => {
     ]);
     expect(week.meet).toMatchObject({ people: 1, withLinkedin: 1, joins: 3, leaves: 1, topicOpens: 1, linkedinTaps: 1 });
     expect(week.meet.topics).toEqual([{ topic: "bigquery", label: "BigQuery", people: 1, opens: 1, taps: 1 }]);
-    expect(week.checkIn).toEqual({ checkedIn: 2, walkIns: 1, guests: 4 });
 
-    expect((await getInsights(env.DB, "7d", false)).checkIn).toEqual({ checkedIn: 1, walkIns: 0, guests: 4 });
-    expect((await getInsights(env.DB, "all", true)).totals.pageViews).toBe(4);
+    expect((await getInsights(env.DB, "all")).totals.pageViews).toBe(4);
   });
 
   it("counts page views by Eastern day and hour across the end of daylight saving time", async () => {
@@ -130,10 +115,10 @@ describe("analytics", () => {
       at("2026-11-02T04:30:00Z"), // 11:30 PM Sunday, EST
       at("2026-11-03T14:10:00Z"), // 9:10 AM Tuesday, EST
     ]);
-    const week = await getInsights(env.DB, "7d", true, new Date("2026-11-03T15:00:00Z"));
+    const week = await getInsights(env.DB, "7d", new Date("2026-11-03T15:00:00Z"));
     expect(week.activity.map((d) => `${d.label} ${d.value}`)).toEqual(["Oct 28 0", "Oct 29 0", "Oct 30 0", "Oct 31 1", "Nov 1 1", "Nov 2 0", "Nov 3 1"]);
 
-    const day = await getInsights(env.DB, "24h", true, new Date("2026-11-03T15:00:00Z"));
+    const day = await getInsights(env.DB, "24h", new Date("2026-11-03T15:00:00Z"));
     expect(day.activity).toHaveLength(24);
     expect(day.activity.at(-1)).toMatchObject({ label: "10 AM", value: 0 });
     expect(day.activity.at(-2)).toMatchObject({ label: "9 AM", value: 1, tooltip: "Tue, Nov 3, 9 AM: 1 page view" });
